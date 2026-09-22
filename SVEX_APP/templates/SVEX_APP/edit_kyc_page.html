@@ -1,0 +1,337 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}Edit KYC Entry{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin-bottom: 2rem; font-size: 1.875rem; font-weight: 600;">Edit KYC Entry</h1>
+        
+        {% if form.errors %}
+        <div style="background: #7f1d1d; border: 1px solid #991b1b; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+            <p style="color: #fca5a5; font-weight: 600; margin-bottom: 0.5rem;">Please correct the following errors:</p>
+            <ul style="color: #fca5a5; margin-left: 1.5rem;">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Client -->
+                <div style="grid-column: span 2;">
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Client
+                    </label>
+                    {{ form.client }}
+                    {% if form.client.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.client.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Government Name -->
+                <div style="grid-column: span 2;">
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Government Name
+                        <span style="color: #9ca3af; font-size: 0.875rem; margin-left: 0.5rem;" id="gov-name-counter">0/100</span>
+                    </label>
+                    {{ form.government_name }}
+                    {% if form.government_name.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.government_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- First Name -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        First Name
+                        <span style="color: #9ca3af; font-size: 0.875rem; margin-left: 0.5rem;" id="first-name-counter">0/100</span>
+                    </label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.first_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Last Name
+                        <span style="color: #9ca3af; font-size: 0.875rem; margin-left: 0.5rem;" id="last-name-counter">0/100</span>
+                    </label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.last_name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Country -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Country
+                        <span style="color: #9ca3af; font-size: 0.875rem; margin-left: 0.5rem;" id="country-counter">0/100</span>
+                    </label>
+                    {{ form.country }}
+                    {% if form.country.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.country.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Birthdate -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Birthdate
+                    </label>
+                    {{ form.birthdate }}
+                    {% if form.birthdate.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.birthdate.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- ID Front -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        ID Front
+                    </label>
+                    <div style="border: 2px dashed #374151; border-radius: 8px; padding: 1rem; ">
+                        {{ form.id_front }}
+                        {% if form.instance.id_front %}
+                            <div style="margin-top: 0.75rem;">
+                                <p style="color: #9ca3af; font-size: 0.875rem; margin-bottom: 0.5rem;">Current image:</p>
+                                <img src="{{ form.instance.id_front.url }}" alt="ID Front" style="max-width: 200px; border-radius: 6px; border: 1px solid #374151;">
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if form.id_front.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.id_front.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- ID Back -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        ID Back
+                    </label>
+                    <div style="border: 2px dashed #374151; border-radius: 8px; padding: 1rem; ">
+                        {{ form.id_back }}
+                        {% if form.instance.id_back %}
+                            <div style="margin-top: 0.75rem;">
+                                <p style="color: #9ca3af; font-size: 0.875rem; margin-bottom: 0.5rem;">Current image:</p>
+                                <img src="{{ form.instance.id_back.url }}" alt="ID Back" style="max-width: 200px; border-radius: 6px; border: 1px solid #374151;">
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if form.id_back.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.id_back.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Is Verified Toggle -->
+                <div style="grid-column: span 2;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <span style="color: #d1d5db; font-weight: 500; margin-right: 1rem;">Is Verified</span>
+                        <div style="position: relative;">
+                            {{ form.is_verified }}
+                            <div class="toggle-switch" style="width: 52px; height: 28px; background: #374151; border-radius: 14px; position: relative; transition: background 0.3s;">
+                                <div class="toggle-slider" style="width: 24px; height: 24px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s;"></div>
+                            </div>
+                        </div>
+                        <span class="toggle-status" style="margin-left: 1rem; color: #9ca3af; font-size: 0.875rem;">Not Verified</span>
+                    </label>
+                    {% if form.is_verified.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.is_verified.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Verification Status -->
+                <div style="grid-column: span 2;">
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Verification Status
+                        <span class="status-indicator" style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-left: 0.5rem;"></span>
+                    </label>
+                    {{ form.verification_status }}
+                    {% if form.verification_status.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.verification_status.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+
+                <button type="submit" style="padding: 0.75rem 1.5rem; background: #2563eb; color: #0f172a; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: background 0.2s;">
+                    Update KYC Entry
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Form field styling */
+    #id_client,
+    #id_government_name,
+    #id_first_name,
+    #id_last_name,
+    #id_country,
+    #id_birthdate,
+    #id_verification_status {
+        width: 100%;
+        padding: 0.75rem;
+        
+        border: 1px solid #374151;
+        border-radius: 8px;
+        color: #0f172a;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #id_client:focus,
+    #id_government_name:focus,
+    #id_first_name:focus,
+    #id_last_name:focus,
+    #id_country:focus,
+    #id_birthdate:focus,
+    #id_verification_status:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* File input styling */
+    #id_id_front,
+    #id_id_back {
+        width: 100%;
+        padding: 0.5rem;
+        color: #d1d5db;
+        font-size: 0.875rem;
+    }
+
+    #id_id_front::file-selector-button,
+    #id_id_back::file-selector-button {
+        padding: 0.5rem 1rem;
+        background: #374151;
+        color: #d1d5db;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-right: 0.75rem;
+        transition: background 0.2s;
+    }
+
+    #id_id_front::file-selector-button:hover,
+    #id_id_back::file-selector-button:hover {
+        background: #4b5563;
+    }
+
+    /* Hide default checkbox */
+    #id_is_verified {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Toggle switch active state */
+    #id_is_verified:checked ~ .toggle-switch {
+        background: #10b981 !important;
+    }
+
+    #id_is_verified:checked ~ .toggle-switch .toggle-slider {
+        transform: translateX(24px);
+    }
+
+    /* Button hover effects */
+    button[type="submit"]:hover {
+        background: #1d4ed8 !important;
+    }
+
+    a[href*="kyc_list"]:hover {
+        background: #4b5563 !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        div[style*="grid-template-columns: repeat(2, 1fr)"] {
+            grid-template-columns: 1fr !important;
+        }
+        
+        div[style*="grid-column: span 2"] {
+            grid-column: span 1 !important;
+        }
+    }
+</style>
+
+<script>
+    // Character counters
+    function updateCounter(inputId, counterId, maxLength) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+        
+        if (input && counter) {
+            const updateCount = () => {
+                const length = input.value.length;
+                counter.textContent = `${length}/${maxLength}`;
+                
+                if (length > maxLength * 0.9) {
+                    counter.style.color = '#f87171';
+                } else if (length > maxLength * 0.7) {
+                    counter.style.color = '#fbbf24';
+                } else {
+                    counter.style.color = '#9ca3af';
+                }
+            };
+            
+            updateCount();
+            input.addEventListener('input', updateCount);
+        }
+    }
+
+    updateCounter('id_government_name', 'gov-name-counter', 100);
+    updateCounter('id_first_name', 'first-name-counter', 100);
+    updateCounter('id_last_name', 'last-name-counter', 100);
+    updateCounter('id_country', 'country-counter', 100);
+
+    // Toggle switch
+    const checkbox = document.getElementById('id_is_verified');
+    const toggleStatus = document.querySelector('.toggle-status');
+    
+    if (checkbox && toggleStatus) {
+        const updateToggleStatus = () => {
+            if (checkbox.checked) {
+                toggleStatus.textContent = 'Verified';
+                toggleStatus.style.color = '#10b981';
+            } else {
+                toggleStatus.textContent = 'Not Verified';
+                toggleStatus.style.color = '#9ca3af';
+            }
+        };
+        
+        updateToggleStatus();
+        checkbox.addEventListener('change', updateToggleStatus);
+    }
+
+    // Status indicator
+    const statusSelect = document.getElementById('id_verification_status');
+    const statusIndicator = document.querySelector('.status-indicator');
+    
+    if (statusSelect && statusIndicator) {
+        const updateStatusIndicator = () => {
+            const value = statusSelect.value;
+            if (value === 'confirmed') {
+                statusIndicator.style.background = '#10b981';
+            } else if (value === 'pending') {
+                statusIndicator.style.background = '#fbbf24';
+            } else if (value === 'cancelled') {
+                statusIndicator.style.background = '#ef4444';
+            }
+        };
+        
+        updateStatusIndicator();
+        statusSelect.addEventListener('change', updateStatusIndicator);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,492 @@
+{% extends 'SVEX_APP/wallets/layout.html' %}
+{% block content %}
+<style>
+    /* Banking Aesthetic Custom Styles */
+    .wallet-dashboard {
+        padding: 32px 24px; 
+        max-width: 1400px; 
+        margin: 0 auto; 
+        background-color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+    }
+    .wallet-header { margin-bottom: 32px; }
+    .wallet-title { font-size: 32px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a; letter-spacing: -0.025em; }
+    
+    .bank-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        margin-bottom: 24px;
+    }
+    
+    .bank-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 24px;
+    }
+    
+    @media (max-width: 991px) {
+        body, html { background-color: #f8fafc !important; }
+        .wallet-dashboard { padding: 0 0 90px 0 !important; }
+        .wallet-header { 
+            padding: 16px !important;
+            margin-bottom: 0 !important;
+            background: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .wallet-title { font-size: 24px !important; font-weight: 800 !important; text-align: center; }
+        .bank-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            padding: 12px !important;
+            gap: 16px !important;
+        }
+        .bank-card {
+            border: none !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04) !important;
+            border-radius: 20px !important;
+            padding: 20px 16px !important;
+            margin: 0 !important;
+        }
+        
+        /* Make Coin Selector highly visible and easy to tap */
+        .coin-selector-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 16px !important;
+            padding: 16px !important;
+            background: #f1f5f9 !important;
+            border: none !important;
+        }
+        #coin_select {
+            width: 100% !important;
+            padding: 14px 16px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            height: 52px !important;
+            background-color: #ffffff !important;
+            border-radius: 12px !important;
+        }
+        
+        /* Large fonts for readability */
+        .form-label { font-size: 16px !important; margin-bottom: 10px !important; color: #0f172a !important; }
+        
+        .form-input {
+            padding: 16px !important;
+            font-size: 18px !important;
+            height: 56px !important;
+            border-radius: 12px !important;
+            background: #f8fafc !important;
+            border: 1px solid #cbd5e1 !important;
+        }
+        
+        .max-btn {
+            top: 44px !important; /* adjust for taller input */
+            padding: 6px 12px !important;
+            font-size: 14px !important;
+        }
+        
+        .btn-primary {
+            padding: 18px !important;
+            font-size: 18px !important;
+            border-radius: 100px !important; /* Revolut style pill */
+            margin-top: 16px !important;
+        }
+        
+        /* Hide right sidebar info panel on mobile to save space */
+        .bank-grid > div:nth-child(2) {
+            display: none !important;
+        }
+    }
+
+    .form-group { margin-bottom: 24px; position: relative; }
+    .form-label { display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+    .form-input { 
+        width: 100%; padding: 12px 16px; 
+        border: 1px solid #cbd5e1; border-radius: 8px; 
+        font-size: 15px; color: #0f172a; 
+        background-color: #ffffff;
+        transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    .form-error { color: #e53e3e; font-size: 13px; margin-top: 6px; padding: 0; list-style-type: none; }
+    
+    .btn-primary {
+        display: block; width: 100%; padding: 14px;
+        background-color: #2563eb; color: #ffffff !important;
+        border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+        cursor: pointer; transition: all 0.2s; text-align: center;
+    }
+    .btn-primary:hover { background-color: #1d4ed8; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+    
+    .btn-secondary {
+        padding: 8px 16px; background: #f1f5f9; color: #334155 !important;
+        border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+    }
+    .btn-secondary:hover { background: #e2e8f0; color: #0f172a !important; }
+
+    .coin-selector-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 24px;
+    }
+    
+    .coin-info-display { display: flex; align-items: center; gap: 12px; }
+    .max-btn {
+        position: absolute; right: 12px; top: 38px;
+        background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px;
+        font-size: 12px; font-weight: 700; color: #475569; cursor: pointer;
+    }
+    .max-btn:hover { background: #e2e8f0; }
+    
+    /* Table styling for history */
+    .bank-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    .bank-table th { padding: 12px 16px; text-align: left; font-size: 13px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
+    .bank-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+    
+</style>
+
+<div class="wallet-dashboard">
+    <div class="wallet-header">
+        <h1 class="wallet-title">Withdraw Funds</h1>
+    </div>
+
+    <div>
+        {% if not form.errors %}
+            {% if success_message %}
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-weight: 600;">
+                    {{ success_message }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="bank-grid">
+        <!-- Main Form Column -->
+        <div class="bank-card">
+            <h3 style="margin-top: 0; font-size: 20px; margin-bottom: 24px; color: #0f172a;">Withdrawal Details</h3>
+            
+            <div class="coin-selector-header">
+                <div class="coin-info-display">
+                    <img id="header-coin-img" src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="BTC" style="width: 40px; height: 40px; border-radius: 50%;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 16px;"><span id="header-code">BTC</span> - <span id="header-name" style="color:#64748b; font-weight: 400;">Bitcoin</span></div>
+                        <div style="font-size: 13px; color: #475569; margin-top: 2px;">
+                            Balance: <span id="header-balance-value" style="font-weight: 600; color: #0f172a;">{{wallet.btc_balance|floatformat:8}} BTC</span>
+                            <span id="header-balance-usd" style="color: #64748b;">(~$0.00)</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <select id="coin_select" onchange="updateCoin(this.value)" class="form-input" style="padding: 8px 12px; width: 180px;">
+                        <option value="spotbtc" selected>EUR Account (Fiat)</option>
+                        <option value="btc">Bitcoin (BTC)</option>
+                        <option value="eth">Ethereum (ETH)</option>
+                        <option value="usdt_erc20">USDT ERC20</option>
+                        <option value="usd_trc20">USDT TRC20</option>
+                    </select>
+                </div>
+            </div>
+
+            <form id="withdrawForm" action="/dashboard/wallets/withdraw" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="crypto_currency" id="crypto_currency_input" value="spotbtc">
+                
+                <div id="security-notice" style="display: none; background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; font-size: 13px; color: #92400e; margin-bottom: 24px; border-radius: 4px;">
+                    <strong>Security Notice:</strong> Do not withdraw directly to a crowdfund or ICO address, as your account will not be credited with tokens from such sales.
+                </div>
+
+                {% if form.errors.crypto_currency %}
+                    <ul class="form-error">
+                        {% for error in form.errors.crypto_currency %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="form-group">
+                    <label class="form-label" for="wallet_withdraw" id="destination-label">Destination Address</label>
+                    <input class="form-input" type="text" id="wallet_withdraw" name="wallet_withdraw" placeholder="Enter recipient wallet address" value="{{ form.wallet_withdraw.value|default_if_none:'' }}">
+                    {% if form.errors.wallet_withdraw %}
+                        <ul class="form-error">{% for error in form.errors.wallet_withdraw %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="amount" id="amount-label">Amount in BTC</label>
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748b; margin-bottom: 8px;">
+                        <span>Available: <strong id="available-balance" style="color:#0f172a;">{{wallet.btc_balance|floatformat:8}}</strong> <span id="currency-symbol">BTC</span> <span id="available-usd">~$0.00</span></span>
+                    </div>
+                    <input class="form-input" type="number" id="amount" name="amount" step="0.00000001" min="0" placeholder="0.00" value="{{ form.amount.value|default_if_none:'' }}">
+                    <div class="max-btn" id="maxAmountBtn">MAX</div>
+                    <div style="text-align: right; font-size: 12px; color: #64748b; margin-top: 6px;">Receiving: <span id="receiving-usd">~$0.00</span></div>
+                    {% if form.errors.amount %}
+                        <ul class="form-error">{% for error in form.errors.amount %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div id="network-fee-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                    <span style="font-size: 14px; color: #475569;">Network Fee</span>
+                    <span style="font-weight: 600; color: #0f172a;">0.00012 BTC</span>
+                </div>
+
+                <button class="btn-primary" type="submit">
+                    Submit Withdrawal
+                </button>
+            </form>
+        </div>
+
+        <!-- Sidebar / Info Column -->
+        <div>
+            <div class="bank-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; font-size: 16px; color: #0f172a;">Daily Withdrawal Limit</h3>
+                    <a href="/dashboard/kyc" class="btn-secondary">Increase Limit</a>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                    <div style="font-size: 24px; font-weight: 700; color: #0f172a;">1.00000000</div>
+                    <div style="font-size: 14px; font-weight: 600; color: #64748b;">BTC</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Table -->
+    <div class="bank-card" style="margin-top: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; font-size: 20px; color: #0f172a;">Withdrawal History</h3>
+            <div style="display: flex; gap: 12px;">
+                <select id="pagePagination" class="form-input" style="width: auto; padding: 6px 12px;">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+                <div class="search-input" style="position: relative;">
+                    <input type="text" class="form-input" placeholder="Search..." style="padding: 6px 12px;">
+                </div>
+            </div>
+        </div>
+        
+        <div style="overflow-x: auto;">
+            <table class="bank-table">
+                <thead>
+                    <tr>
+                        <th>Withdraw ID</th>
+                        <th>Currency</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="ticket-list">
+                    <!-- Loaded via AJAX -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+            <div id="totalNumber" style="font-size: 13px; color: #64748b;"></div>
+            <div class="pagination" style="display: flex; gap: 8px; font-size: 14px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- JS Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const PRICES = {
+        btc: parseFloat('{{ btc_price|default_if_none:0|floatformat:"2"|cut:"," }}'),
+        spotbtc: 1.0,
+        eth: parseFloat('{{ eth_price|default_if_none:0|floatformat:"2"|cut:"," }}'),
+        usdt_erc20: parseFloat('{{ usdt_price|default_if_none:1.0|floatformat:"4"|cut:"," }}'),
+        usd_trc20: parseFloat('{{ usdt_price|default_if_none:1.0|floatformat:"4"|cut:"," }}')
+    };
+
+    function updateCoin(coin) {
+        const currencyData = {
+            'btc': { label: 'Amount in BTC', symbol: 'BTC', balance: '{{wallet.btc_balance|floatformat:8}}', code: 'btc', name: 'Bitcoin', img: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' },
+            'spotbtc': { label: 'Amount in EUR', symbol: 'EUR', balance: '{{wallet.spotbtc_balance|floatformat:2}}', code: 'EUR', name: 'Main Account', img: "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23005b9f'/%3E%3Ctext x='50' y='72' font-family='Arial, sans-serif' font-size='65' font-weight='bold' fill='white' text-anchor='middle'%3E%E2%82%AC%3C/text%3E%3C/svg%3E" },
+            'eth': { label: 'Amount in ETH', symbol: 'ETH', balance: '{{wallet.eth_balance|floatformat:8}}', code: 'eth', name: 'Ethereum', img: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
+            'usdt_erc20': { label: 'Amount in USDT ERC20', symbol: 'USDT', balance: '{{wallet.usdt_balance_erc20|floatformat:8}}', code: 'usdt_erc20', name: 'Tether ERC20', img: 'https://cryptologos.cc/logos/tether-usdt-logo.png' },
+            'usd_trc20': { label: 'Amount in USDT TRC20', symbol: 'USDT', balance: '{{wallet.usd_balance_trc20|floatformat:8}}', code: 'usd_trc20', name: 'Tether TRC20', img: 'https://cryptologos.cc/logos/tether-usdt-logo.png' }
+        };
+
+        if (currencyData[coin]) {
+            $('#amount-label').text(currencyData[coin].label);
+            $('#available-balance').text(currencyData[coin].balance);
+            $('#currency-symbol').text(currencyData[coin].symbol);
+            $('#header-code').text(currencyData[coin].code);
+            $('#header-name').text(currencyData[coin].name);
+            $('#header-balance-value').text(currencyData[coin].balance + ' ' + currencyData[coin].code);
+            $('#header-coin-img').attr('src', currencyData[coin].img);
+            $('#crypto_currency_input').val(coin);
+
+            const price = PRICES[coin] || 0;
+            const bal = parseFloat(currencyData[coin].balance) || 0;
+            const balUsd = bal * price;
+            
+            if (coin === 'spotbtc') {
+                $('#header-balance-usd').text('');
+                $('#available-usd').text('');
+                $('#destination-label').text('Recipient IBAN / Bank Account');
+                $('#wallet_withdraw').attr('placeholder', 'e.g. DE89 3704 0044 0532 0130 00');
+                $('#security-notice').hide();
+                $('#network-fee-row').hide();
+                $('#receiving-usd').parent().hide();
+            } else {
+                $('#header-balance-usd').text(' (~$' + balUsd.toFixed(2) + ')');
+                $('#available-usd').text(' ~$' + balUsd.toFixed(2));
+                $('#destination-label').text('Destination Address');
+                $('#wallet_withdraw').attr('placeholder', 'Enter recipient wallet address');
+                $('#security-notice').show();
+                $('#network-fee-row').show();
+                $('#receiving-usd').parent().show();
+            }
+
+            $('#amount').trigger('input');
+        }
+    }
+
+    $(document).ready(function() {
+        var selectEl = document.getElementById('coin_select');
+        if (selectEl) { updateCoin(selectEl.value); }
+
+        $('#amount').on('input', function() {
+            var coin = $('#coin_select').val() || 'btc';
+            var price = PRICES[coin] || 0;
+            var amt = parseFloat(this.value) || 0;
+            $('#receiving-usd').text(' ~$' + (amt * price).toFixed(2));
+        });
+
+        $('#maxAmountBtn').on('click', function() {
+            var available = parseFloat($('#available-balance').text()) || 0;
+            $('#amount').val(available.toFixed(8)).trigger('input');
+        });
+
+        // AJAX History logic
+        var searchInput = $('.search-input input');
+        searchInput.on('input', function() {
+            fetchTickets(searchInput.val(), 1, $('#pagePagination').val());
+        });
+
+        $('#pagePagination').change(function() {
+            fetchTickets(searchInput.val(), 1, $(this).val());
+        });
+
+        fetchTickets('', 1, $('#pagePagination').val());
+
+        function fetchTickets(searchText, page, itemsPerPage) {
+            $.ajax({
+                url: '/get-withdraws/',
+                type: 'GET',
+                data: { q: searchText, page: page, items_per_page: itemsPerPage },
+                dataType: 'json',
+                beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}'); },
+                success: function(response) {
+                    var tableBody = $('#ticket-list');
+                    tableBody.empty();
+                    $.each(response.withdraws, function (index, withdraw) {
+                        var statusColor = withdraw.status === 'Completed' ? 'green' : (withdraw.status === 'Pending' ? 'orange' : 'red');
+                        var row = `<tr>
+                            <td style="font-family: monospace;">${withdraw.id}</td>
+                            <td><strong style="color: #3b82f6;">${withdraw.crypto.toUpperCase()}</strong></td>
+                            <td style="font-family: monospace; font-size: 13px;">${withdraw.wallet_withdraw.substring(0, 16)}...</td>
+                            <td style="color: ${statusColor}; font-weight: 600;">${withdraw.status}</td>
+                            <td style="font-weight: 600;">${withdraw.amount}</td>
+                            <td style="color: #64748b;">${withdraw.created_at}</td>
+                        </tr>`;
+                        tableBody.append(row);
+                    });
+                    updatePagination(response.total_pages, response.current_page, response.total_entries, response.items_per_page);
+                }
+            });
+        }
+
+        function updatePagination(totalPages, currentPage, totalEntries, itemsPerPage) {
+            var paginationLinks = $('.pagination');
+            paginationLinks.empty();
+            if (currentPage > 1) {
+                paginationLinks.append(`<a href="#" style="text-decoration: none; color: #3b82f6;" data-page="${currentPage - 1}">Prev</a>`);
+            }
+            paginationLinks.append(`<span style="font-weight: 700; color: #0f172a; padding: 0 8px;">${currentPage} / ${totalPages || 1}</span>`);
+            if (currentPage < totalPages) {
+                paginationLinks.append(`<a href="#" style="text-decoration: none; color: #3b82f6;" data-page="${currentPage + 1}">Next</a>`);
+            }
+            $('#totalNumber').html(`Showing ${totalEntries === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1} to ${Math.min(currentPage * itemsPerPage, totalEntries)} of ${totalEntries} entries`);
+            
+            paginationLinks.find('a').click(function(e) {
+                e.preventDefault();
+                fetchTickets($('.search-input input').val(), $(this).data('page'), itemsPerPage);
+            });
+        }
+    });
+</script>
+
+<!-- Error Modal -->
+<div id="withdrawErrorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 32px; border-radius: 16px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+        <div style="color: #ef4444; margin-bottom: 20px; background: #fef2f2; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: auto; margin-right: auto;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+        <h3 style="margin-top: 0; font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">Withdrawal Error</h3>
+        <p id="withdrawErrorMessage" style="font-size: 15px; color: #475569; margin: 0 0 16px 0; line-height: 1.5;">
+            <!-- Error message will go here -->
+        </p>
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <p style="font-size: 15px; font-weight: 600; color: #334155; margin: 0 0 16px 0;">
+                Please contact support to resolve this issue.
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <a href="https://wa.me/" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #25D366; border: none; padding: 14px; border-radius: 100px; font-weight: 700; font-size: 16px; cursor: pointer; color: #0f172a; text-decoration: none; transition: transform 0.2s;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    WhatsApp Support
+                </a>
+                <a href="javascript:void(0)" onclick="if(typeof Tawk_API !== 'undefined'){Tawk_API.toggle();} else {alert('Live chat widget is currently unavailable.');}" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: #2563eb; border: none; padding: 14px; border-radius: 100px; font-weight: 700; font-size: 16px; cursor: pointer; color: #0f172a; text-decoration: none; transition: transform 0.2s;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                    Live Chat
+                </a>
+            </div>
+        </div>
+        <button onclick="document.getElementById('withdrawErrorModal').style.display='none'" style="width: 100%; background: transparent; border: 2px solid #e2e8f0; padding: 14px; border-radius: 100px; font-weight: 700; font-size: 16px; cursor: pointer; color: #64748b; transition: background 0.2s;">
+            Dismiss
+        </button>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    var deniedMessage = {% if withdrawal_denied_message %}"{{ withdrawal_denied_message|escapejs }}"{% else %}null{% endif %};
+    var customMessage = {% if custom_message %}"{{ custom_message|escapejs }}"{% else %}null{% endif %};
+    var hasFormErrors = {% if form.errors %}true{% else %}false{% endif %};
+    
+    function showErrorModal(msg) {
+        $('#withdrawErrorMessage').text(msg);
+        $('#withdrawErrorModal').css('display', 'flex');
+    }
+
+    // Intercept form submit
+    $('#withdrawForm').on('submit', function(e) {
+        if (deniedMessage) {
+            e.preventDefault();
+            showErrorModal(deniedMessage);
+        }
+    });
+
+    // Auto-show modal if we landed on the page with a custom message after a POST
+    if (customMessage) {
+        showErrorModal(customMessage);
+    } else if (hasFormErrors) {
+        showErrorModal("Please check the form fields for valid inputs.");
+    }
+});
+</script>
+{% endblock %}

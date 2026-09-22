@@ -1,0 +1,266 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}Deposit Wallets{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Deposit Wallets</h1>
+        <div class="header-actions">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by user..." onkeyup="searchTable()">
+            <a href="{% url 'create_deposit_wallet' %}" class="btn btn-primary">
+                + Add Wallet
+            </a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>BTC Wallet</th>
+                        <th>ETH Wallet</th>
+                        <th>ERC20 Wallet</th>
+                        <th>TRC20 Wallet</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="depositWalletTableBody">
+                    {% for wallet in deposit_wallets %}
+                        <tr>
+                            <td>{{ wallet.user.username }}</td>
+                            <td class="monospace text-secondary truncate" title="{{ wallet.btc_deposit_wallet }}">
+                                {{ wallet.btc_deposit_wallet|default:"—" }}
+                            </td>
+                            <td class="monospace text-secondary truncate" title="{{ wallet.eth_deposit_wallet }}">
+                                {{ wallet.eth_deposit_wallet|default:"—" }}
+                            </td>
+                            <td class="monospace text-secondary truncate" title="{{ wallet.erc20_deposit_wallet }}">
+                                {{ wallet.erc20_deposit_wallet|default:"—" }}
+                            </td>
+                            <td class="monospace text-secondary truncate" title="{{ wallet.trc20_deposit_wallet }}">
+                                {{ wallet.trc20_deposit_wallet|default:"—" }}
+                            </td>
+                            <td class="text-center">
+                                <div class="action-buttons">
+                                    <a href="{% url 'edit_deposit_wallet' wallet.pk %}" class="btn btn-sm btn-info">
+                                        Edit
+                                    </a>
+                                    <form method="post" action="{% url 'delete_deposit_wallet' wallet.pk %}" onsubmit="return confirm('Are you sure you want to delete this wallet configuration?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div class="empty-state-title">No deposit wallets found</div>
+                                <div class="empty-state-subtitle">Use the button above to add a new wallet configuration for a user.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* General Layout & Typography */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap; /* Allows wrapping on smaller screens */
+        gap: 1rem;
+    }
+    .page-header h1 {
+        color: #0f172a;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .monospace { font-family: monospace; }
+    .text-secondary { color: #a0a0a0; }
+    .text-center { text-align: center; }
+
+    /* Search Input */
+    .search-input {
+        background-color: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0.65rem 1rem;
+        font-size: 0.875rem;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder {
+        color: #6b7280;
+    }
+    .search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+        color: #0f172a;
+        white-space: nowrap; /* Prevents button text from wrapping */
+    }
+    .btn-primary {
+        padding: 0.75rem 1.5rem;
+        background-color: #10b981;
+        border-radius: 8px;
+    }
+    .btn-primary:hover { background-color: #059669; }
+    
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        border-radius: 6px;
+    }
+    .btn-info { background-color: #3b82f6; }
+    .btn-info:hover { background-color: #2563eb; }
+    
+    .btn-danger { background-color: #ef4444; }
+    .btn-danger:hover { background-color: #dc2626; }
+
+    /* Table Styling */
+    .table-container {
+        
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+    }
+    .table-wrapper {
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th {
+        padding: 1rem;
+        text-align: left;
+        color: #0f172a;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    td {
+        padding: 1rem;
+        color: #334155;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    thead tr {
+        background-color: #ffffff;
+        border-bottom: 2px solid #cbd5e1;
+    }
+    tbody tr {
+        border-bottom: 1px solid #e2e8f0;
+        transition: background-color 0.2s;
+    }
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+    tbody tr:hover {
+        background-color: #252525;
+    }
+    .truncate {
+        max-width: 180px; /* Adjust as needed */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Action Buttons in Table */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    .action-buttons form {
+        display: inline-block;
+        margin: 0;
+    }
+
+    /* Empty State */
+    .empty-state {
+        padding: 3rem;
+        text-align: center;
+        color: #6b7280;
+    }
+    .empty-state-title {
+        font-size: 1.125rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .empty-state-subtitle {
+        font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .header-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+<script>
+    // This script remains the same as it correctly targets the IDs.
+    function searchTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const tableBody = document.getElementById("depositWalletTableBody");
+        const rows = tableBody.getElementsByTagName("tr");
+        let found = false;
+
+        for (let i = 0; i < rows.length; i++) {
+            // Check if this is not the empty state row
+            if (rows[i].getElementsByTagName("td").length > 1) {
+                const td = rows[i].getElementsByTagName("td")[0]; // Search in the first column (User)
+                if (td) {
+                    const txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                        found = true;
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

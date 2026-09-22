@@ -1,0 +1,985 @@
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <style type="text/css">svg:not(:root).svg-inline--fa {
+  overflow: visible;
+}
+
+.svg-inline--fa {
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -0.125em;
+}
+.svg-inline--fa.fa-lg {
+  vertical-align: -0.225em;
+}
+.svg-inline--fa.fa-w-1 {
+  width: 0.0625em;
+}
+.svg-inline--fa.fa-w-2 {
+  width: 0.125em;
+}
+.svg-inline--fa.fa-w-3 {
+  width: 0.1875em;
+}
+.svg-inline--fa.fa-w-4 {
+  width: 0.25em;
+}
+.svg-inline--fa.fa-w-5 {
+  width: 0.3125em;
+}
+.svg-inline--fa.fa-w-6 {
+  width: 0.375em;
+}
+.svg-inline--fa.fa-w-7 {
+  width: 0.4375em;
+}
+.svg-inline--fa.fa-w-8 {
+  width: 0.5em;
+}
+.svg-inline--fa.fa-w-9 {
+  width: 0.5625em;
+}
+.svg-inline--fa.fa-w-10 {
+  width: 0.625em;
+}
+.svg-inline--fa.fa-w-11 {
+  width: 0.6875em;
+}
+.svg-inline--fa.fa-w-12 {
+  width: 0.75em;
+}
+.svg-inline--fa.fa-w-13 {
+  width: 0.8125em;
+}
+.svg-inline--fa.fa-w-14 {
+  width: 0.875em;
+}
+.svg-inline--fa.fa-w-15 {
+  width: 0.9375em;
+}
+.svg-inline--fa.fa-w-16 {
+  width: 1em;
+}
+.svg-inline--fa.fa-w-17 {
+  width: 1.0625em;
+}
+.svg-inline--fa.fa-w-18 {
+  width: 1.125em;
+}
+.svg-inline--fa.fa-w-19 {
+  width: 1.1875em;
+}
+.svg-inline--fa.fa-w-20 {
+  width: 1.25em;
+}
+.svg-inline--fa.fa-pull-left {
+  margin-right: 0.3em;
+  width: auto;
+}
+.svg-inline--fa.fa-pull-right {
+  margin-left: 0.3em;
+  width: auto;
+}
+.svg-inline--fa.fa-border {
+  height: 1.5em;
+}
+.svg-inline--fa.fa-li {
+  width: 2em;
+}
+.svg-inline--fa.fa-fw {
+  width: 1.25em;
+}
+
+.fa-layers svg.svg-inline--fa {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.fa-layers {
+  display: inline-block;
+  height: 1em;
+  position: relative;
+  text-align: center;
+  vertical-align: -0.125em;
+  width: 1em;
+}
+.fa-layers svg.svg-inline--fa {
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+}
+
+.fa-layers-counter, .fa-layers-text {
+  display: inline-block;
+  position: absolute;
+  text-align: center;
+}
+
+.fa-layers-text {
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+}
+
+.fa-layers-counter {
+  background-color: #ff253a;
+  border-radius: 1em;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: #0f172a;
+  height: 1.5em;
+  line-height: 1;
+  max-width: 5em;
+  min-width: 1.5em;
+  overflow: hidden;
+  padding: 0.25em;
+  right: 0;
+  text-overflow: ellipsis;
+  top: 0;
+  -webkit-transform: scale(0.25);
+          transform: scale(0.25);
+  -webkit-transform-origin: top right;
+          transform-origin: top right;
+}
+
+.fa-layers-bottom-right {
+  bottom: 0;
+  right: 0;
+  top: auto;
+  -webkit-transform: scale(0.25);
+          transform: scale(0.25);
+  -webkit-transform-origin: bottom right;
+          transform-origin: bottom right;
+}
+
+.fa-layers-bottom-left {
+  bottom: 0;
+  left: 0;
+  right: auto;
+  top: auto;
+  -webkit-transform: scale(0.25);
+          transform: scale(0.25);
+  -webkit-transform-origin: bottom left;
+          transform-origin: bottom left;
+}
+
+.fa-layers-top-right {
+  right: 0;
+  top: 0;
+  -webkit-transform: scale(0.25);
+          transform: scale(0.25);
+  -webkit-transform-origin: top right;
+          transform-origin: top right;
+}
+
+.fa-layers-top-left {
+  left: 0;
+  right: auto;
+  top: 0;
+  -webkit-transform: scale(0.25);
+          transform: scale(0.25);
+  -webkit-transform-origin: top left;
+          transform-origin: top left;
+}
+
+.fa-lg {
+  font-size: 1.3333333333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.fa-xs {
+  font-size: 0.75em;
+}
+
+.fa-sm {
+  font-size: 0.875em;
+}
+
+.fa-1x {
+  font-size: 1em;
+}
+
+.fa-2x {
+  font-size: 2em;
+}
+
+.fa-3x {
+  font-size: 3em;
+}
+
+.fa-4x {
+  font-size: 4em;
+}
+
+.fa-5x {
+  font-size: 5em;
+}
+
+.fa-6x {
+  font-size: 6em;
+}
+
+.fa-7x {
+  font-size: 7em;
+}
+
+.fa-8x {
+  font-size: 8em;
+}
+
+.fa-9x {
+  font-size: 9em;
+}
+
+.fa-10x {
+  font-size: 10em;
+}
+
+.fa-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.fa-ul {
+  list-style-type: none;
+  margin-left: 2.5em;
+  padding-left: 0;
+}
+.fa-ul > li {
+  position: relative;
+}
+
+.fa-li {
+  left: -2em;
+  position: absolute;
+  text-align: center;
+  width: 2em;
+  line-height: inherit;
+}
+
+.fa-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.fa-pull-left {
+  float: left;
+}
+
+.fa-pull-right {
+  float: right;
+}
+
+.fa.fa-pull-left,
+.fas.fa-pull-left,
+.far.fa-pull-left,
+.fal.fa-pull-left,
+.fab.fa-pull-left {
+  margin-right: 0.3em;
+}
+.fa.fa-pull-right,
+.fas.fa-pull-right,
+.far.fa-pull-right,
+.fal.fa-pull-right,
+.fab.fa-pull-right {
+  margin-left: 0.3em;
+}
+
+.fa-spin {
+  -webkit-animation: fa-spin 2s infinite linear;
+          animation: fa-spin 2s infinite linear;
+}
+
+.fa-pulse {
+  -webkit-animation: fa-spin 1s infinite steps(8);
+          animation: fa-spin 1s infinite steps(8);
+}
+
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+.fa-rotate-90 {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+
+.fa-rotate-180 {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+.fa-rotate-270 {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
+  -webkit-transform: rotate(270deg);
+          transform: rotate(270deg);
+}
+
+.fa-flip-horizontal {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+  -webkit-transform: scale(-1, 1);
+          transform: scale(-1, 1);
+}
+
+.fa-flip-vertical {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
+  -webkit-transform: scale(1, -1);
+          transform: scale(1, -1);
+}
+
+.fa-flip-both, .fa-flip-horizontal.fa-flip-vertical {
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
+  -webkit-transform: scale(-1, -1);
+          transform: scale(-1, -1);
+}
+
+:root .fa-rotate-90,
+:root .fa-rotate-180,
+:root .fa-rotate-270,
+:root .fa-flip-horizontal,
+:root .fa-flip-vertical,
+:root .fa-flip-both {
+  -webkit-filter: none;
+          filter: none;
+}
+
+.fa-stack {
+  display: inline-block;
+  height: 2em;
+  position: relative;
+  width: 2.5em;
+}
+
+.fa-stack-1x,
+.fa-stack-2x {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.svg-inline--fa.fa-stack-1x {
+  height: 1em;
+  width: 1.25em;
+}
+.svg-inline--fa.fa-stack-2x {
+  height: 2em;
+  width: 2.5em;
+}
+
+.fa-inverse {
+  color: #0f172a;
+}
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.sr-only-focusable:active, .sr-only-focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+.svg-inline--fa .fa-primary {
+  fill: var(--fa-primary-color, currentColor);
+  opacity: 1;
+  opacity: var(--fa-primary-opacity, 1);
+}
+
+.svg-inline--fa .fa-secondary {
+  fill: var(--fa-secondary-color, currentColor);
+  opacity: 0.4;
+  opacity: var(--fa-secondary-opacity, 0.4);
+}
+
+.svg-inline--fa.fa-swap-opacity .fa-primary {
+  opacity: 0.4;
+  opacity: var(--fa-secondary-opacity, 0.4);
+}
+
+.svg-inline--fa.fa-swap-opacity .fa-secondary {
+  opacity: 1;
+  opacity: var(--fa-primary-opacity, 1);
+}
+
+.svg-inline--fa mask .fa-primary,
+.svg-inline--fa mask .fa-secondary {
+  fill: black;
+}
+
+.fad.fa-inverse {
+  color: #0f172a;
+}
+    </style>
+    <style type="text/css">
+        svg:not(:root).svg-inline--fa{overflow:visible}.svg-inline--fa{display:inline-block;font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em}.svg-inline--fa.fa-lg{vertical-align:-.225em}.svg-inline--fa.fa-w-1{width:.0625em}.svg-inline--fa.fa-w-2{width:.125em}.svg-inline--fa.fa-w-3{width:.1875em}.svg-inline--fa.fa-w-4{width:.25em}.svg-inline--fa.fa-w-5{width:.3125em}.svg-inline--fa.fa-w-6{width:.375em}.svg-inline--fa.fa-w-7{width:.4375em}.svg-inline--fa.fa-w-8{width:.5em}.svg-inline--fa.fa-w-9{width:.5625em}.svg-inline--fa.fa-w-10{width:.625em}.svg-inline--fa.fa-w-11{width:.6875em}.svg-inline--fa.fa-w-12{width:.75em}.svg-inline--fa.fa-w-13{width:.8125em}.svg-inline--fa.fa-w-14{width:.875em}.svg-inline--fa.fa-w-15{width:.9375em}.svg-inline--fa.fa-w-16{width:1em}.svg-inline--fa.fa-w-17{width:1.0625em}.svg-inline--fa.fa-w-18{width:1.125em}.svg-inline--fa.fa-w-19{width:1.1875em}.svg-inline--fa.fa-w-20{width:1.25em}.svg-inline--fa.fa-pull-left{margin-right:.3em;width:auto}.svg-inline--fa.fa-pull-right{margin-left:.3em;width:auto}.svg-inline--fa.fa-border{height:1.5em}.svg-inline--fa.fa-li{width:2em}.svg-inline--fa.fa-fw{width:1.25em}.fa-layers svg.svg-inline--fa{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.fa-layers{display:inline-block;height:1em;position:relative;text-align:center;vertical-align:-.125em;width:1em}.fa-layers svg.svg-inline--fa{-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter,.fa-layers-text{display:inline-block;position:absolute;text-align:center}.fa-layers-text{left:50%;top:50%;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);-webkit-transform-origin:center center;transform-origin:center center}.fa-layers-counter{background-color:#ff253a;border-radius:1em;-webkit-box-sizing:border-box;box-sizing:border-box;color:#fff;height:1.5em;line-height:1;max-width:5em;min-width:1.5em;overflow:hidden;padding:.25em;right:0;text-overflow:ellipsis;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-bottom-right{bottom:0;right:0;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom right;transform-origin:bottom right}.fa-layers-bottom-left{bottom:0;left:0;right:auto;top:auto;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:bottom left;transform-origin:bottom left}.fa-layers-top-right{right:0;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top right;transform-origin:top right}.fa-layers-top-left{left:0;right:auto;top:0;-webkit-transform:scale(.25);transform:scale(.25);-webkit-transform-origin:top left;transform-origin:top left}.fa-lg{font-size:1.3333333333em;line-height:.75em;vertical-align:-.0667em}.fa-xs{font-size:.75em}.fa-sm{font-size:.875em}.fa-1x{font-size:1em}.fa-2x{font-size:2em}.fa-3x{font-size:3em}.fa-4x{font-size:4em}.fa-5x{font-size:5em}.fa-6x{font-size:6em}.fa-7x{font-size:7em}.fa-8x{font-size:8em}.fa-9x{font-size:9em}.fa-10x{font-size:10em}.fa-fw{text-align:center;width:1.25em}.fa-ul{list-style-type:none;margin-left:2.5em;padding-left:0}.fa-ul>li{position:relative}.fa-li{left:-2em;position:absolute;text-align:center;width:2em;line-height:inherit}.fa-border{border:solid .08em #eee;border-radius:.1em;padding:.2em .25em .15em}.fa-pull-left{float:left}.fa-pull-right{float:right}.fa.fa-pull-left,.fab.fa-pull-left,.fal.fa-pull-left,.far.fa-pull-left,.fas.fa-pull-left{margin-right:.3em}.fa.fa-pull-right,.fab.fa-pull-right,.fal.fa-pull-right,.far.fa-pull-right,.fas.fa-pull-right{margin-left:.3em}.fa-spin{-webkit-animation:fa-spin 2s infinite linear;animation:fa-spin 2s infinite linear}.fa-pulse{-webkit-animation:fa-spin 1s infinite steps(8);animation:fa-spin 1s infinite steps(8)}@-webkit-keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes fa-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.fa-rotate-90{-webkit-transform:rotate(90deg);transform:rotate(90deg)}.fa-rotate-180{-webkit-transform:rotate(180deg);transform:rotate(180deg)}.fa-rotate-270{-webkit-transform:rotate(270deg);transform:rotate(270deg)}.fa-flip-horizontal{-webkit-transform:scale(-1,1);transform:scale(-1,1)}.fa-flip-vertical{-webkit-transform:scale(1,-1);transform:scale(1,-1)}.fa-flip-both,.fa-flip-horizontal.fa-flip-vertical{-webkit-transform:scale(-1,-1);transform:scale(-1,-1)}:root .fa-flip-both,:root .fa-flip-horizontal,:root .fa-flip-vertical,:root .fa-rotate-180,:root .fa-rotate-270,:root .fa-rotate-90{-webkit-filter:none;filter:none}.fa-stack{display:inline-block;height:2em;position:relative;width:2.5em}.fa-stack-1x,.fa-stack-2x{bottom:0;left:0;margin:auto;position:absolute;right:0;top:0}.svg-inline--fa.fa-stack-1x{height:1em;width:1.25em}.svg-inline--fa.fa-stack-2x{height:2em;width:2.5em}.fa-inverse{color:#fff}.sr-only{border:0;clip:rect(0,0,0,0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.sr-only-focusable:active,.sr-only-focusable:focus{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto}
+    </style>
+    <link rel="icon" href="/images/favicon_default.ico">
+    <title>Wallets | Svex</title>
+        <link href="/static/css/one.css" rel="prefetch">
+    <link href="/static/css/two.css" rel="prefetch">
+    <link href="/static/css/three.css" rel="prefetch">
+    <link href="/static/css/dark-mode-toggle.css" rel="prefetch">
+    <link href="/static/css/4.css" rel="prefetch">
+    <link href="/static/css/5.css" rel="prefetch">
+    <link href="/static/css/layout/6.css" rel="prefetch">
+    <link href="/static/css/footer/1.css" rel="prefetch">
+    <link href="/static/css/layout/3.css" rel="prefetch">
+    <link href="/static/css/layout/7.css" rel="prefetch">
+    <link href="/static/css/layout/15.css" rel="prefetch">
+    <link href="/static/css/layout/14.css" rel="prefetch">
+    <link href="/static/css/layout/13.css" rel="prefetch">
+    <link href="/static/css/layout/12.css" rel="prefetch">
+    <link href="/static/css/layout/1.css" rel="prefetch">
+    <link href="/static/css/dashboard-settings/2.css" rel="prefetch">
+    <link href="/static/css/layout/11.css" rel="prefetch">
+    <link href="/static/css/layout/2.css" rel="prefetch">
+    <link href="/static/css/layout/8.css" rel="prefetch">
+    <link href="/static/css/layout/5.css" rel="prefetch">
+    <link href="/static/css/dashboard-settings/1.css" rel="prefetch">
+    <link href="/static/css/layout/10.css" rel="prefetch">
+    <link href="/static/css/layout/9.css" rel="prefetch">
+    <link href="/static/css/layout/4.css" rel="prefetch">
+    <link href="/static/css/app/1.css" rel="preload" as="style">
+    <link href="/static/css/vendors/2.css" rel="preload" as="style">
+    <link href="/static/css/vendors/1.css" rel="stylesheet">
+    <link href="/static/css/app.css" rel="stylesheet">
+    <style type="text/css">
+        .vue-notification-group{display:block;position:fixed;z-index:5000}.vue-notification-wrapper{display:block;overflow:hidden;width:100%;margin:0;padding:0}.notification-title{font-weight:600}.vue-notification-template{background:#fff}.vue-notification,.vue-notification-template{display:block;box-sizing:border-box;text-align:left}.vue-notification{font-size:12px;padding:10px;margin:0 5px 5px;color:#fff;background:#44a4fc;border-left:5px solid #187fe7}.vue-notification.warn{background:#ffb648;border-left-color:#f48a06}.vue-notification.error{background:#e54d42;border-left-color:#b82e24}.vue-notification.success{background:#68cd86;border-left-color:#42a85f}.vn-fade-enter-active,.vn-fade-leave-active,.vn-fade-move{transition:all .5s}.vn-fade-enter,.vn-fade-leave-to{opacity:0}
+    </style>
+    <style type="text/css">
+        .vue-modal-top,
+        .vue-modal-bottom,
+        .vue-modal-left,
+        .vue-modal-right,
+        .vue-modal-topRight,
+        .vue-modal-topLeft,
+        .vue-modal-bottomLeft,
+        .vue-modal-bottomRight {
+          display: block;
+          overflow: hidden;
+          position: absolute;
+          background: transparent;
+          z-index: 9999999;
+        }
+        .vue-modal-topRight,
+        .vue-modal-topLeft,
+        .vue-modal-bottomLeft,
+        .vue-modal-bottomRight {
+          width: 12px;
+          height: 12px;
+        }
+        .vue-modal-top {
+          right: 12;
+          top: 0;
+          width: 100%;
+          height: 12px;
+          cursor: n-resize;
+        }
+        .vue-modal-bottom {
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 12px;
+          cursor: s-resize;
+        }
+        .vue-modal-left {
+          left: 0;
+          top: 0;
+          width: 12px;
+          height: 100%;
+          cursor: w-resize;
+        }
+        .vue-modal-right {
+          right: 0;
+          top: 0;
+          width: 12px;
+          height: 100%;
+          cursor: e-resize;
+        }
+        .vue-modal-topRight {
+          right: 0;
+          top: 0;
+          background: transparent;
+          cursor: ne-resize;
+        }
+        .vue-modal-topLeft {
+          left: 0;
+          top: 0;
+          cursor: nw-resize;
+        }
+        .vue-modal-bottomLeft {
+          left: 0;
+          bottom: 0;
+          cursor: sw-resize;
+        }
+        .vue-modal-bottomRight {
+          right: 0;
+          bottom: 0;
+          cursor: se-resize;
+        }
+        #vue-modal-triangle::after {
+          display: block;
+          position: absolute;
+          content: '';
+          background: transparent;
+          left: 0;
+          top: 0;
+          width: 0;
+          height: 0;
+          border-bottom: 10px solid #ddd;
+          border-left: 10px solid transparent;
+        }
+        #vue-modal-triangle.clicked::after {
+          border-bottom: 10px solid #369be9;
+        }
+
+    </style>
+    <style type="text/css">
+        .vm--block-scroll {
+          overflow: hidden;
+          width: 100vw;
+        }
+        .vm--container {
+          position: fixed;
+          box-sizing: border-box;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100vh;
+          z-index: 999;
+        }
+        .vm--overlay {
+          position: fixed;
+          box-sizing: border-box;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.2);
+          /* z-index: 999; */
+          opacity: 1;
+        }
+        .vm--container.scrollable {
+          height: 100%;
+          min-height: 100vh;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .vm--modal {
+          position: relative;
+          overflow: hidden;
+          box-sizing: border-box;
+
+          background-color: #ffffff;
+          border-radius: 3px;
+          box-shadow: 0 20px 60px -2px rgba(27, 33, 58, 0.4);
+        }
+        .vm--container.scrollable .vm--modal {
+          margin-bottom: 2px;
+        }
+        .vm--top-right-slot {
+          display: block;
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
+        .vm-transition--overlay-enter-active,
+        .vm-transition--overlay-leave-active {
+          transition: all 50ms;
+        }
+        .vm-transition--overlay-enter,
+        .vm-transition--overlay-leave-active {
+          opacity: 0;
+        }
+        .vm-transition--modal-enter-active,
+        .vm-transition--modal-leave-active {
+          transition: all 400ms;
+        }
+        .vm-transition--modal-enter,
+        .vm-transition--modal-leave-active {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        .vm-transition--default-enter-active,
+        .vm-transition--default-leave-active {
+          transition: all 2ms;
+        }
+        .vm-transition--default-enter,
+        .vm-transition--default-leave-active {
+          opacity: 0;
+        }
+
+            </style>
+    <style type="text/css">
+        .vue-dialog {
+          font-size: 14px;
+        }
+        .vue-dialog div {
+          box-sizing: border-box;
+        }
+        .vue-dialog-content {
+          flex: 1 0 auto;
+          width: 100%;
+          padding: 14px;
+        }
+        .vue-dialog-content-title {
+          font-weight: 600;
+          padding-bottom: 14px;
+        }
+        .vue-dialog-buttons {
+          display: flex;
+          flex: 0 1 auto;
+          width: 100%;
+          border-top: 1px solid #eee;
+        }
+        .vue-dialog-buttons-none {
+          width: 100%;
+          padding-bottom: 14px;
+        }
+        .vue-dialog-button {
+          font-size: inherit;
+          background: transparent;
+          padding: 0;
+          margin: 0;
+          border: 0;
+          cursor: pointer;
+          box-sizing: border-box;
+          line-height: 40px;
+          height: 40px;
+          color: inherit;
+          font: inherit;
+          outline: none;
+        }
+        .vue-dialog-button:hover {
+          background: #f9f9f9;
+        }
+        .vue-dialog-button:active {
+          background: #f3f3f3;
+        }
+        .vue-dialog-button:not(:first-of-type) {
+          border-left: 1px solid #eee;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard-2.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard-1.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard-3.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/dashboard-4.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/wallets/1.css">
+</head>
+<body>
+<div id="app" class="">
+    <div>
+        <div><!---->
+            <div data-v-3660d761="" class="dashboard" style="display: flex;">
+                <div data-v-5c31f4e0="" data-v-3660d761="">
+                    <div data-v-5c31f4e0="" class="desktop-container">
+                      <article data-v-5c31f4e0="">
+                        <img data-v-5c31f4e0="" src="/images/favicon_default.ico" alt="">
+                          <a data-v-5c31f4e0="" href="{% url 'home' %}" class="logo-name router-link-active">{{ website.name }}</a>
+                      </article>
+                        <div data-v-6d8feed9="" data-v-5c31f4e0="" class="">
+                            <div data-v-6d8feed9="" class="desktop-menu child">
+                                <div data-v-6d8feed9="" class="back-btn"><a data-v-6d8feed9="" href="/dashboard"
+                                                                            class="router-link-active">
+                                    <svg data-v-6d8feed9="" width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path data-v-6d8feed9="" d="M12 5L7 10L12 15" stroke="#0A0F38"
+                                              stroke-width="1.2"></path>
+                                    </svg>
+                                    <span data-v-6d8feed9="">Back to Dashboard</span></a></div>
+                                <div data-v-6d8feed9=""
+                                     style="display: flex; flex-direction: column; height: 100%; overflow-y: auto; padding: 15px 16px 20px;">
+                                    <div data-v-6d8feed9="">
+                                        <a data-v-e4400ee6="" data-v-6d8feed9="" href="/dashboard/wallets" class="" id="walletLink">
+                                        <svg data-v-e4400ee6="">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M18.183 4.581H16.22C16.034 3.127 14.789 2 13.286 2H10.704C9.201 2 7.956 3.126 7.77 4.58L5.817 4.581C3.712 4.581 2 6.289 2 8.388V11.855C2 12.107 2.126 12.342 2.337 12.481C4.396 13.84 6.833 14.745 9.384 15.1C9.763 15.156 10.111 14.919 10.211 14.555C10.434 13.744 11.149 13.199 11.99 13.199C12.822 13.199 13.544 13.756 13.746 14.551C13.831 14.887 14.134 15.117 14.472 15.117C14.507 15.117 14.541 15.115 14.576 15.11C17.144 14.755 19.592 13.845 21.654 12.481C21.864 12.341 21.99 12.107 21.99 11.855V8.388C21.99 6.289 20.282 4.581 18.183 4.581ZM20.49 11.445C18.847 12.466 16.953 13.181 14.959 13.532C14.411 12.425 13.271 11.699 11.99 11.699C10.719 11.699 9.574 12.423 9.011 13.523C7.029 13.174 5.141 12.463 3.5 11.445V8.388C3.5 7.116 4.539 6.081 5.818 6.081L8.496 6.079C8.696 6.079 8.886 6 9.027 5.859C9.167 5.717 9.246 5.527 9.246 5.328L9.245 4.958C9.245 4.154 9.9 3.5 10.704 3.5H13.286C13.959 3.5 14.528 3.959 14.695 4.581H11.995C11.581 4.581 11.245 4.917 11.245 5.331C11.245 5.745 11.581 6.081 11.995 6.081H18.183C19.455 6.081 20.49 7.116 20.49 8.388V11.445ZM12.7448 15.3834V16.6774C12.7448 17.0914 12.4088 17.4274 11.9948 17.4274C11.5808 17.4274 11.2448 17.0914 11.2448 16.6774V15.3834C11.2448 14.9694 11.5808 14.6334 11.9948 14.6334C12.4088 14.6334 12.7448 14.9694 12.7448 15.3834ZM21.215 14.7253C20.822 14.7253 20.509 15.0313 20.479 15.4153C20.479 15.4153 20.325 17.1643 20.293 17.7163C20.256 18.3273 20.008 18.9923 19.661 19.4093C19.172 19.9993 18.63 20.2303 17.728 20.2323C17.136 20.2333 13.943 20.2343 11.531 20.2343C11.116 20.2343 10.78 20.5703 10.78 20.9843C10.78 21.3983 11.116 21.7343 11.53 21.7343C13.858 21.7343 17.172 21.7333 17.731 21.7323C19.065 21.7293 20.046 21.2953 20.816 20.3673C21.369 19.7013 21.733 18.7443 21.79 17.8063C21.8127 17.4205 21.8902 16.4197 21.9334 15.8623C21.9511 15.6337 21.963 15.4797 21.963 15.4733C21.963 15.0603 21.628 14.7253 21.215 14.7253ZM6.2622 20.2321C6.4582 20.2331 6.8642 20.2331 7.3972 20.2331C7.8112 20.2331 8.1502 20.5691 8.1502 20.9831C8.1502 21.3971 7.8102 21.7331 7.3952 21.7331C6.8552 21.7331 6.4612 21.7331 6.2602 21.7321C4.9252 21.7291 3.9442 21.2951 3.1742 20.3661C2.6222 19.7011 2.2572 18.7441 2.2012 17.8061C2.17814 17.4259 2.10233 16.4484 2.05876 15.8866C2.03999 15.6446 2.0272 15.4797 2.0272 15.4731C2.0272 15.0601 2.3622 14.7251 2.7752 14.7251C3.1682 14.7251 3.4802 15.0311 3.5112 15.4161C3.5112 15.4161 3.6652 17.1651 3.6982 17.7161C3.7352 18.3271 3.9822 18.9921 4.3292 19.4081C4.8192 20.0001 5.3612 20.2301 6.2622 20.2321Z"
+                                                      fill="#808191"></path>
+                                            </svg>
+                                        </svg>
+                                        <span data-v-e4400ee6="">My wallets</span></a>
+                                        <a data-v-e4400ee6=""
+                                           data-v-6d8feed9=""
+                                           id="depositLink"
+                                           href="/dashboard/wallets/deposit"
+                                           class="router-link-exact-active"
+                                           aria-current="page">
+                                        <svg data-v-e4400ee6="">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M9.012 21.232C9.012 21.654 8.669 21.997 8.247 21.997C4.392 22 2 19.608 2 15.756V8.253C2 4.392 4.392 2 8.244 2H15.744C19.607 2 22 4.392 22 8.253V15.753C22 19.59 19.607 22 15.747 22H13.178C12.761 22 12.422 21.661 12.422 21.244V21.235H12.439C12.439 20.813 12.781 20.471 13.203 20.47H13.205H15.747C18.8 20.47 20.47 18.8 20.47 15.756V8.256C20.47 5.21 18.79 3.53 15.747 3.53H8.247C5.213 3.53 3.533 5.21 3.533 8.253V15.753C3.533 18.796 5.213 20.467 8.247 20.467C8.669 20.467 9.012 20.81 9.012 21.232ZM12.7499 16.0859L12.7499 9.7299L15.2169 12.2069C15.5089 12.5009 15.9829 12.5019 16.2769 12.2089C16.5719 11.9169 16.5699 11.4419 16.2789 11.1489L12.5309 7.3849C12.5309 7.3839 12.5309 7.3839 12.5299 7.3839C12.4619 7.3149 12.3789 7.2599 12.2869 7.2219C12.1959 7.1839 12.0989 7.1639 12.0009 7.1639H11.9999C11.9929 7.1639 11.9871 7.16563 11.9812 7.16739C11.9761 7.16891 11.9709 7.17044 11.9649 7.1709C11.8799 7.1749 11.7949 7.1889 11.7139 7.2219C11.6319 7.2559 11.5599 7.3069 11.4939 7.3659C11.4907 7.36914 11.487 7.37131 11.4833 7.37349C11.479 7.37603 11.4747 7.3786 11.4709 7.3829C11.4009 7.4519 11.3459 7.5349 11.3079 7.6259C11.2699 7.7189 11.2499 7.8149 11.2499 7.9139L11.2499 16.0859C11.2499 16.4999 11.5859 16.8359 11.9999 16.8359C12.4139 16.8359 12.7499 16.4999 12.7499 16.0859ZM8.9989 9.8642L7.7209 11.1482C7.5749 11.2952 7.5019 11.4862 7.5019 11.6772C7.5019 11.8702 7.5749 12.0622 7.7229 12.2102C8.0169 12.5022 8.4909 12.5012 8.7829 12.2072L10.0609 10.9232C10.3529 10.6292 10.3529 10.1552 10.0599 9.8622C9.7659 9.5702 9.2909 9.5712 8.9989 9.8642Z"
+                                                      fill="#808191"></path>
+                                            </svg>
+                                        </svg>
+                                        <span data-v-e4400ee6="">Deposit</span></a>
+                                        <a data-v-e4400ee6=""
+                                           data-v-6d8feed9=""
+                                           id="withdrawLink"
+                                           href="/dashboard/wallets/withdraw"
+                                           class="">
+                                        <svg data-v-e4400ee6="">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M14.988 2.76791C14.988 2.34591 15.331 2.00291 15.753 2.00291C19.608 1.99991 22 4.39191 22 8.24391V15.7469C22 19.6079 19.608 21.9999 15.756 21.9999H8.256C4.393 21.9999 2 19.6079 2 15.7469V8.24691C2 4.40991 4.393 1.99991 8.253 1.99991H10.822C11.239 1.99991 11.578 2.33891 11.578 2.75591V2.76491H11.561C11.561 3.18691 11.219 3.52891 10.797 3.52991H10.795H8.253C5.2 3.52991 3.53 5.19991 3.53 8.24391V15.7439C3.53 18.7899 5.21 20.4699 8.253 20.4699H15.753C18.787 20.4699 20.467 18.7899 20.467 15.7469V8.24691C20.467 5.20391 18.787 3.53291 15.753 3.53291C15.331 3.53291 14.988 3.18991 14.988 2.76791ZM11.2501 7.91401V14.27L8.7831 11.793C8.4911 11.499 8.0171 11.498 7.7231 11.791C7.4281 12.083 7.4301 12.558 7.7211 12.851L11.4691 16.615C11.4691 16.616 11.4691 16.616 11.4701 16.616C11.5381 16.685 11.6211 16.74 11.7131 16.778C11.8041 16.816 11.9011 16.836 11.9991 16.836H12.0001C12.0071 16.836 12.0129 16.8343 12.0188 16.8325C12.0239 16.831 12.0291 16.8295 12.0351 16.829C12.1201 16.825 12.2051 16.811 12.2861 16.778C12.3681 16.744 12.4401 16.693 12.5061 16.634C12.5093 16.6308 12.513 16.6286 12.5167 16.6264C12.521 16.6239 12.5253 16.6213 12.5291 16.617C12.5991 16.548 12.6541 16.465 12.6921 16.374C12.7301 16.281 12.7501 16.185 12.7501 16.086V7.91401C12.7501 7.50001 12.4141 7.16401 12.0001 7.16401C11.5861 7.16401 11.2501 7.50001 11.2501 7.91401ZM15.0011 14.1357L16.2791 12.8517C16.4251 12.7047 16.4981 12.5137 16.4981 12.3227C16.4981 12.1297 16.4251 11.9377 16.2771 11.7897C15.9831 11.4977 15.5091 11.4987 15.2171 11.7927L13.9391 13.0767C13.6471 13.3707 13.6471 13.8447 13.9401 14.1377C14.2341 14.4297 14.7091 14.4287 15.0011 14.1357Z"
+                                                      fill="#808191"></path>
+                                            </svg>
+                                        </svg>
+                                        <span data-v-e4400ee6="">Withdraw</span></a>
+                                    </div>
+                                    <div data-v-6d8feed9="" class="end-container" style="margin-top: auto;">
+                                        <a data-v-6d8feed9="" class="logout" href="/logout/">
+                                        <svg data-v-6d8feed9="" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path data-v-6d8feed9="" fill-rule="evenodd" clip-rule="evenodd"
+                                                  d="M3.50004 13.9489C3.50004 14.3527 3.16404 14.6804 2.75012 14.6804C2.3362 14.6804 2.00019 14.3527 2.00019 13.9489V6.71437C2.00019 4.39058 3.93831 2.5 6.32151 2.5H11.0675C13.4555 2.5 15.3985 4.39533 15.3985 6.72482V7.6093C15.3985 8.01212 15.0625 8.33988 14.6486 8.33988C14.2347 8.33988 13.8987 8.01212 13.8987 7.6093V6.72482C13.8987 5.20096 12.6287 3.96306 11.0675 3.96306H6.32151C4.76517 3.96306 3.50004 5.19811 3.50004 6.71437V13.9489ZM13.8985 16.3916C13.8985 15.9879 14.2345 15.6601 14.6484 15.6601C15.0623 15.6601 15.3983 15.9879 15.3983 16.3916V17.2856C15.3983 19.6094 13.4602 21.5 11.077 21.5H6.33008C3.94298 21.5 2 19.6047 2 17.2752C2 16.8714 2.336 16.5446 2.74992 16.5446C3.16384 16.5446 3.49985 16.8714 3.49985 17.2752C3.49985 18.799 4.76985 20.0369 6.33008 20.0369H11.077C12.6333 20.0369 13.8985 18.8028 13.8985 17.2856V16.3916ZM21.9433 11.7209C21.8274 11.4463 21.5537 11.2677 21.2499 11.2677H9.5491C9.13518 11.2677 8.7982 11.5964 8.7982 12.0002C8.7982 12.404 9.13518 12.7317 9.5491 12.7317H19.4345L17.8752 14.2461C17.5811 14.5311 17.5811 14.9938 17.8732 15.2807C18.0193 15.4241 18.2122 15.4963 18.404 15.4963C18.5959 15.4963 18.7868 15.4241 18.9339 15.2826L21.7797 12.5189C21.9939 12.3099 22.0592 11.9945 21.9433 11.7209ZM19.1218 10.6607C18.9309 10.6607 18.74 10.5895 18.594 10.4489L17.8762 9.7563C17.582 9.47223 17.5801 9.00862 17.8713 8.72265C18.1635 8.43384 18.6368 8.43194 18.9319 8.71695L19.6487 9.40858C19.9438 9.69359 19.9458 10.1563 19.6546 10.4432C19.5075 10.5876 19.3147 10.6607 19.1218 10.6607Z"
+                                                  fill="#808191"></path>
+                                        </svg>
+                                        Log out </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-v-3660d761="" class="content">
+                    <nav data-v-01e7ec6a="" data-v-3660d761="" class="Navbar light">
+                        <article data-v-01e7ec6a="" style="display: none;"><img data-v-01e7ec6a=""
+                                                                                src="/images/favicon_default.ico" alt=""
+                                                                                style="margin-right: 10px;"><a
+                                data-v-01e7ec6a="" href="/" class="logo-name router-link-active light">{{ website.name }}</a>
+                        </article>
+                        <div data-v-01e7ec6a="" class="desktop">
+                            <ul data-v-01e7ec6a="" style="margin-left: auto;">
+                                <li data-v-01e7ec6a=""><a data-v-01e7ec6a="" href="/dashboard" class=""> Dashboard
+                                    <span data-v-01e7ec6a="" class="badge badge-warning"
+                                          style="display: none;">Soon</span></a></li>
+                                <li data-v-01e7ec6a=""><a data-v-01e7ec6a="" href="/exchange" class="">
+                                    Trade <span data-v-01e7ec6a="" class="badge badge-warning"
+                                                   style="display: none;">Soon</span></a></li>
+                                <li data-v-01e7ec6a=""><a data-v-01e7ec6a="" href="/buy-crypto" class=""> Buy Crypto
+                                    <span data-v-01e7ec6a="" class="badge badge-warning"
+                                          style="display: none;">Soon</span></a></li>
+                                <li data-v-01e7ec6a=""><a data-v-01e7ec6a="" href="/markets" class=""> Markets <span
+                                        data-v-01e7ec6a="" class="badge badge-warning"
+                                        style="display: none;">Soon</span></a></li>
+                                <li data-v-01e7ec6a=""><a data-v-01e7ec6a="" href="/faq" class=""> F.A.Q. <span
+                                        data-v-01e7ec6a="" class="badge badge-warning"
+                                        style="display: none;">Soon</span></a></li>
+                            </ul>
+                            <div data-v-01e7ec6a="" style="margin-left: auto;">
+                                <div data-v-62f6121f="" data-v-01e7ec6a="" class="user-menu-desktop light">
+                                    <div data-v-62f6121f="" class="header">
+                                        <a data-v-62f6121f="" href="/dashboard" class="display-link router-link-active">{{user_email}} </a>
+                                        <svg data-v-62f6121f="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                             data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 448 512"
+                                             class="select-arrow svg-inline--fa fa-chevron-down fa-w-14 fa-xs"
+                                             style="margin-left: 5px;">
+                                            <path data-v-62f6121f="" fill="currentColor"
+                                                  d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
+                                                  class=""></path>
+                                        </svg>
+
+                                    </div>
+                                    <div data-v-62f6121f="" class="body" style="display: none;" id="body-user-info">
+                                        <div data-v-62f6121f="" class="asset-block">
+                                            <p data-v-62f6121f="" class="estimated-label"><span data-v-62f6121f="">Estimated Asset Value</span>
+                                                <svg data-v-62f6121f="" aria-hidden="true" focusable="false"
+                                                     data-prefix="fas" data-icon="eye" role="img"
+                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
+                                                     class="svg-inline--fa fa-eye fa-w-18"
+                                                     style="margin-left: 10px; cursor: pointer;">
+                                                    <path data-v-62f6121f="" fill="currentColor"
+                                                          d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z"
+                                                          class=""></path>
+                                                </svg>
+                                            </p>
+                                            <div data-v-62f6121f="" class="estimated-value">
+                                                <em data-v-62f6121f="">{{wallet.btc_balance}} BTC</em><b data-v-62f6121f="">USD&nbsp;{{wallet.spotbtc_balance}}</b></div>
+                                            <div data-v-62f6121f="" class="balance-link-box">
+                                                <a data-v-62f6121f="" href="/dashboard/wallets/deposit" class="">
+                                                    <img data-v-62f6121f="" src="/static/images/home-page/deposit.svg"> Deposit </a>
+                                                <a data-v-62f6121f="" href="/dashboard/wallets/withdraw" class="">
+                                                    <img data-v-62f6121f="" src="/static/images/home-page/withdraw.svg"> Withdraw </a>
+                                            </div>
+                                        </div>
+                                        <div data-v-62f6121f="" class="navigation-block">
+                                            <div data-v-62f6121f="" class="navigation-list">
+                                                <a data-v-62f6121f="" href="/dashboard" aria-current="page" class="router-link-exact-active router-link-active">Account </a>
+                                                <a data-v-62f6121f="" href="/dashboard/wallets" class="">Assets </a>
+                                                <a data-v-62f6121f="" href="/dashboard/history" class="">Funds History </a>
+                                                <a data-v-62f6121f="" href="/dashboard/orders" class=""> Trade History </a>
+                                            </div>
+                                            <div data-v-62f6121f="" class="referral-button">
+                                                <button data-v-62f6121f="" class=""> Earn 70% Commission</button>
+                                            </div>
+                                             <div data-v-62f6121f="" class="logout-button">
+                                                <a href="/logout/">
+                                                <span data-v-62f6121f=""> Sign out </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </nav><!---->
+<!--                    HERE-->
+                    {% block content %}
+
+                    {% endblock %}
+<!--                    HERE-->
+                    <footer data-v-94690250="" data-v-3660d761="" class="dashboard">
+                        <div data-v-94690250="" class="container">
+                            <div data-v-94690250="" class="sections">
+                                <div data-v-94690250="" class="col-xs-12 col-lg-12 col-md-12"
+                                     style="margin-bottom: 40px;">
+                                    <div data-v-94690250="" class="section col-lg-4 col-md-4 col-xs-6"><p
+                                            data-v-94690250="">Company</p><a data-v-94690250="" href="/terms"
+                                                                             class=""> Terms of use <span
+                                            data-v-94690250="" class="badge badge-warning"
+                                            style="display: none;">Soon</span></a><a data-v-94690250=""
+                                                                                     href="/privacy" class="">
+                                        Privacy <span data-v-94690250="" class="badge badge-warning"
+                                                      style="display: none;">Soon</span></a></div>
+                                    <div data-v-94690250="" class="section col-lg-4 col-md-4 col-xs-6"><p
+                                            data-v-94690250="">Products</p><a data-v-94690250="" href="/exchange"
+                                                                              class=""> Trade <span
+                                            data-v-94690250="" class="badge badge-warning"
+                                            style="display: none;">Soon</span></a><a data-v-94690250=""
+                                                                                     href="/dashboard/staking"
+                                                                                     class="disableded disabled"> Staking <span
+                                            data-v-94690250="" class="badge badge-warning"
+                                            style="display: none;">Soon</span></a><a data-v-94690250=""
+                                                                                     href="/dashboard/wallets/deposit#"
+                                                                                     class="disableded disabled"> NFT
+                                        <span data-v-94690250="" class="badge badge-warning">Soon</span></a></div>
+                                    <div data-v-94690250="" class="section col-lg-4 col-md-4 col-xs-6">
+                                        <p data-v-94690250="">Information</p>
+                                        <a data-v-94690250="" href="/dashboard/referral" class="">
+                                        Referral <span data-v-94690250="" class="badge badge-warning"
+                                                       style="display: none;">Soon</span></a><a data-v-94690250=""
+                                                                                                href="/fees"
+                                                                                                class=""> Fees <span
+                                            data-v-94690250="" class="badge badge-warning"
+                                            style="display: none;">Soon</span></a><a data-v-94690250="" href="/faq"
+                                                                                     class=""> F.A.Q. <span
+                                            data-v-94690250="" class="badge badge-warning"
+                                            style="display: none;">Soon</span></a></div>
+                                </div>
+                            </div>
+                            <hr data-v-94690250="" size="1" color="#696969">
+                            <div data-v-94690250="" class="copyright"> Copyright 2017-2024 © {{ website.name }} All Rights
+                                Reserved
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+                <div data-v-3660d761="" class="vue-notification-group" style="width: 300px; top: 0px; right: 0px;">
+                    <span></span></div>
+            </div>
+        </div>
+    </div>
+    <div></div>
+    <noscript><img height="1" width="1" style="display: none;"></noscript>
+</div>
+<div id="modals-container"></div>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+$(document).ready(function() {
+  function isLinkActive(route) {
+    // Check if the current URL exactly matches the specified route
+    return window.location.pathname === route;
+  }
+
+  const walletLink = $('#walletLink');
+  const depositLink = $('#depositLink');
+  const withdrawLink = $('#withdrawLink');
+<!--  const transferLink = $('#transferLink');-->
+
+  if (isLinkActive('/dashboard/wallets')) {
+    walletLink.addClass('current');
+  }
+  if (isLinkActive('/dashboard/wallets/deposit')) {
+    depositLink.addClass('current');
+  }
+  if (isLinkActive('/dashboard/wallets/withdraw')) {
+    withdrawLink.addClass('current');
+  }
+<!--  if (isLinkActive('/dashboard/wallets/transfer')) {-->
+<!--    transferLink.addClass('current');-->
+<!--  }-->
+
+function handleHeaderHover() {
+  const bodyUserInfo = $('#body-user-info');
+  const originalStyles = {
+    display: bodyUserInfo.css('display'),
+  };
+
+  $('.user-menu-desktop').hover(
+    function() {
+      bodyUserInfo.css('display', 'block');
+    },
+    function() {
+      bodyUserInfo.css(originalStyles);
+    }
+  );
+}
+handleHeaderHover();
+});
+</script>
+
+{% include "SVEX_APP/mobile_nav.html" %}
+</body>
+</html>

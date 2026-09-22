@@ -1,0 +1,21 @@
+{% extends 'SVEX_APP/base_client.html' %}
+
+{% block content %}
+  <h2>KYC Status</h2>
+  {% if kyc %}
+    <p>Status: {{ kyc.get_verification_status_display }}</p>
+    
+    {% if kyc.verification_status == 'confirmed' %}
+      <p>Your KYC has been verified.</p>
+    {% elif kyc.verification_status == 'pending' %}
+      <p>Your KYC is pending verification. Please be patient while we review your information.</p>
+    {% else %}  
+      <p>Your KYC verification was {{ kyc.get_verification_status_display }}.</p> 
+      {% if kyc.verification_status == 'cancelled' %}
+        <p>Please <a href="{% url 'kyc_verification' %}">resubmit your KYC information</a>.</p>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <p>You have not yet submitted your KYC information. Please <a href="{% url 'kyc_verification' %}">complete the KYC verification process</a> to access all features.</p>
+  {% endif %}
+{% endblock %}

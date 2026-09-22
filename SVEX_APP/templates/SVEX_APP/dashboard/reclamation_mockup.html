@@ -1,0 +1,220 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Desktop warning */
+    @media (min-width: 768px) {
+        .revolut-mobile-only {
+            max-width: 414px;
+            margin: 40px auto;
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 8px solid #1e293b;
+            overflow: hidden;
+            height: 896px;
+            position: relative;
+        }
+    }
+    
+    .revolut-mobile-only {
+        background-color: #f8fafc;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    /* Header/Balance area matching existing project */
+    .revolut-header-bg {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: white;
+        padding: 40px 24px 80px 24px;
+        border-bottom-left-radius: 32px;
+        border-bottom-right-radius: 32px;
+        text-align: center;
+    }
+    
+    .revolut-balance-label { font-size: 14px; color: #94a3b8; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .revolut-balance { font-size: 48px; font-weight: 800; color: #ffffff; letter-spacing: -1px; margin-bottom: 24px; }
+    
+    /* Content Area */
+    .revolut-content-area {
+        padding: 0 24px;
+        margin-top: -40px;
+    }
+    
+    .bank-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 32px 24px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+    
+    /* Custom Big Buttons */
+    .big-primary-btn {
+        display: block;
+        width: 100%;
+        background-color: #3b82f6;
+        color: white;
+        padding: 18px;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+        margin-bottom: 16px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    
+    .big-secondary-btn {
+        display: block;
+        width: 100%;
+        background-color: #f1f5f9;
+        color: #64748b;
+        padding: 16px;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* Modal Styling */
+    .slide-modal {
+        position: fixed;
+        bottom: -100%;
+        left: 0;
+        width: 100%;
+        height: 85%;
+        background: #ffffff;
+        border-top-left-radius: 32px;
+        border-top-right-radius: 32px;
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+        transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 100;
+        padding: 32px 24px;
+        box-sizing: border-box;
+    }
+    .slide-modal.active {
+        bottom: 0;
+    }
+    
+    /* Security OTP Styling */
+    .otp-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 24px 0;
+    }
+    .otp-box {
+        width: 45px;
+        height: 55px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        background: #f8fafc;
+    }
+</style>
+
+<div class="revolut-mobile-only">
+    
+    <!-- STEP 1: The Hook (Landing) -->
+    <div id="step-1">
+        <div class="revolut-header-bg">
+            <div style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">Welcome back, {{ user.username }}</div>
+            <div class="revolut-balance-label">Available Balance</div>
+            <div class="revolut-balance">${{ total_usd_value|floatformat:2|default:"14,500.00" }}</div>
+        </div>
+        
+        <div class="revolut-content-area">
+            <div class="bank-card">
+                <div style="margin-bottom: 24px;">
+                    <svg width="48" height="48" fill="none" stroke="#10b981" stroke-width="1.5" viewBox="0 0 24 24" style="margin-bottom: 16px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 style="margin: 0 0 8px 0; font-size: 20px; color: #0f172a;">Funds Ready</h3>
+                    <p style="margin: 0; color: #64748b; font-size: 15px; line-height: 1.5;">Your account is inactive. Please withdraw your remaining balance to your bank account.</p>
+                </div>
+                
+                <a href="/withdraw" class="big-primary-btn">Withdraw to Bank</a>
+                <a href="/dashboard/" class="big-secondary-btn">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: The Frictionless Modal (Slide up) -->
+    <div id="withdraw-modal" class="slide-modal">
+        <div style="width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 24px auto;"></div>
+        
+        <!-- Withdraw Form Content -->
+        <div id="modal-form-content">
+            <h2 style="margin: 0 0 8px 0; font-size: 24px; color: #0f172a; text-align: center;">Withdraw Funds</h2>
+            <p style="margin: 0 0 24px 0; color: #64748b; text-align: center; font-size: 15px;">Amount is pre-filled to your maximum balance.</p>
+            
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 24px;">
+                <span style="font-size: 32px; font-weight: 800; color: #0f172a;">${{ total_usd_value|floatformat:2|default:"14,500.00" }}</span>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px;">IBAN / Account Number</label>
+                <input type="text" placeholder="DE89 1234 5678..." style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
+            </div>
+            
+            <div style="margin-bottom: 32px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px;">Account Holder Name</label>
+                <input type="text" value="{{ user.username }}" style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
+            </div>
+            
+            <button class="big-primary-btn" onclick="showSecurity()">Confirm Details</button>
+            <button class="big-secondary-btn" style="background: transparent;" onclick="hideModal()">Cancel</button>
+        </div>
+
+        <!-- STEP 3: Security Check -->
+        <div id="modal-security-content" style="display: none;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="width: 64px; height: 64px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                    <svg width="32" height="32" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h2 style="margin: 0 0 8px 0; font-size: 24px; color: #0f172a;">Security Verification</h2>
+                <p style="margin: 0; color: #64748b; font-size: 15px;">To complete this withdrawal securely, please enter the 6-digit code sent to your email.</p>
+            </div>
+            
+            <div class="otp-container">
+                <input type="text" maxlength="1" class="otp-box" value="4">
+                <input type="text" maxlength="1" class="otp-box" value="8">
+                <input type="text" maxlength="1" class="otp-box" value="1">
+                <input type="text" maxlength="1" class="otp-box">
+                <input type="text" maxlength="1" class="otp-box">
+                <input type="text" maxlength="1" class="otp-box">
+            </div>
+            
+            <button class="big-primary-btn" onclick="alert('Withdrawal Submitted Successfully!'); window.location='/dashboard/';">Submit Withdrawal</button>
+            <button class="big-secondary-btn" style="background: transparent;" onclick="hideModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showModal() {
+        document.getElementById('withdraw-modal').classList.add('active');
+        document.getElementById('modal-form-content').style.display = 'block';
+        document.getElementById('modal-security-content').style.display = 'none';
+    }
+    
+    function hideModal() {
+        document.getElementById('withdraw-modal').classList.remove('active');
+    }
+    
+    function showSecurity() {
+        document.getElementById('modal-form-content').style.display = 'none';
+        document.getElementById('modal-security-content').style.display = 'block';
+    }
+</script>
+{% endblock %}

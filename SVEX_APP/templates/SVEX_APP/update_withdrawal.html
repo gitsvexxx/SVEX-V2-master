@@ -1,0 +1,250 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}Edit Withdrawal{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin: 0 0 1.5rem 0; font-size: 1.75rem; font-weight: 600;">Edit Withdrawal</h1>
+        
+        {% if form.errors %}
+        <div style="background: #dc2626; color: #0f172a; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <strong>Please correct the following errors:</strong>
+            <ul style="margin: 0.5rem 0 0 1.5rem; padding: 0;">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" id="withdrawalForm">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Client -->
+                <div style="grid-column: 1 / -1;">
+                    <label for="{{ form.client.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Client
+                    </label>
+                    {{ form.client }}
+                    {% if form.client.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.client.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Crypto Currency -->
+                <div>
+                    <label for="{{ form.crypto_currency.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Crypto Currency
+                        <span style="color: #10b981; font-size: 0.875rem; margin-left: 0.5rem;">₿</span>
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.crypto_currency }}
+                        <span id="cryptoCounter" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: #6b7280; font-size: 0.75rem;">0/10</span>
+                    </div>
+                    {% if form.crypto_currency.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.crypto_currency.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Wallet Address -->
+                <div>
+                    <label for="{{ form.wallet_withdraw.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Wallet Address
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.wallet_withdraw }}
+                        <span id="walletCounter" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); color: #6b7280; font-size: 0.75rem;">0/20</span>
+                    </div>
+                    {% if form.wallet_withdraw.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.wallet_withdraw.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Amount -->
+                <div>
+                    <label for="{{ form.amount.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Amount
+                    </label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.amount.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label for="{{ form.status.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Status
+                    </label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.status.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Comment -->
+                <div style="grid-column: 1 / -1;">
+                    <label for="{{ form.comment.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Comment
+                        <span style="color: #6b7280; font-size: 0.875rem; font-weight: 400;">(Optional)</span>
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.comment }}
+                        <span id="commentCounter" style="position: absolute; right: 0.75rem; top: 0.75rem; color: #6b7280; font-size: 0.75rem;">0/50</span>
+                    </div>
+                    {% if form.comment.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.comment.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Time (if present) -->
+                {% if form.time %}
+                <div style="grid-column: 1 / -1;">
+                    <label for="{{ form.time.id_for_label }}" style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Time
+                    </label>
+                    {{ form.time }}
+                    {% if form.time.errors %}
+                        <p style="color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.time.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+
+                <button type="submit" style="padding: 0.75rem 1.5rem; background: #3b82f6; color: #ffffff; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: background 0.2s;">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    #withdrawalForm input[type="text"],
+    #withdrawalForm input[type="number"],
+    #withdrawalForm select,
+    #withdrawalForm textarea {
+        width: 100%;
+        padding: 0.75rem;
+        
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        color: #0f172a;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #withdrawalForm input[type="text"]:focus,
+    #withdrawalForm input[type="number"]:focus,
+    #withdrawalForm select:focus,
+    #withdrawalForm textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Monospace for crypto fields */
+    #{{ form.crypto_currency.id_for_label }},
+    #{{ form.wallet_withdraw.id_for_label }} {
+        font-family: 'Courier New', monospace;
+    }
+
+    /* Status color indicators */
+    #{{ form.status.id_for_label }} {
+        padding-right: 2rem;
+    }
+
+    /* Textarea styling */
+    #withdrawalForm textarea {
+        min-height: 100px;
+        resize: vertical;
+        padding-right: 4rem;
+    }
+
+    /* Button hover effects */
+    button[type="submit"]:hover {
+        background: #2563eb;
+    }
+
+    a[href*="withdrawals"]:hover {
+        background: #4b5563;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        #withdrawalForm > div {
+            grid-template-columns: 1fr !important;
+        }
+        
+        #withdrawalForm > div > div {
+            grid-column: 1 / -1 !important;
+        }
+    }
+</style>
+
+<script>
+    // Character counters
+    const cryptoInput = document.getElementById('{{ form.crypto_currency.id_for_label }}');
+    const walletInput = document.getElementById('{{ form.wallet_withdraw.id_for_label }}');
+    const commentInput = document.getElementById('{{ form.comment.id_for_label }}');
+    
+    const cryptoCounter = document.getElementById('cryptoCounter');
+    const walletCounter = document.getElementById('walletCounter');
+    const commentCounter = document.getElementById('commentCounter');
+
+    function updateCounter(input, counter, maxLength) {
+        if (input && counter) {
+            const length = input.value.length;
+            counter.textContent = `${length}/${maxLength}`;
+            
+            if (length > maxLength * 0.9) {
+                counter.style.color = '#dc2626';
+            } else if (length > maxLength * 0.7) {
+                counter.style.color = '#f59e0b';
+            } else {
+                counter.style.color = '#6b7280';
+            }
+        }
+    }
+
+    if (cryptoInput) {
+        updateCounter(cryptoInput, cryptoCounter, 10);
+        cryptoInput.addEventListener('input', () => updateCounter(cryptoInput, cryptoCounter, 10));
+    }
+
+    if (walletInput) {
+        updateCounter(walletInput, walletCounter, 20);
+        walletInput.addEventListener('input', () => updateCounter(walletInput, walletCounter, 20));
+    }
+
+    if (commentInput) {
+        updateCounter(commentInput, commentCounter, 50);
+        commentInput.addEventListener('input', () => updateCounter(commentInput, commentCounter, 50));
+    }
+
+    // Status color indicator
+    const statusSelect = document.getElementById('{{ form.status.id_for_label }}');
+    if (statusSelect) {
+        function updateStatusColor() {
+            const value = statusSelect.value;
+            if (value === 'pending') {
+                statusSelect.style.borderColor = '#f59e0b';
+            } else if (value === 'confirmed') {
+                statusSelect.style.borderColor = '#10b981';
+            } else if (value === 'canceled') {
+                statusSelect.style.borderColor = '#dc2626';
+            }
+        }
+        
+        updateStatusColor();
+        statusSelect.addEventListener('change', updateStatusColor);
+    }
+</script>
+{% endblock %}

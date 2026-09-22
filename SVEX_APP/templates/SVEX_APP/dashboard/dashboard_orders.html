@@ -1,0 +1,278 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% block content %}
+
+    <style>
+        .orders-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; padding: 16px; }
+        .orders-toolbar { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .orders-search { position: relative; }
+        .orders-search input { border-radius: 8px; border: 1px solid #f0f0f0; padding: 8px 32px 8px 32px; outline: none; }
+        .orders-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .orders-table thead th { background: #fafafa; font-weight: 600; color: #0a0f38b3; padding: 10px 12px; border-bottom: 1px solid #eee; }
+        .orders-table tbody td { padding: 12px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+        .orders-table tbody tr:hover { background: #fcfcfc; }
+        .hash { color: #3b82f6; cursor: pointer; }
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+        .status-badge.pending { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+        .status-badge.confirmed { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .status-badge.canceled { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+        .status-badge.inprogress { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .pill-select { border-radius: 999px; padding: 6px 10px; border: 1px solid #f0f0f0; outline: none; }
+        .pagination { display: flex; gap: 6px; }
+        .pagination .page-item { color: #2563eb; }
+    </style>
+
+    <div data-v-3548214f="" class="">
+        <div data-v-3548214f="" class="page-header"><h1 data-v-3548214f="">My Orders</h1></div>{#          Withdraws table              #}
+        <div data-v-58827758="" data-v-4a6dcd5a="" class="container orders-card">
+<h2 data-v-58827758="" data-v-4a6dcd5a="">My Withdraw</h2>
+<div data-v-62f45cc0="" data-v-58827758="" class="" data-v-4a6dcd5a="">
+<div data-v-62f45cc0="" style="position: relative;">
+<div data-v-62f45cc0="" class="orders-toolbar">
+    <div data-v-62f45cc0="" class="toggle_filters" style="display: none;">
+        <span data-v-62f45cc0="" style="margin-right: 5px;">Clear sort</span>
+        <svg data-v-62f45cc0="" aria-hidden="true" focusable="false"
+             data-prefix="fal" data-icon="times" role="img"
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+             class="svg-inline--fa fa-times fa-w-10 fa-sm">
+            <path data-v-62f45cc0="" fill="currentColor"
+                  d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"
+                  class=""></path>
+        </svg>
+    </div>
+    <div data-v-62f45cc0="" class="orders-toolbar">
+        <div data-v-62f45cc0="">
+            <select data-v-62f45cc0="" class="mr-auto pill-select" id="pagePagination" style="width: auto !important;">
+                  <option data-v-62f45cc0="" value="10">10</option>
+                  <option data-v-62f45cc0="" value="25">25</option>
+                  <option data-v-62f45cc0="" value="50">50</option>
+          </select>
+        </div>
+        <div data-v-62f45cc0="" class="orders-search">
+            <div data-v-62f45cc0="" class="search-input">
+                <input data-v-62f45cc0="" type="text" placeholder="Search by ID, currency, wallet, status...">
+                <div data-v-62f45cc0="" class="placeholder">
+                    <svg data-v-62f45cc0="" aria-hidden="true"
+                         focusable="false" data-prefix="fal"
+                         data-icon="search" role="img"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512"
+                         class="svg-inline--fa fa-search fa-w-16">
+                        <path data-v-62f45cc0="" fill="currentColor"
+                              d="M508.5 481.6l-129-129c-2.3-2.3-5.3-3.5-8.5-3.5h-10.3C395 312 416 262.5 416 208 416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c54.5 0 104-21 141.1-55.2V371c0 3.2 1.3 6.2 3.5 8.5l129 129c4.7 4.7 12.3 4.7 17 0l9.9-9.9c4.7-4.7 4.7-12.3 0-17zM208 384c-97.3 0-176-78.7-176-176S110.7 32 208 32s176 78.7 176 176-78.7 176-176 176z"
+                              class=""></path>
+                    </svg>
+                </div>
+                <svg data-v-62f45cc0="" aria-hidden="true"
+                     focusable="false" data-prefix="fal"
+                     data-icon="times" role="img"
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 320 512"
+                     class="clear_search svg-inline--fa fa-times fa-w-10"
+                     style="display: none;">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"
+                          class=""></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div data-v-62f45cc0="">
+<div data-v-62f45cc0="" class="table_div" style="overflow-x: auto;">
+    <table data-v-62f45cc0="" class="orders-table">
+        <thead data-v-62f45cc0="">
+        <tr data-v-62f45cc0="">
+            <th data-v-62f45cc0="" class="animated">Withdraw ID
+                <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="sort-up"
+                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                     class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                          class=""></path>
+                </svg>
+            </th>
+             <th data-v-62f45cc0="" class="animated">Crypto Currency
+                <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="sort-up"
+                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                     class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                          class=""></path>
+                </svg>
+            </th>
+            <th data-v-62f45cc0="" class="animated">Wallet Withdraw
+                <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="sort-up"
+                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                     class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                          class=""></path>
+                </svg>
+            </th>
+            <th data-v-62f45cc0="" class="animated">Status
+                <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="sort-up"
+                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                     class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                          class=""></path>
+                </svg>
+            </th>
+            <th data-v-62f45cc0="" class="animated">Amount
+                <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="sort-up"
+                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                     class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                          class=""></path>
+                </svg>
+            </th>
+            <th data-v-62f45cc0="" class="animated">Date
+                <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="sort-up"
+                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                     class="arrow svg-inline--fa fa-sort-up fa-w-10 up">
+                    <path data-v-62f45cc0="" fill="currentColor"
+                          d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                          class=""></path>
+                </svg>
+            </th>
+        </tr>
+        </thead>
+        <tbody data-v-62f45cc0="" id="ticket-list">
+
+        </tbody>
+    </table>
+</div>
+<div data-v-62f45cc0="" style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+  <span data-v-62f45cc0="" style="color: rgb(117, 125, 145); font-size: 11.3833px;" id="totalNumber">
+  </span>
+    <ul data-v-62f45cc0="" class="pagination justify-content-end">
+
+    </ul>
+</div>
+</div>
+</div>
+</div>
+
+          {#                    #}
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+function updateNetwork(networkName) {
+document.getElementById('crypto_currency').value = networkName;
+}
+$(document).ready(function() {
+$('.network-option').click(function() {
+$('.network-option').removeClass('current');
+$(this).addClass('current');
+});
+});
+$(document).ready(function() {
+var searchInput = $('.search-input input');
+function handleSearchInput() {
+var searchText = searchInput.val();
+fetchTickets(searchText, 1, $('#pagePagination').val());
+}
+
+searchInput.on('input', handleSearchInput);
+
+$('#pagePagination').change(function() {
+var itemsPerPage = $(this).val();
+fetchTickets(searchInput.val(), 1, itemsPerPage);
+});
+console.log($('#pagePagination').val())
+fetchTickets('', 1, $('#pagePagination').val());
+
+function fetchTickets(searchText, page, itemsPerPage) {
+$.ajax({
+url: '/get-withdraws/',
+type: 'GET',
+data: {
+q: searchText,
+page: page,
+items_per_page: itemsPerPage
+},
+dataType: 'json',
+beforeSend: function(xhr) {
+xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+},
+success: function(response) {
+var withdraws = response.withdraws;
+var totalEntries = response.total_entries;
+var itemsPerPage = response.items_per_page
+var tableBody = $('#ticket-list');
+tableBody.empty();
+
+$.each(withdraws, function (index, withdraw) {
+  var badgeClass = withdraw.status_class || (withdraw.status ? withdraw.status.toLowerCase() : '');
+  var row = '<tr>' +
+    '<td class="hash">' + withdraw.id + '</td>' +
+    '<td>' + withdraw.crypto + '</td>' +
+    '<td>' + withdraw.wallet_withdraw + '</td>' +
+    '<td><span class="status-badge ' + badgeClass + '">' + withdraw.status + '</span></td>' +
+    '<td>' + withdraw.amount + '</td>' +
+    '<td>' + (withdraw.created_at || '') + '</td>' +
+    '</tr>';
+  tableBody.append(row);
+});
+updatePagination(response.total_pages, response.current_page, totalEntries, itemsPerPage);
+},
+error: function (xhr, status, error) {
+console.error('Error fetching tickets:', error);
+}
+});
+}
+
+function updatePagination(totalPages, currentPage, totalEntries, itemsPerPage) {
+var paginationLinks = $('.pagination');
+paginationLinks.empty();
+
+if (currentPage > 1) {
+paginationLinks.append('<a class="page-item" href="#" data-page="1"></a>');
+paginationLinks.append('<a class="page-item" href="#" data-page="' + (currentPage - 1) + '">' + (currentPage - 1) + '</a>');
+}
+
+if (currentPage === 1) {
+paginationLinks.append('<span style="font-size: 14px; color: blue; font-weight: bolder" class="page-item currentPage"> ' + currentPage + '</span>');
+} else {
+paginationLinks.append('<span class="page-item currentPage" style="font-size: 14px; color: blue; font-weight: bolder">' + currentPage + '</span>');
+}
+
+if (currentPage < totalPages) {
+paginationLinks.append('<a class="page-item" href="#" data-page="' + (currentPage + 1) + '"> ' + (currentPage + 1) + '</a>');
+paginationLinks.append('<a class="page-item" href="#" data-page="' + totalPages + '"></a>');
+}
+
+$('#totalNumber').html('Showing ' + ((currentPage - 1) * itemsPerPage + 1) + ' to ' + Math.min(currentPage * itemsPerPage, totalEntries) + ' of ' + totalEntries + ' entries');
+
+$('.pagination a.page-item:not(.currentPage)').each(function() {
+$(this).after('&nbsp;');
+});
+
+paginationLinks.find('a.page-item').click(function(e) {
+e.preventDefault();
+var page = $(this).data('page');
+fetchTickets($('.search-input input').val(), page, itemsPerPage);
+});
+}
+
+
+fetchTickets('');
+});
+
+</script>
+{% endblock %}

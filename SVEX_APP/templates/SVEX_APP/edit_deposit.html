@@ -1,0 +1,301 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}Edit Deposit{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin: 0 0 1.5rem 0; font-size: 1.75rem; font-weight: 600;">Edit Deposit</h1>
+        
+        {% if form.errors %}
+        <div style="background: #dc2626; color: #0f172a; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <strong>Please correct the following errors:</strong>
+            <ul style="margin: 0.5rem 0 0 1.5rem;">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Client -->
+                <div style="grid-column: 1 / -1;">
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Client
+                    </label>
+                    {{ form.client }}
+                    <style>
+                        #id_client {
+                            width: 100%;
+                            padding: 0.75rem;
+                            
+                            border: 1px solid #374151;
+                            border-radius: 8px;
+                            color: #0f172a;
+                            font-size: 1rem;
+                        }
+                        #id_client:focus {
+                            outline: none;
+                            border-color: #3b82f6;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                        }
+                    </style>
+                </div>
+
+                <!-- Crypto Currency -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Crypto Currency
+                    </label>
+                    {{ form.crypto_currency }}
+                    <div id="crypto-counter" style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.25rem;">
+                        <span id="crypto-count">0</span> / 10
+                    </div>
+                    <style>
+                        #id_crypto_currency {
+                            width: 100%;
+                            padding: 0.75rem;
+                            
+                            border: 1px solid #374151;
+                            border-radius: 8px;
+                            color: #10b981;
+                            font-size: 1rem;
+                            font-family: 'Courier New', monospace;
+                            text-transform: uppercase;
+                        }
+                        #id_crypto_currency:focus {
+                            outline: none;
+                            border-color: #10b981;
+                            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+                        }
+                    </style>
+                </div>
+
+                <!-- Wallet Address -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Wallet Address
+                    </label>
+                    {{ form.wallet_withdraw }}
+                    <div id="wallet-counter" style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.25rem;">
+                        <span id="wallet-count">0</span> / 20
+                    </div>
+                    <style>
+                        #id_wallet_withdraw {
+                            width: 100%;
+                            padding: 0.75rem;
+                            
+                            border: 1px solid #374151;
+                            border-radius: 8px;
+                            color: #0f172a;
+                            font-size: 0.875rem;
+                            font-family: 'Courier New', monospace;
+                        }
+                        #id_wallet_withdraw:focus {
+                            outline: none;
+                            border-color: #3b82f6;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                        }
+                    </style>
+                </div>
+
+                <!-- Amount -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Amount
+                    </label>
+                    {{ form.amount }}
+                    <style>
+                        #id_amount {
+                            width: 100%;
+                            padding: 0.75rem;
+                            
+                            border: 1px solid #374151;
+                            border-radius: 8px;
+                            color: #10b981;
+                            font-size: 1rem;
+                            font-weight: 600;
+                        }
+                        #id_amount:focus {
+                            outline: none;
+                            border-color: #10b981;
+                            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+                        }
+                    </style>
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Status
+                    </label>
+                    {{ form.status }}
+                    <div id="status-indicator" style="font-size: 0.875rem; margin-top: 0.5rem; padding: 0.5rem; border-radius: 6px; text-align: center; font-weight: 600;">
+                    </div>
+                    <style>
+                        #id_status {
+                            width: 100%;
+                            padding: 0.75rem;
+                            
+                            border: 1px solid #374151;
+                            border-radius: 8px;
+                            color: #0f172a;
+                            font-size: 1rem;
+                        }
+                        #id_status:focus {
+                            outline: none;
+                            border-color: #3b82f6;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                        }
+                    </style>
+                </div>
+
+                <!-- Time (if displayed) -->
+                {% if form.time %}
+                <div style="grid-column: 1 / -1;">
+                    <label style="display: block; color: #d1d5db; font-weight: 500; margin-bottom: 0.5rem;">
+                        Time
+                    </label>
+                    {{ form.time }}
+                    <style>
+                        #id_time {
+                            width: 100%;
+                            padding: 0.75rem;
+                            
+                            border: 1px solid #374151;
+                            border-radius: 8px;
+                            color: #0f172a;
+                            font-size: 1rem;
+                        }
+                        #id_time:focus {
+                            outline: none;
+                            border-color: #3b82f6;
+                            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                        }
+                    </style>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <a href="{% url 'deposit_list' %}" 
+                   style="padding: 0.75rem 1.5rem; background: #374151; color: #0f172a; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background 0.2s;">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        style="padding: 0.75rem 1.5rem; background: #3b82f6; color: #ffffff; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: background 0.2s;">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Character counter for crypto currency
+    const cryptoInput = document.getElementById('id_crypto_currency');
+    const cryptoCount = document.getElementById('crypto-count');
+    const cryptoCounter = document.getElementById('crypto-counter');
+    
+    if (cryptoInput && cryptoCount) {
+        function updateCryptoCounter() {
+            const length = cryptoInput.value.length;
+            cryptoCount.textContent = length;
+            
+            if (length > 8) {
+                cryptoCounter.style.color = '#ef4444';
+            } else if (length > 6) {
+                cryptoCounter.style.color = '#f59e0b';
+            } else {
+                cryptoCounter.style.color = '#9ca3af';
+            }
+        }
+        
+        cryptoInput.addEventListener('input', updateCryptoCounter);
+        updateCryptoCounter();
+    }
+
+    // Character counter for wallet
+    const walletInput = document.getElementById('id_wallet_withdraw');
+    const walletCount = document.getElementById('wallet-count');
+    const walletCounter = document.getElementById('wallet-counter');
+    
+    if (walletInput && walletCount) {
+        function updateWalletCounter() {
+            const length = walletInput.value.length;
+            walletCount.textContent = length;
+            
+            if (length > 16) {
+                walletCounter.style.color = '#ef4444';
+            } else if (length > 12) {
+                walletCounter.style.color = '#f59e0b';
+            } else {
+                walletCounter.style.color = '#9ca3af';
+            }
+        }
+        
+        walletInput.addEventListener('input', updateWalletCounter);
+        updateWalletCounter();
+    }
+
+    // Status indicator
+    const statusSelect = document.getElementById('id_status');
+    const statusIndicator = document.getElementById('status-indicator');
+    
+    if (statusSelect && statusIndicator) {
+        function updateStatusIndicator() {
+            const status = statusSelect.value.toLowerCase();
+            
+            if (status === 'pending') {
+                statusIndicator.textContent = '⏳ Pending';
+                statusIndicator.style.background = '#fbbf24';
+                statusIndicator.style.color = '#78350f';
+            } else if (status === 'confirmed') {
+                statusIndicator.textContent = '✓ Confirmed';
+                statusIndicator.style.background = '#10b981';
+                statusIndicator.style.color = '#064e3b';
+            } else if (status === 'canceled') {
+                statusIndicator.textContent = '✗ Canceled';
+                statusIndicator.style.background = '#ef4444';
+                statusIndicator.style.color = '#7f1d1d';
+            }
+        }
+        
+        statusSelect.addEventListener('change', updateStatusIndicator);
+        updateStatusIndicator();
+    }
+
+    document.querySelectorAll('button[type="submit"]').forEach(btn => {
+        btn.addEventListener('mouseenter', () => {
+            btn.style.background = '#2563eb';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.background = '#3b82f6';
+        });
+    });
+
+    document.querySelectorAll('a[href*="deposit_list"]').forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            link.style.background = '#4b5563';
+        });
+        link.addEventListener('mouseleave', () => {
+            link.style.background = '#374151';
+        });
+    });
+</script>
+
+<style>
+    @media (max-width: 768px) {
+        div[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

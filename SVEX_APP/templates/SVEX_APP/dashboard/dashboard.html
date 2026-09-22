@@ -1,0 +1,419 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .wallet-dashboard {
+        padding: 32px 24px; max-width: 1400px; margin: 0 auto; background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #0f172a;
+    }
+    .wallet-header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .wallet-title { font-size: 32px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a; letter-spacing: -0.025em; }
+    
+    .bank-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); margin-bottom: 24px; }
+    
+    .bank-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    
+    .user-profile-header { display: flex; align-items: center; gap: 24px; }
+    .user-avatar { width: 80px; height: 80px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; color: #64748b; }
+    
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+    .status-badge.verified { background: #dcfce7; color: #166534; }
+    .status-badge.pending { background: #fef9c3; color: #854d0e; }
+    .status-badge.unverified { background: #fee2e2; color: #991b1b; }
+    
+    .info-list { list-style: none; padding: 0; margin: 0; }
+    .info-list li { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+    .info-list li:last-child { border-bottom: none; }
+    .info-list .label { color: #64748b; }
+    .info-list .val { font-weight: 600; color: #0f172a; }
+    
+    .btn-secondary { padding: 8px 16px; background: #f1f5f9; color: #334155 !important; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+    .btn-secondary:hover { background: #e2e8f0; color: #0f172a !important; }
+    
+    /* Revolut-style mobile view */
+    .revolut-mobile-only { display: none; }
+    
+    @media (max-width: 991px) {
+        .wallet-dashboard {
+            padding: 0 0 90px 0 !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            margin: 0 !important;
+            background-color: #f8fafc;
+        }
+        
+        .desktop-only { display: none !important; }
+        .revolut-mobile-only { display: block; }
+        
+        .revolut-header-bg {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            padding: 20px 20px 40px 20px;
+            color: #0f172a;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            margin-bottom: -30px;
+        }
+        
+        .revolut-top-nav {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+        }
+        .revolut-top-nav .user-circle {
+            width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); 
+            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px;
+        }
+        
+        .revolut-balance-section {
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .revolut-balance-label {
+            font-size: 14px; opacity: 0.8; font-weight: 500; margin-bottom: 4px;
+        }
+        .revolut-balance {
+            font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-bottom: 24px;
+        }
+        
+        .revolut-action-row {
+            display: flex; justify-content: center; gap: 32px;
+        }
+        .revolut-action-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 8px; text-decoration: none; color: #0f172a;
+        }
+        .revolut-action-icon {
+            width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center; font-size: 20px;
+            transition: transform 0.2s;
+        }
+        .revolut-action-btn:active .revolut-action-icon { transform: scale(0.9); }
+        .revolut-action-label { font-size: 13px; font-weight: 600; }
+        
+        .revolut-content-area {
+            padding: 0 16px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .bank-card {
+            border: none !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+            border-radius: 20px !important;
+            padding: 20px !important;
+            margin-bottom: 16px !important;
+            background: #ffffff !important;
+        }
+        
+        /* Clean list */
+        .revolut-list-item {
+            display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-decoration: none; color: inherit;
+        }
+        .revolut-list-item:last-child { border-bottom: none; }
+        .revolut-icon-bg { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #3b82f6; font-size: 18px; margin-right: 12px; }
+    }
+
+
+    /* V1 Slide Modal Styling */
+    .slide-modal {
+        position: fixed; bottom: -100%; left: 0; width: 100%; height: 85%;
+        background: #ffffff; border-top-left-radius: 32px; border-top-right-radius: 32px;
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+        transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 1000; padding: 32px 24px; box-sizing: border-box;
+    }
+    .slide-modal.active { bottom: 0; }
+    
+    .big-primary-btn {
+        display: block; width: 100%; background-color: #3b82f6; color: white;
+        padding: 18px; border-radius: 16px; font-size: 18px; font-weight: 700;
+        text-decoration: none; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+        margin-bottom: 16px; border: none; cursor: pointer;
+    }
+    .big-secondary-btn {
+        display: block; width: 100%; background-color: #f1f5f9; color: #64748b;
+        padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 600;
+        text-decoration: none; border: none; cursor: pointer; text-align: center;
+    }
+    .otp-container { display: flex; justify-content: space-between; margin: 24px 0; }
+    .otp-box { width: 45px; height: 55px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 24px; font-weight: 700; text-align: center; background: #f8fafc; }
+
+</style>
+
+<div class="wallet-dashboard">
+    <!-- MOBILE REVOLUT VIEW -->
+    <div class="revolut-mobile-only">
+        <div class="revolut-header-bg">
+            <div class="revolut-top-nav">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="user-circle">{{ user.email|make_list|first|upper }}</div>
+                    <div style="display: flex; flex-direction: column; text-align: left;">
+                        <span style="font-size: 15px; opacity: 0.9; font-weight: 500;">Welcome back,</span>
+                        <span style="font-size: 20px; font-weight: 800;">{{ user.username|default:user.email }}</span>
+                    </div>
+                </div>
+                <a href="/dashboard/settings" style="color: #0f172a;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></a>
+            </div>
+            
+            <div class="revolut-balance-section">
+                <div class="revolut-balance-label">Total Balance</div>
+                <div class="revolut-balance">${{total_usd_value|floatformat:2}}</div>
+                
+                <div class="revolut-action-row">
+                    <a href="/dashboard/wallets/deposit" class="revolut-action-btn">
+                        <div class="revolut-action-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <span class="revolut-action-label">Add Money</span>
+                    </a>
+                    
+                    <a href="/exchange" class="revolut-action-btn">
+                        <div class="revolut-action-icon">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        </div>
+                        <span class="revolut-action-label">Exchange</span>
+                    </a>
+                    
+                    <a href="#" onclick="event.preventDefault(); showModal();" class="revolut-action-btn">
+                        <div class="revolut-action-icon" style="background: rgba(0,0,0,0.2);">
+                            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                        </div>
+                        <span class="revolut-action-label">Withdraw</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="revolut-content-area">
+            <!-- Wallets Shortcut -->
+            <div class="bank-card" style="padding: 12px 20px !important;">
+                <a href="/dashboard/wallets" class="revolut-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <div class="revolut-icon-bg"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg></div>
+                        <div>
+                            <div style="font-weight: 600; color: #0f172a;">Crypto Wallets</div>
+                            <div style="font-size: 13px; color: #64748b;">View all your balances</div>
+                        </div>
+                    </div>
+                    <svg width="20" height="20" fill="none" stroke="#94a3b8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+                
+                <a href="/dashboard/history" class="revolut-list-item">
+                    <div style="display: flex; align-items: center;">
+                        <div class="revolut-icon-bg" style="background: #fdf4ff; color: #c026d3;"><svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        <div>
+                            <div style="font-weight: 600; color: #0f172a;">Recent Transactions</div>
+                            <div style="font-size: 13px; color: #64748b;">Deposits & withdrawals</div>
+                        </div>
+                    </div>
+                    <svg width="20" height="20" fill="none" stroke="#94a3b8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+            
+            <h3 style="font-size: 16px; margin: 24px 0 12px 4px; color: #64748b;">Account Status</h3>
+            <div class="bank-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="revolut-icon-bg" style="background: #dcfce7; color: #16a34a; width: 32px; height: 32px; border-radius: 50%;"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div>
+                        <span style="font-weight: 600;">Verification</span>
+                    </div>
+                    {% if user.kyc.verification_status == 'confirmed' %}
+                        <span class="status-badge verified">Confirmed</span>
+                    {% elif user.kyc.verification_status == 'pending' %}
+                        <span class="status-badge pending">Pending</span>
+                    {% else %}
+                        <span class="status-badge unverified">Unverified</span>
+                    {% endif %}
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="revolut-icon-bg" style="background: #f1f5f9; color: #64748b; width: 32px; height: 32px; border-radius: 50%;"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
+                        <span style="font-weight: 600;">2FA Auth</span>
+                    </div>
+                    <span class="status-badge" style="background: #f1f5f9; color: #64748b;">Disabled</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DESKTOP VIEW (Hides on Mobile) -->
+    <div class="desktop-only">
+        <div class="wallet-header">
+            <div>
+                <h1 class="wallet-title">Dashboard</h1>
+                <p style="color: #64748b; font-size: 15px; margin: 0;">Welcome back, {{user.email}}</p>
+            </div>
+            <div>
+                <a href="/dashboard/wallets/deposit" class="btn-secondary" style="margin-right: 8px;">Deposit</a>
+                <a href="#" onclick="event.preventDefault(); showModal();" class="btn-secondary">Withdraw</a>
+            </div>
+        </div>
+
+        <div class="bank-grid">
+            <!-- Profile Card -->
+            <div class="bank-card" style="grid-column: span 2;">
+                <div class="user-profile-header">
+                    <div class="user-avatar">{{ user.email|make_list|first|upper }}</div>
+                    <div style="flex-grow: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h2 style="margin: 0 0 4px 0; font-size: 20px; color: #0f172a;">{{user.username}}</h2>
+                                <p style="margin: 0 0 12px 0; color: #64748b; font-size: 14px; font-family: monospace;">ID: {{user.id}}</p>
+                            </div>
+                            <a href="/dashboard/settings" class="btn-secondary">Account Settings</a>
+                        </div>
+                        
+                        <div style="display: flex; gap: 16px; margin-top: 8px;">
+                            {% if user.kyc.verification_status == 'confirmed' %}
+                                <span class="status-badge verified">KYC Confirmed</span>
+                            {% elif user.kyc.verification_status == 'pending' %}
+                                <span class="status-badge pending">KYC Pending</span>
+                            {% else %}
+                                <span class="status-badge unverified">KYC Unverified</span>
+                            {% endif %}
+                            <span class="status-badge verified" style="background: #e0e7ff; color: #3730a3;">Standard Trading Tier</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Portfolio Value -->
+            <div class="bank-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; font-size: 16px; color: #64748b; font-weight: 600;">Total Portfolio Value</h3>
+                    <a href="/dashboard/wallets" style="color: #3b82f6; font-size: 14px; text-decoration: none; font-weight: 600;">View Wallets</a>
+                </div>
+                <div style="font-size: 36px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">
+                    ~${{total_usd_value|floatformat:2}}
+                </div>
+                <div style="font-size: 14px; color: #64748b;">
+                    <strong>{{wallet.btc_balance|floatformat:8}} BTC</strong> (Mainly held)
+                </div>
+            </div>
+            
+            <!-- Account Limits -->
+            <div class="bank-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; font-size: 16px; color: #64748b; font-weight: 600;">Daily Withdrawal Limit</h3>
+                    <a href="/dashboard/kyc" style="color: #3b82f6; font-size: 14px; text-decoration: none; font-weight: 600;">Increase Limit</a>
+                </div>
+                <div style="font-size: 36px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">
+                    1.00 <span style="font-size: 20px; color: #64748b;">BTC</span>
+                </div>
+                <div style="font-size: 14px; color: #64748b;">
+                    Standard verification limit
+                </div>
+            </div>
+        </div>
+        
+        <div class="bank-grid">
+            <!-- Security Overview -->
+            <div class="bank-card">
+                <h3 style="margin: 0 0 16px 0; font-size: 18px; color: #0f172a;">Security Overview</h3>
+                <ul class="info-list">
+                    <li><span class="label">Last Login</span><span class="val">{{user.last_login|date:"M d, Y H:i"}}</span></li>
+                    <li><span class="label">Password Updated</span><span class="val">Recently</span></li>
+                    <li><span class="label">2FA Status</span><span class="val" style="color: #e53e3e;">Disabled</span></li>
+                </ul>
+            </div>
+
+            <!-- Fee Schedule -->
+            <div class="bank-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; font-size: 18px; color: #0f172a;">Current Fee Schedule</h3>
+                    <a href="/fees" style="color: #3b82f6; font-size: 14px; text-decoration: none; font-weight: 600;">View All</a>
+                </div>
+                <ul class="info-list">
+                    <li><span class="label">Maker Fee (Lv. 1)</span><span class="val">0.075%</span></li>
+                    <li><span class="label">Taker Fee (Lv. 1)</span><span class="val">0.075%</span></li>
+                    <li><span class="label">Discount</span><span class="val">0%</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- V1 Frictionless Modal (Slide up) -->
+    <div id="withdraw-modal" class="slide-modal">
+        <div style="width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 24px auto;"></div>
+        
+        <!-- Withdraw Form Content -->
+        <div id="modal-form-content">
+            <h2 style="margin: 0 0 8px 0; font-size: 24px; color: #0f172a; text-align: center;">Withdraw Funds</h2>
+            <p style="margin: 0 0 24px 0; color: #64748b; text-align: center; font-size: 15px;">Amount is pre-filled to your maximum balance.</p>
+            
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 24px;">
+                <span style="font-size: 32px; font-weight: 800; color: #0f172a;">${{ total_usd_value|floatformat:2|default:"0.00" }}</span>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px;">IBAN / Account Number</label>
+                <input type="text" placeholder="DE89 1234 5678..." style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
+            </div>
+            
+            <div style="margin-bottom: 32px;">
+                <label style="display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px;">Account Holder Name</label>
+                <input type="text" value="{{ user.username|default:user.email }}" style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
+            </div>
+            
+            <button class="big-primary-btn" onclick="showSecurity()">Confirm Details</button>
+            <button class="big-secondary-btn" style="background: transparent;" onclick="hideModal()">Cancel</button>
+        </div>
+
+        <!-- Security Check -->
+        <div id="modal-security-content" style="display: none;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="width: 64px; height: 64px; background: #eff6ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                    <svg width="32" height="32" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h2 style="margin: 0 0 8px 0; font-size: 24px; color: #0f172a;">Security Verification</h2>
+                <p style="margin: 0; color: #64748b; font-size: 15px;">To complete this withdrawal securely, please enter the 6-digit code sent to your email.</p>
+            </div>
+            
+            <div class="otp-container">
+                <input type="text" maxlength="1" class="otp-box" value="">
+                <input type="text" maxlength="1" class="otp-box" value="">
+                <input type="text" maxlength="1" class="otp-box" value="">
+                <input type="text" maxlength="1" class="otp-box" value="">
+                <input type="text" maxlength="1" class="otp-box" value="">
+                <input type="text" maxlength="1" class="otp-box" value="">
+            </div>
+            
+            <button class="big-primary-btn" onclick="submitFinalWithdrawal()">Submit Withdrawal</button>
+            <button class="big-secondary-btn" style="background: transparent;" onclick="hideModal()">Cancel</button>
+        </div>
+    </div>
+
+<script>
+    function showModal() {
+        document.getElementById('withdraw-modal').classList.add('active');
+        document.getElementById('modal-form-content').style.display = 'block';
+        document.getElementById('modal-security-content').style.display = 'none';
+        
+        // Setup OTP auto-focus logic
+        const otpInputs = document.querySelectorAll('.otp-box');
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.key >= 0 && e.key <= 9 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                } else if (e.key === 'Backspace' && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+    }
+    
+    function hideModal() {
+        document.getElementById('withdraw-modal').classList.remove('active');
+    }
+    
+    function showSecurity() {
+        document.getElementById('modal-form-content').style.display = 'none';
+        document.getElementById('modal-security-content').style.display = 'block';
+        setTimeout(() => document.querySelectorAll('.otp-box')[0].focus(), 100);
+    }
+    
+    function submitFinalWithdrawal() {
+        alert('Withdrawal Submitted Successfully!');
+        hideModal();
+    }
+</script>
+
+{% endblock %}

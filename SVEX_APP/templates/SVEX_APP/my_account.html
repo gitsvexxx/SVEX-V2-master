@@ -1,0 +1,121 @@
+{% extends 'SVEX_APP/navbar/layout.html' %}
+
+{% block content %}
+<div style="padding: 40px 20px; max-width: 1200px; margin: 0 auto; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh;">
+    <!-- Page Header -->
+    <div style="margin-bottom: 30px;">
+        <h1 style="font-size: 32px; font-weight: 700; color: #2d3748; margin-bottom: 8px;">My Account</h1>
+        <p style="font-size: 16px; color: #718096;">Manage your account information and settings</p>
+    </div>
+
+    <!-- Account Information Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+        
+        <!-- Profile Information Card -->
+        <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-radius: 16px; padding: 28px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); border: 1px solid rgba(255, 255, 255, 0.8);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+                    <svg style="width: 28px; height: 28px; color: #0f172a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                </div>
+                <h2 style="font-size: 20px; font-weight: 600; color: #1e40af; margin: 0;">Profile Information</h2>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">First Name</label>
+                <p style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0;">{{ user.first_name|default:"Not provided" }}</p>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Last Name</label>
+                <p style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0;">{{ user.last_name|default:"Not provided" }}</p>
+            </div>
+            
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Username</label>
+                <p style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0;">{{ user.username }}</p>
+            </div>
+        </div>
+
+        <!-- Contact Information Card -->
+        <div style="background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); border-radius: 16px; padding: 28px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); border: 1px solid rgba(255, 255, 255, 0.8);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+                    <svg style="width: 28px; height: 28px; color: #0f172a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h2 style="font-size: 20px; font-weight: 600; color: #be185d; margin: 0;">Contact Information</h2>
+            </div>
+            
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Email Address</label>
+                <p style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0; word-break: break-all;">{{ user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Account Details Card -->
+        <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-radius: 16px; padding: 28px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); border: 1px solid rgba(255, 255, 255, 0.8);">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+                    <svg style="width: 28px; height: 28px; color: #0f172a;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h2 style="font-size: 20px; font-weight: 600; color: #047857; margin: 0;">Account Details</h2>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Member Since</label>
+                <p style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0;">{{ user.date_joined|date:"F d, Y" }}</p>
+            </div>
+            
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Account Status</label>
+                <div style="display: inline-flex; align-items: center; background: rgba(16, 185, 129, 0.15); padding: 6px 14px; border-radius: 20px; margin-top: 4px;">
+                    <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 8px;"></div>
+                    <span style="font-size: 14px; font-weight: 600; color: #047857;">Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div style="background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); border: 1px solid rgba(0, 0, 0, 0.06);">
+        <h2 style="font-size: 22px; font-weight: 600; color: #2d3748; margin-bottom: 20px;">Account Summary</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div style="padding: 16px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; border: 1px solid rgba(251, 191, 36, 0.3);">
+                <p style="font-size: 13px; font-weight: 600; color: #92400e; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">User ID</p>
+                <p style="font-size: 20px; font-weight: 700; color: #78350f; margin: 0;">{{ user.id }}</p>
+            </div>
+            
+            <div style="padding: 16px; background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.3);">
+                <p style="font-size: 13px; font-weight: 600; color: #3730a3; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Last Login</p>
+                <p style="font-size: 20px; font-weight: 700; color: #312e81; margin: 0;">{{ user.last_login|date:"M d, Y" }}</p>
+            </div>
+            
+            <div style="padding: 16px; background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%); border-radius: 12px; border: 1px solid rgba(249, 115, 22, 0.3);">
+                <p style="font-size: 13px; font-weight: 600; color: #9a3412; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Account Type</p>
+                <p style="font-size: 20px; font-weight: 700; color: #7c2d12; margin: 0;">Standard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="margin-top: 30px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <!-- Added link to edit profile URL -->
+        <a href="{% url 'edit_client_profile' %}" style="padding: 14px 28px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #0f172a; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3); transition: all 0.3s ease; text-decoration: none; display: inline-block;">
+            Edit Profile
+        </a>
+        <!-- Added link to password reset URL -->
+        <a href="{% url 'password-reset' %}" style="padding: 14px 28px; background: white; color: #3b82f6; border: 2px solid #3b82f6; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block;">
+            Change Password
+        </a>
+        <button style="padding: 14px 28px; background: white; color: #64748b; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+            Security Settings
+        </button>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% load custom_tags %}
+{% block content %}
+
+    <style>
+        .kyc-surface { background: #f8fafc; border-radius: 16px; padding: 16px; }
+        .image-preview {
+            margin-bottom: 10px;
+        }
+
+        .image-preview label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            box-sizing: border-box;
+            display: none;
+        }
+
+        .uniform-width {
+            width: 100%;
+        }
+        .kyc-card { background: #fff; border: 1px solid #eef2f7; border-radius: 16px; padding: 20px; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06); }
+        .kyc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .kyc-grid .Input { margin-bottom: 0; }
+        .Input label { font-size: 12px; color: #64748b; margin-bottom: 6px; display: inline-block; }
+        .Input input[type="text"],
+        .Input input[type="date"],
+        .Input select,
+        .Input input[type="file"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            background: #ffffff;
+        }
+        .Input input:focus,
+        .Input select:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+        .status-badge.pending { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+        .status-badge.confirmed { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .status-badge.cancelled { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+        .upload-zone { border: 1px dashed #cbd5e1; background: #f8fafc; padding: 12px; border-radius: 14px; }
+        .hint { color: #94a3b8; font-size: 12px; margin-top: 6px; }
+        .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .section-title .chip { background: #eff6ff; color: #1d4ed8; padding: 4px 10px; border-radius: 999px; font-size: 11px; border: 1px solid #bfdbfe; }
+        .primary-btn { width: 100%; padding: 12px; background-color: #2563eb; color: #0f172a; border: none; border-radius: 14px; cursor: pointer; font-weight: 600; }
+        .primary-btn:hover { background-color: #1d4ed8; }
+        @media (max-width: 992px) { .kyc-grid { grid-template-columns: 1fr; } }
+    </style>
+    <div data-v-400a8981="" class="body">
+        <div data-v-3548214f="" data-v-416a9088="" data-v-1b930420="" data-v-6f92ef35="" data-v-400a8981=""
+             class="page dashboard no-line">
+            <div data-v-b8f82250="" data-v-3548214f="" class="loading" style="display: none;">
+                <div data-v-b8f82250="" class="img" style="text-align: center;">
+                    <img data-v-b8f82250="" src="/images/favicon_default.ico" alt="" style="margin-bottom: 15px; width: 64px; height: 64px;">
+                    <br data-v-b8f82250="">
+                    <span data-v-3548214f="" data-v-b8f82250="" style="display: none;">Data loading error. Reload the page or try again later.</span>
+                </div>
+            </div>
+            <div data-v-3548214f="" class="no-line" style="">
+                <div data-v-3548214f="" class="page-header"><h1 data-v-3548214f="">Identity Verification</h1></div>
+                <div data-v-4a6dcd5a="" data-v-416a9088="" class="page-container row kyc-surface" data-v-3548214f="" style="border-bottom: none; margin: 0px; align-items: center; display: flex;">
+                    <div data-v-416a9088="" data-v-4a6dcd5a="" class="col-lg-12 verification-card kyc-card">
+                        <div data-v-416a9088="" data-v-4a6dcd5a="" class="section-title">
+                            <h2 data-v-416a9088="" data-v-4a6dcd5a="" style="margin: 0;">Your Information</h2>
+                            <span class="chip">KYC</span>
+                        </div>
+                        <div data-v-416a9088="" data-v-4a6dcd5a="" class="kyc col-lg-12 row" style="margin: 0px;">
+                            <div data-v-416a9088="" data-v-4a6dcd5a="">
+                                <div data-v-416a9088="" data-v-4a6dcd5a="" class="col-lg-12">
+                                    {% if message %}
+                                        <p>{{ message }}</p>
+                                        <p>KYC Status: <span class="status-badge {{ kyc_status|lower }}">{{ kyc_status|title }}</span></p>
+                                    {% elif form %}
+                                        <form action="{% url 'dashboard_kyc' %}" method="POST"
+                                              enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="kyc-grid">
+                                                <div data-v-72d3b7be="" data-v-416a9088="" class="Input" data-v-4a6dcd5a="">
+                                                    <label data-v-72d3b7be="" for="{{ form.government_name.id_for_label }}">Government Name</label>
+                                                    {{ form.government_name|add_class:"uniform-width" }}
+                                                </div>
+                                                <div data-v-72d3b7be="" data-v-416a9088="" class="Input" data-v-4a6dcd5a="">
+                                                    <label data-v-72d3b7be="" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                                                    {{ form.last_name|add_class:"uniform-width" }}
+                                                </div>
+                                                <div data-v-72d3b7be="" data-v-416a9088="" class="Input" data-v-4a6dcd5a="">
+                                                    <label data-v-72d3b7be="" for="{{ form.country.id_for_label }}">Country</label>
+                                                    {{ form.country|add_class:"uniform-width" }}
+                                                </div>
+                                                <div data-v-72d3b7be="" data-v-416a9088="" class="Input" data-v-4a6dcd5a="">
+                                                    <label data-v-72d3b7be="" for="{{ form.birthdate.id_for_label }}">Birth Date</label>
+                                                    <input type="date" name="{{ form.birthdate.name }}"
+                                                           id="{{ form.birthdate.id_for_label }}"
+                                                           required max="{{ current_date|date:'Y-m-d' }}"
+                                                           class="uniform-width">
+                                                </div>
+                                            </div>
+                                            <!-- Add front ID photo preview -->
+                                            <div class="image-preview upload-zone" style="margin-bottom: 15px;">
+                                                <label for="{{ form.id_front.id_for_label }}">Front of ID</label>
+                                                    {{ form.id_front|add_class:"uniform-width" }}
+                                                <img id="front_id_preview" src="#" alt="Front of ID" style="display: none; max-width: 200px; max-height: 300px; margin-top: 10px;">
+                                                <div class="hint">Accepted formats: JPG, PNG. Max size 5MB.</div>
+                                            </div>
+                                            <!-- Add back ID photo preview -->
+                                            <div class="image-preview upload-zone" style="margin-bottom: 15px;">
+                                                <label for="{{ form.id_back.id_for_label }}">Back of ID</label>
+                                                    {{ form.id_back|add_class:"uniform-width" }}
+                                                <img id="back_id_preview" src="#" alt="Back of ID" style="display: none; max-width: 200px; max-height: 300px; margin-top: 10px;">
+                                                <div class="hint">Make sure all details are clearly visible.</div>
+                                            </div>
+                                            <button type="submit" data-v-31aba6a9="" data-v-416a9088=""
+                                                    class="primary-btn"
+                                                    data-v-4a6dcd5a="">
+                                                Verify Identity
+                                                <svg data-v-31aba6a9="" viewBox="0 0 50 50" class="spinner" style="display: none;">
+                                                    <circle data-v-31aba6a9="" cx="25" cy="25" r="20" fill="none" stroke-width="5" class="path"></circle>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function previewImage(input) {
+            var preview = input.nextElementSibling;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '#';
+                preview.style.display = 'none';
+            }
+        }
+
+        {% if form %}
+        var frontInput = document.getElementById('{{ form.id_front.id_for_label }}');
+        var backInput = document.getElementById('{{ form.id_back.id_for_label }}');
+        if (frontInput) {
+            frontInput.addEventListener('change', function () { previewImage(this); });
+        }
+        if (backInput) {
+            backInput.addEventListener('change', function () { previewImage(this); });
+        }
+        {% endif %}
+
+        $(document).ready(function () {
+            var today = new Date();
+            var year = today.getFullYear() - 18;
+            var month = String(today.getMonth() + 1).padStart(2, '0');
+            var day = String(today.getDate()).padStart(2, '0');
+            var today_date = `${year}-${month}-${day}`;
+            $('#birth_date').attr('max', today_date);
+
+            $('#nextBtn').on('click', function () {
+                var selectedDate = new Date($('#birth_date').val());
+                if (selectedDate > today) {
+                    alert('Please select a date in the past for your birth date.');
+                    return false; // Prevent form submission
+                }
+                return true; // Allow form submission
+            });
+        });
+    </script>
+{% endblock %}

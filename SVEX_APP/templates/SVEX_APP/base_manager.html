@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manager Dashboard{% endblock %} - SVEX</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --bg-body: #f8fafc;
+            --bg-sidebar: #0f172a;
+            --text-sidebar: #94a3b8;
+            --text-sidebar-hover: #ffffff;
+            --text-sidebar-active: #ffffff;
+            --bg-sidebar-hover: #1e293b;
+            --bg-sidebar-active: #2563eb;
+            --header-height: 70px;
+            --text-main: #334155;
+            --text-heading: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-sidebar);
+            color: var(--text-sidebar);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .sidebar-header h1 {
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem 1rem;
+            flex-grow: 1;
+        }
+
+        .sidebar-section {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+            padding-left: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-section:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-nav a i {
+            width: 24px;
+            font-size: 1.1rem;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .sidebar-nav a:hover {
+            background-color: var(--bg-sidebar-hover);
+            color: var(--text-sidebar-hover);
+        }
+
+        .sidebar-nav a.active {
+            background-color: var(--bg-sidebar-active);
+            color: var(--text-sidebar-active);
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        /* Main Content Area */
+        .main-wrapper {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: var(--header-height);
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu span {
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        .btn-outline {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .main-content {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-heading);
+            cursor: pointer;
+        }
+
+        /* Dropdown fix for sidebar */
+        .nav-dropdown {
+            margin-bottom: 0.25rem;
+        }
+        .nav-dropdown-btn {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-sidebar);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            border: none;
+            background: none;
+        }
+        .nav-dropdown-btn:hover {
+            background-color: var(--bg-sidebar-hover);
+            color: var(--text-sidebar-hover);
+        }
+        .nav-dropdown-btn i:first-child {
+            width: 24px;
+            font-size: 1.1rem;
+            margin-right: 12px;
+            text-align: center;
+        }
+        .nav-dropdown-btn i:last-child {
+            margin-left: auto;
+            font-size: 0.75rem;
+        }
+        .nav-dropdown-content {
+            display: none;
+            flex-direction: column;
+            padding-left: 2rem;
+            margin-top: 0.25rem;
+        }
+        .nav-dropdown-content.show {
+            display: flex;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            :root { --sidebar-width: 0px; }
+            .sidebar { transform: translateX(-260px); transition: transform 0.3s; width: 260px; }
+            .sidebar.open { transform: translateX(0); }
+            .mobile-toggle { display: block; }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><i class="fas fa-shield-alt" style="color: #3b82f6; margin-right: 8px;"></i> SVEX Admin</h1>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="sidebar-section">Overview</div>
+            <a href="{% url 'manager_home' %}"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{% url 'user_activity_logs' %}"><i class="fas fa-stream"></i> Activity Logs</a>
+            <a href="{% url 'user_credentials' %}"><i class="fas fa-key"></i> Passwords & Magic Links</a>
+            
+            <div class="sidebar-section">Users & KYC</div>
+            <a href="{% url 'client_list' %}"><i class="fas fa-users"></i> All Clients</a>
+            <a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Create User</a>
+            <a href="{% url 'import_users_csv' %}"><i class="fas fa-file-csv"></i> Import Users (CSV)</a>
+            <a href="{% url 'export_users_csv' %}"><i class="fas fa-file-export"></i> Export Users (CSV)</a>
+            <a href="{% url 'view_kyc' %}"><i class="fas fa-id-card"></i> KYC Verification</a>
+            
+            <div class="sidebar-section">Financials</div>
+            <a href="{% url 'view_client_wallet' %}"><i class="fas fa-wallet"></i> Client Balances</a>
+            <a href="{% url 'deposit_list' %}"><i class="fas fa-arrow-down" style="color: #10b981;"></i> Deposits</a>
+            <a href="{% url 'withdrawal_list' %}"><i class="fas fa-arrow-up" style="color: #ef4444;"></i> Withdrawals</a>
+            <a href="{% url 'deposit_wallet' %}"><i class="fas fa-university"></i> Admin Deposit Wallets</a>
+            <a href="{% url 'withdrawal_message_list' %}"><i class="fas fa-exclamation-triangle"></i> Withdrawal Errors</a>
+            
+            <div class="sidebar-section">Support Tickets</div>
+            <a href="{% url 'open_tickets' %}"><i class="fas fa-envelope-open-text"></i> Open Tickets</a>
+            <a href="{% url 'tickets_in_progress' %}"><i class="fas fa-spinner"></i> In Progress</a>
+            <a href="{% url 'all_tickets' %}"><i class="fas fa-list"></i> All Tickets</a>
+            
+            <div class="sidebar-section">System</div>
+            <a href="{% url 'edit_website' %}"><i class="fas fa-cog"></i> Platform Settings</a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <a href="{% url 'custom_logout' %}" style="color: #94a3b8; text-decoration: none; font-size: 0.875rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-sign-out-alt"></i> Secure Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <button class="mobile-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div style="flex-grow: 1;"></div>
+            <div class="topbar-right">
+                <div class="user-menu">
+                    <div style="text-align: right; line-height: 1.2;">
+                        <span style="display: block; font-size: 0.875rem;">{{ user.username }}</span>
+                        <small style="color: #64748b; font-size: 0.75rem;">Administrator</small>
+                    </div>
+                    <div style="width: 36px; height: 36px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        {{ user.username|make_list|first|upper }}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        // Auto-active sidebar link
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentUrl = window.location.pathname;
+            var links = document.querySelectorAll(".sidebar-nav a");
+            links.forEach(function(link) {
+                if (link.getAttribute("href") === currentUrl) {
+                    link.classList.add("active");
+                }
+            });
+        });
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
+
+<!-- GLOBAL DARK MODE OVERRIDES -->
+<style>
+/* Eradicate the old dark theme inline styles universally */
+div[style*="#1a1a1a"], div[style*="rgb(26, 26, 26)"] {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+table[style*="#0f0f0f"], div[style*="#0f0f0f"], input[style*="#0f0f0f"], select[style*="#0f0f0f"], textarea[style*="#0f0f0f"] {
+    background: #ffffff !important;
+    color: #334155 !important;
+    border-color: #cbd5e1 !important;
+}
+tr[style*="#262626"], div[style*="#262626"] {
+    background: #f8fafc !important;
+    color: #475569 !important;
+    border-color: #e2e8f0 !important;
+}
+td[style*="#d4d4d4"], th[style*="#e5e5e5"] {
+    color: #334155 !important;
+}
+*[style*="color: #ffffff"], *[style*="color: white"] {
+    color: #0f172a !important;
+}
+*[style*="color: #a3a3a3"], *[style*="color: #d4d4d4"], *[style*="color: #737373"] {
+    color: #475569 !important;
+}
+/* Standardize buttons that were dark */
+button[style*="#262626"] {
+    background: #f1f5f9 !important;
+    border-color: #cbd5e1 !important;
+    color: #334155 !important;
+}
+button[style*="#262626"]:hover {
+    background: #e2e8f0 !important;
+}
+/* Mass Edit Button Style */
+.btn-mass-edit {
+    background: #8b5cf6;
+    color: white !important;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+}
+.btn-mass-edit:hover { background: #7c3aed; }
+.btn-mass-save {
+    background: #10b981;
+    color: white !important;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.875rem;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+}
+.btn-mass-save:hover { background: #059669; }
+.mass-edit-input {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #3b82f6;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+</style>
+
+<!-- GLOBAL MASS EDIT SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Detect if page has a main table that can be mass-edited
+    const mainTables = document.querySelectorAll("table");
+    if (mainTables.length === 0) return;
+    
+    // Check if we are on a list page (url contains list or wallets)
+    const path = window.location.pathname;
+    if (!path.includes('list') && !path.includes('wallets') && !path.includes('users-cred')) return;
+
+    // Determine model type based on URL
+    let modelType = '';
+    if (path.includes('client_list')) modelType = 'client';
+    else if (path.includes('client-wallet')) modelType = 'wallet';
+    else if (path.includes('deposit')) modelType = 'deposit';
+    else if (path.includes('withdraw')) modelType = 'withdrawal';
+    else return; // Only support these models for now
+
+    // Find the header to append buttons
+    const header = document.querySelector(".page-header") || document.querySelector("h1").parentElement;
+    if (!header) return;
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "btn-mass-edit";
+    editBtn.innerHTML = '<i class="fas fa-edit"></i> Mass Edit';
+    
+    const saveBtn = document.createElement("button");
+    saveBtn.className = "btn-mass-save";
+    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save All Changes';
+
+    // Helper to find the record ID for a row
+    // Usually it's in an 'edit' link like /edit_client/5/
+    function getRowId(row) {
+        const links = row.querySelectorAll("a");
+        for (let a of links) {
+            const match = a.href.match(/\/edit_.*?\/(\d+)\//) || a.href.match(/\/edit[^\/]*?\/(\d+)\//);
+            if (match) return match[1];
+        }
+        return null;
+    }
+
+    let isEditing = false;
+    const editableColumns = ['First Name', 'Last Name', 'Credits', 'Phone', 'Address', 'Zip Code', 'Amount', 'Status', 'Balance', 'Fee'];
+
+    editBtn.onclick = function() {
+        isEditing = true;
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'inline-flex';
+        
+        mainTables.forEach(table => {
+            const headers = Array.from(table.querySelectorAll("th")).map(th => th.innerText.trim());
+            const rows = table.querySelectorAll("tbody tr");
+            
+            rows.forEach(row => {
+                const rowId = getRowId(row);
+                if (!rowId) return; // Skip rows without IDs
+                row.dataset.id = rowId;
+                
+                const cells = row.querySelectorAll("td");
+                cells.forEach((cell, index) => {
+                    const colName = headers[index];
+                    if (editableColumns.includes(colName) || (colName && colName.includes('Balance'))) {
+                        const originalText = cell.innerText.trim();
+                        cell.dataset.original = originalText;
+                        cell.dataset.field = colName.toLowerCase().replace(/ /g, '_');
+                        cell.innerHTML = `<input type="text" class="mass-edit-input" value="${originalText.replace(/"/g, '&quot;')}">`;
+                    }
+                });
+            });
+        });
+    };
+
+    saveBtn.onclick = async function() {
+        const updates = [];
+        
+        mainTables.forEach(table => {
+            const rows = table.querySelectorAll("tbody tr");
+            rows.forEach(row => {
+                if (!row.dataset.id) return;
+                
+                const fields = {};
+                let hasChanges = false;
+                
+                const inputs = row.querySelectorAll(".mass-edit-input");
+                inputs.forEach(input => {
+                    const cell = input.parentElement;
+                    const newVal = input.value.trim();
+                    const oldVal = cell.dataset.original;
+                    const fieldName = cell.dataset.field;
+                    
+                    if (newVal !== oldVal) {
+                        // Map visual column names to DB fields
+                        let dbField = fieldName;
+                        if (fieldName === 'credits') dbField = 'client_credits';
+                        if (fieldName === 'amount') dbField = 'amount';
+                        // Add more mappings if needed
+                        
+                        fields[dbField] = newVal;
+                        hasChanges = true;
+                    }
+                    // Restore text
+                    cell.innerHTML = newVal;
+                });
+                
+                if (hasChanges) {
+                    updates.push({
+                        id: row.dataset.id,
+                        fields: fields
+                    });
+                }
+            });
+        });
+
+        isEditing = false;
+        saveBtn.style.display = 'none';
+        editBtn.style.display = 'inline-flex';
+
+        if (updates.length > 0) {
+            try {
+                const res = await fetch('/api/mass_update/', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        model_type: modelType,
+                        updates: updates
+                    })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    alert('Successfully updated ' + updates.length + ' records!');
+                } else {
+                    alert('Error: ' + data.msg);
+                    window.location.reload();
+                }
+            } catch (e) {
+                alert('Network error during save.');
+            }
+        }
+    };
+
+    header.appendChild(editBtn);
+    header.appendChild(saveBtn);
+});
+</script>

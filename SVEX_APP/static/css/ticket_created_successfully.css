@@ -1,0 +1,23 @@
+/* ticket_created_successfully.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* Light gray background */
+}
+
+h1 {
+    color: #333; /* Dark gray heading color */
+}
+
+p {
+    color: #666; /* Dark gray text color */
+}
+
+/* Styling for the success message */
+.success-message {
+    background-color: #c8e6c9; /* Light green background for success message */
+    color: #333; /* Dark gray text color */
+    padding: 10px; /* Add some padding for better readability */
+    border-radius: 5px; /* Rounded corners */
+    margin-bottom: 20px; /* Add some space below the success message */
+}

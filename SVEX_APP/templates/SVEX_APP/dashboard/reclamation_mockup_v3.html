@@ -1,0 +1,52 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    @media (min-width: 768px) {
+        .revolut-mobile-only { max-width: 414px; margin: 40px auto; border-radius: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 8px solid #1e293b; overflow: hidden; height: 896px; position: relative; }
+    }
+    .revolut-mobile-only { background-color: #f8fafc; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+    .revolut-header-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 40px 24px 60px 24px; border-bottom-left-radius: 32px; border-bottom-right-radius: 32px; }
+    .user-circle { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .revolut-balance-label { font-size: 14px; color: #94a3b8; font-weight: 500; margin-top: 24px; }
+    .revolut-balance { font-size: 40px; font-weight: 800; margin-bottom: 24px; }
+    
+    .action-card { background: white; margin: -30px 24px 24px 24px; padding: 24px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 4px solid #f59e0b; position: relative; z-index: 10; }
+    
+    .btn-withdraw { display: inline-block; background: #0f172a; color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; text-decoration: none; margin-top: 16px; }
+</style>
+
+<div class="revolut-mobile-only">
+    <div class="revolut-header-bg">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="user-circle">C</div>
+                <div style="font-weight: 600;">Client</div>
+            </div>
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        </div>
+        
+        <div class="revolut-balance-label">Total Balance</div>
+        <div class="revolut-balance">${{ total_usd_value|floatformat:2|default:"14,500.00" }}</div>
+    </div>
+    
+    <div class="action-card">
+        <div style="display: flex; align-items: center; gap: 8px; color: #d97706; font-weight: 700; font-size: 14px; text-transform: uppercase; margin-bottom: 8px;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            Action Required
+        </div>
+        <h3 style="margin: 0 0 8px 0; color: #0f172a; font-size: 18px;">Dormant Account Alert</h3>
+        <p style="margin: 0; color: #64748b; font-size: 14px; line-height: 1.5;">Your account is pending closure. Please withdraw your funds immediately to prevent processing delays.</p>
+        <a href="/dashboard/reclamation_mockup_v2/" class="btn-withdraw">Withdraw Now</a>
+    </div>
+    
+    <div style="padding: 0 24px;">
+        <h3 style="font-size: 16px; margin: 0 0 16px 0; color: #0f172a;">Recent Activity</h3>
+        <div style="background: white; border-radius: 16px; padding: 16px; display: flex; align-items: center; justify-content: center; height: 100px; color: #94a3b8; font-size: 14px;">
+            No recent transactions.
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+django
+pillow
+requests
+django-cors-headers
+django-filter
+django-rest-framework
+pre-commit
+black
+psycopg[binary]

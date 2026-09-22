@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="nvGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FCD34D"/>
+            <stop offset="50%" stop-color="#F59E0B"/>
+            <stop offset="100%" stop-color="#B45309"/>
+        </linearGradient>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#F59E0B" flood-opacity="0.35"/>
+        </filter>
+    </defs>
+    <!-- Outer Shield / Vault Hexagon Frame -->
+    <path d="M22 2L39 11.5V32.5L22 42L5 32.5V11.5L22 2Z" fill="#141A24" stroke="url(#nvGoldGrad)" stroke-width="2.2" filter="url(#glow)"/>
+    <!-- Stylized Interlocking N - V Vault Geometry -->
+    <path d="M14 15V29L22 34V20L14 15Z" fill="url(#nvGoldGrad)"/>
+    <path d="M30 15V29L22 34V20L30 15Z" fill="#FBBF24" fill-opacity="0.85"/>
+    <path d="M22 10L30 15L22 20L14 15L22 10Z" fill="#FDE68A"/>
+    <!-- Central Core Dot -->
+    <circle cx="22" cy="22" r="2.5" fill="#0B0E14" stroke="#F59E0B" stroke-width="1.5"/>
+</svg>

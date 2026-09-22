@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h2 class="text-center">Transaction History</h2>
+                <h3>Withdrawals</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for withdrawal in withdrawals %}
+                            <tr>
+                                <td>{{ withdrawal.time }}</td>
+                                <td>{{ withdrawal.amount }}</td>
+                                <td>{{ withdrawal.crypto_currency }}</td>
+                                <td>{{ withdrawal.status }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h3>Deposits</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for deposit in deposits %}
+                            <tr>
+                                <td>{{ deposit.time }}</td>
+                                <td>{{ deposit.amount }}</td>
+                                <td>{{ deposit.crypto_currency }}</td>
+                                <td>{{ deposit.status }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

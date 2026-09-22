@@ -1,0 +1,24 @@
+{% extends 'SVEX_APP/base_client.html' %}
+{% block content %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet Balance</title>
+</head>
+<body>
+    <h1>Wallet Balance</h1>
+
+    <p><strong>BTC Balance:</strong> {{ btc_balance }} <span style="color: grey">(~${{ btc_balance|mul:btc_price|usd }})</span></p>
+    <p><strong>Spot BTC Balance:</strong> {{ spotbtc_balance }} <span style="color: grey">(~${{ spotbtc_balance|mul:btc_price|usd }})</span></p>
+    <p><strong>Ethereum (ETH) Balance:</strong> {{ eth_balance }} <span style="color: grey">(~${{ eth_balance|mul:eth_price|usd }})</span></p>
+    <p><strong>USDT ERC-20 Balance:</strong> {{ usdt_balance_erc20 }} <span style="color: grey">(~${{ usdt_balance_erc20|floatformat:2 }})</span></p>
+    <p><strong>USD TRC-20 Balance:</strong> {{ usd_balance_trc20 }} <span style="color: grey">(~${{ usd_balance_trc20|floatformat:2 }})</span></p>
+
+    
+
+</body>
+</html>
+{% endblock %}

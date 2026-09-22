@@ -1,0 +1,201 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}Client Wallets{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Client Wallets</h1>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by client..." onkeyup="searchTable()">
+    </div>
+
+    <div class="table-container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th class="text-right">Transfer Wallet</th>
+                        <th class="text-right">Spot BTC Balance</th>
+                        <th class="text-right">BTC Balance</th>
+                        <th class="text-right">ETH Balance</th>
+                        <th class="text-right">USDT (ERC20)</th>
+                        <th class="text-right">USDT (TRC20)</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="walletTableBody">
+                    {% for wallet in client_wallets %}
+                        <tr>
+                            <td>{{ wallet.client.username }}</td>
+                            <td class="text-right monospace font-semibold">{{ wallet.wallet_address}}</td>
+                            <td class="text-right monospace font-semibold">{{ wallet.spotbtc_balance }}</td>
+                            <td class="text-right monospace font-semibold">{{ wallet.btc_balance }}</td>
+                            <td class="text-right monospace font-semibold">{{ wallet.eth_balance }}</td>
+                            <td class="text-right monospace font-semibold">{{ wallet.usdt_balance_erc20 }}</td>
+                            <td class="text-right monospace font-semibold">{{ wallet.usd_balance_trc20 }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'edit_client_wallet' client_wallet_id=wallet.pk %}" class="btn btn-sm btn-info">Edit</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <div class="empty-state-title">No client wallets found</div>
+                                <div class="empty-state-subtitle">Wallet balances will appear here once they are generated for clients.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* General Layout & Typography */
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .page-header h1 {
+        color: #0f172a;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    .monospace { font-family: monospace; }
+    .font-semibold { font-weight: 600; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+
+    /* Search Input */
+    .search-input {
+        background-color: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 0.65rem 1rem;
+        font-size: 0.875rem;
+        outline: none;
+        min-width: 250px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input::placeholder {
+        color: #6b7280;
+    }
+    .search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Buttons */
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+        color: #0f172a;
+        white-space: nowrap;
+    }
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        border-radius: 6px;
+    }
+    .btn-info { background-color: #3b82f6; }
+    .btn-info:hover { background-color: #2563eb; }
+
+    /* Table Styling */
+    .table-container {
+        
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+    }
+    .table-wrapper {
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th {
+        padding: 1rem;
+        text-align: left;
+        color: #0f172a;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    td {
+        padding: 1rem;
+        color: #334155;
+        font-weight: 500;
+    }
+    thead tr {
+        background-color: #ffffff;
+        border-bottom: 2px solid #cbd5e1;
+    }
+    tbody tr {
+        border-bottom: 1px solid #e2e8f0;
+        transition: background-color 0.2s;
+    }
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+    tbody tr:hover {
+        background-color: #252525;
+    }
+
+    /* Empty State */
+    .empty-state {
+        padding: 3rem;
+        text-align: center;
+        color: #6b7280;
+    }
+    .empty-state-title {
+        font-size: 1.125rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .empty-state-subtitle {
+        font-size: 0.875rem;
+    }
+</style>
+
+<script>
+    function searchTable() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const tableBody = document.getElementById("walletTableBody");
+        const rows = tableBody.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            // Only search actual data rows, not the empty state row
+            if (rows[i].getElementsByTagName("td").length > 1) {
+                const td = rows[i].getElementsByTagName("td")[0]; // Search by client username
+                if (td) {
+                    const txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

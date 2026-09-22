@@ -1,0 +1,113 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}KYC Entries{% endblock %}
+
+{% block content %}
+    <style>
+        /* Table styles */
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto; /* Center the table */
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Search input styles */
+        #searchInput {
+            width: 20%;
+            padding: 10px;
+            margin: 20px 200px;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #searchInput:focus {
+            border-color: #007bff;
+        }
+
+        /* Table row hover effect */
+        tbody tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        /* Edit link styles */
+        .edit-link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Edit link hover effect */
+        .edit-link:hover {
+            color: #0056b3;
+        }
+    </style>
+
+    <h1>KYC Entries</h1>
+    <!-- Search input field -->
+    <input type="text" id="searchInput" placeholder="Search by Client, Government Name, Last Name, or Country">
+    <table>
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Government Name</th>
+                <th>Last Name</th>
+                <th>Country</th>
+                <th>Birthdate</th>
+                <th>ID Front</th>
+                <th>ID Back</th>
+                <th>Verified</th>
+                <th>Verification Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for kyc_entry in kyc_entries %}
+                <tr>
+                    <td>{{ kyc_entry.client.username }}</td>
+                    <td>{{ kyc_entry.government_name }}</td>
+                    <td>{{ kyc_entry.last_name }}</td>
+                    <td>{{ kyc_entry.country }}</td>
+                    <td>{{ kyc_entry.birthdate }}</td>
+                    <td style="text-align: center;">
+                        <img src="{{ kyc_entry.id_front.url }}" width="100" height="100" alt="Front of {{ kyc_entry.client.username }}'s ID">
+                    </td>
+                    <td style="text-align: center;">
+                        <img src="{{ kyc_entry.id_back.url }}" width="100" height="100" alt="Back of {{ kyc_entry.client.username }}'s ID">
+                    </td>
+                    <td>{{ kyc_entry.is_verified }}</td>
+                    <td>{{ kyc_entry.verification_status }}</td>
+                    <td><a class="edit-link" href="{% url 'edit_kyc' kyc_entry.id %}">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        var input = document.getElementById("searchInput");
+        var tableRows = document.querySelectorAll("tbody tr");
+
+        input.addEventListener("input", function() {
+            var searchText = input.value.toLowerCase();
+            tableRows.forEach(function(row) {
+                var rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchText)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+{% endblock %}

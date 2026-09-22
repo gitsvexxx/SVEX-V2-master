@@ -1,0 +1,121 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}Edit Case{% endblock %}
+
+{% block content %}
+<style>
+/* Custom styles for the form */
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #0f172a;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+<div class="form-container">
+<h1>Edit Case</h1>
+<form method="post">
+  {% csrf_token %}
+
+  <div class="form-group">
+    <label for="case_category">Category:</label>
+    {{ form.case_category }}
+  </div>
+
+  <div class="form-group">
+    <label for="client_contact_details">Client Contact Details:</label>
+    {{ form.client_contact_details }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_status">Status:</label>
+    {{ form.case_status }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_client">Client:</label>
+    {{ form.case_client }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_subject">Subject:</label>
+    {{ form.case_subject }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_touch">Touch:</label>
+    {{ form.case_touch }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_priority">Priority:</label>
+    {{ form.case_priority }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_notes">Notes:</label>
+    {{ form.case_notes }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_attachment">Attachment:</label>
+    {{ form.case_attachment }}
+  </div>
+
+  <div class="form-group">
+    <label for="id_related_cases">Related Cases:</label>
+    {{ form.related_cases }}
+  </div>
+
+  <div class="form-group">
+    <label for="case_resolution_details">Resolution Details:</label>
+    {{ form.case_resolution_details }}
+  </div>
+
+  <div class="form-group">
+    <label for="customer_feedback">Customer Feedback:</label>
+    {{ form.customer_feedback }}
+  </div>
+
+  <input type="submit" class="btn btn-primary" value="Update">
+</form>
+</div>
+{% endblock %}

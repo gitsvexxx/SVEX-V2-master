@@ -1,0 +1,215 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}Edit Withdrawal Message{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin-bottom: 1.5rem; font-size: 1.75rem; font-weight: 600;">
+            Edit Withdrawal Message
+        </h1>
+
+        {% if form.errors %}
+        <div style="background: #dc2626; color: #0f172a; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <strong>Please correct the following errors:</strong>
+            <ul style="margin: 0.5rem 0 0 1.5rem;">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <!-- User Field -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        User
+                    </label>
+                    {{ form.user }}
+                    {% if form.user.help_text %}
+                    <p style="color: #9ca3af; font-size: 0.875rem; margin-top: 0.25rem;">
+                        {{ form.user.help_text }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Can Withdraw Toggle -->
+                <div style=" padding: 1.25rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <label style="color: #1e293b; font-weight: 500; display: block; margin-bottom: 0.25rem;">
+                                Withdrawal Permission
+                            </label>
+                            <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">
+                                Enable or disable withdrawal access for this user
+                            </p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            {{ form.can_withdraw }}
+                            <span id="toggle-status" style="color: #10b981; font-weight: 500; min-width: 70px;">
+                                Enabled
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Field -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Message
+                    </label>
+                    <textarea 
+                        name="{{ form.message.name }}" 
+                        id="id_message"
+                        maxlength="200"
+                        rows="4"
+                        style="width: 100%; padding: 0.75rem;  border: 1px solid #cbd5e1; border-radius: 8px; color: #0f172a; font-size: 1rem; resize: vertical; font-family: inherit;"
+                        placeholder="Enter withdrawal message for the user..."
+                    >{{ form.message.value|default_if_none:"" }}</textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                        <p style="color: #9ca3af; font-size: 0.875rem; margin: 0;">
+                            Message shown to user regarding withdrawal status
+                        </p>
+                        <span id="char-count" style="color: #9ca3af; font-size: 0.875rem;">
+                            0 / 200
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: flex-end;">
+                <a href="{% url 'withdrawal_message_list' %}" 
+                   style="padding: 0.75rem 1.5rem; background: #e2e8f0; color: #0f172a; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background 0.2s; display: inline-block;">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        style="padding: 0.75rem 1.5rem; background: #3b82f6; color: #ffffff; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: background 0.2s;">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Form field styling */
+    #id_user {
+        width: 100%;
+        padding: 0.75rem;
+        
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        color: #0f172a;
+        font-size: 1rem;
+    }
+
+    #id_user:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    #id_message:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Checkbox styling for can_withdraw */
+    #id_can_withdraw {
+        width: 48px;
+        height: 24px;
+        cursor: pointer;
+        appearance: none;
+        background: #dc2626;
+        border-radius: 12px;
+        position: relative;
+        transition: background 0.3s;
+    }
+
+    #id_can_withdraw:checked {
+        background: #10b981;
+    }
+
+    #id_can_withdraw::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: white;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+    }
+
+    #id_can_withdraw:checked::before {
+        transform: translateX(24px);
+    }
+
+    /* Button hover effects */
+    button[type="submit"]:hover {
+        background: #2563eb;
+    }
+
+    a[href*="withdrawal_message_list"]:hover {
+        background: #525252;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    // Character counter for message field
+    const messageField = document.getElementById('id_message');
+    const charCount = document.getElementById('char-count');
+    
+    function updateCharCount() {
+        const length = messageField.value.length;
+        charCount.textContent = `${length} / 200`;
+        
+        if (length > 180) {
+            charCount.style.color = '#ef4444';
+        } else if (length > 150) {
+            charCount.style.color = '#f59e0b';
+        } else {
+            charCount.style.color = '#9ca3af';
+        }
+    }
+    
+    messageField.addEventListener('input', updateCharCount);
+    updateCharCount(); // Initialize on page load
+
+    // Toggle status text update
+    const toggleCheckbox = document.getElementById('id_can_withdraw');
+    const toggleStatus = document.getElementById('toggle-status');
+    
+    function updateToggleStatus() {
+        if (toggleCheckbox.checked) {
+            toggleStatus.textContent = 'Enabled';
+            toggleStatus.style.color = '#10b981';
+        } else {
+            toggleStatus.textContent = 'Disabled';
+            toggleStatus.style.color = '#dc2626';
+        }
+    }
+    
+    toggleCheckbox.addEventListener('change', updateToggleStatus);
+    updateToggleStatus(); // Initialize on page load
+</script>
+{% endblock %}

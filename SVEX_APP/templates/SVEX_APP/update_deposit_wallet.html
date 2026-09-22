@@ -1,0 +1,157 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}Update Deposit Wallet{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 2rem auto; padding: 0 1rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin-bottom: 0.5rem; font-size: 1.875rem; font-weight: 600;">Update Deposit Wallet</h1>
+        <p style="color: #9ca3af; margin-bottom: 2rem;">Configure cryptocurrency deposit wallet addresses</p>
+
+        {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: #065f46; color: #d1fae5;">
+            {% else %}
+            <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: #991b1b; color: #fecaca;">
+            {% endif %}
+                {{ message }}
+            </div>
+
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: #991b1b; color: #fecaca;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <!-- User Field (if editable) -->
+                {% if form.user %}
+                <div>
+                    <label style="display: block; color: #e5e7eb; font-weight: 500; margin-bottom: 0.5rem;">
+                        {{ form.user.label }}
+                    </label>
+                    {{ form.user }}
+                    {% if form.user.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.user.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- BTC Wallet -->
+                <div>
+                    <label style="display: block; color: #e5e7eb; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #f7931a;">₿</span>
+                            Bitcoin (BTC) Deposit Wallet
+                        </span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="btc_deposit_wallet" 
+                        value="{{ form.btc_deposit_wallet.value|default:'' }}"
+                        style="width: 100%; padding: 0.75rem;  border: 1px solid #374151; border-radius: 8px; color: #0f172a; font-family: monospace; font-size: 0.875rem;"
+                        placeholder="Enter BTC wallet address"
+                    >
+                    {% if form.btc_deposit_wallet.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.btc_deposit_wallet.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- ETH Wallet -->
+                <div>
+                    <label style="display: block; color: #e5e7eb; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #627eea;">Ξ</span>
+                            Ethereum (ETH) Deposit Wallet
+                        </span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="eth_deposit_wallet" 
+                        value="{{ form.eth_deposit_wallet.value|default:'' }}"
+                        style="width: 100%; padding: 0.75rem;  border: 1px solid #374151; border-radius: 8px; color: #0f172a; font-family: monospace; font-size: 0.875rem;"
+                        placeholder="Enter ETH wallet address"
+                    >
+                    {% if form.eth_deposit_wallet.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.eth_deposit_wallet.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- ERC20 Wallet -->
+                <div>
+                    <label style="display: block; color: #e5e7eb; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #627eea;">⬡</span>
+                            ERC-20 (USDT) Deposit Wallet
+                        </span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="erc20_deposit_wallet" 
+                        value="{{ form.erc20_deposit_wallet.value|default:'' }}"
+                        style="width: 100%; padding: 0.75rem;  border: 1px solid #374151; border-radius: 8px; color: #0f172a; font-family: monospace; font-size: 0.875rem;"
+                        placeholder="Enter ERC-20 wallet address"
+                    >
+                    {% if form.erc20_deposit_wallet.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.erc20_deposit_wallet.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- TRC20 Wallet -->
+                <div>
+                    <label style="display: block; color: #e5e7eb; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <span style="color: #eb0029;">T</span>
+                            TRC-20 (USDT) Deposit Wallet
+                        </span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="trc20_deposit_wallet" 
+                        value="{{ form.trc20_deposit_wallet.value|default:'' }}"
+                        style="width: 100%; padding: 0.75rem;  border: 1px solid #374151; border-radius: 8px; color: #0f172a; font-family: monospace; font-size: 0.875rem;"
+                        placeholder="Enter TRC-20 wallet address"
+                    >
+                    {% if form.trc20_deposit_wallet.errors %}
+                        <p style="color: #f87171; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.trc20_deposit_wallet.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button 
+                    type="submit"
+                    style="flex: 1; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #0f172a; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.4)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                >
+                    Save Changes
+                </button>
+                <a 
+                    href="{% url 'deposit_wallet' %}"
+                    style="flex: 1; padding: 0.75rem 1.5rem; background: #374151; color: #0f172a; border: none; border-radius: 8px; font-weight: 600; text-align: center; text-decoration: none; cursor: pointer; transition: all 0.2s; display: inline-block;"
+                    onmouseover="this.style.background='#4b5563';"
+                    onmouseout="this.style.background='#374151';"
+                >
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input[type="text"]:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+</style>
+{% endblock %}

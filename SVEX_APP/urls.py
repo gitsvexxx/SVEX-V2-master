@@ -1,0 +1,171 @@
+from django.urls import path
+from . import views
+from .views import EditClientProfileView
+from django.contrib.auth.views import (
+    LogoutView,
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
+
+
+urlpatterns = [
+    path("", views.home_page, name="home"),
+    path("client/", views.client_home, name="client_home"),
+    path("manager/", views.manager_home, name="manager_home"),
+    path("manager/logs/", views.user_activity_logs, name="user_activity_logs"),
+    path("api/mass_update/", views.mass_update_api, name="mass_update_api"),
+    #path("login/", views.custom_login, name="custom_login"),
+    path("login-new/", views.new_login, name="new_login"),
+    path("logout/", views.custom_logout, name="custom_logout"),
+    path("autologin/<uuid:token>/", views.autologin, name="autologin"),
+    path("api/track/", views.track_analytics, name="track_analytics"),
+    path("register/", views.register, name="register"),
+    path("manager/import-users/", views.import_users_csv, name="import_users_csv"),
+    path("manager/export-users/", views.export_users_csv, name="export_users_csv"),
+    path("export-users-csv/", views.export_users_csv, name="export_users_csv_alias"),
+    path("register-new/", views.register_new, name="register_new"),
+    path("forgot-password/", views.forgot_password, name="forgot_password"),
+    path(
+        "create-support-ticket/",
+        views.create_support_ticket,
+        name="create_support_ticket",
+    ),
+    path(
+        "ticket-created-successfully/",
+        views.ticket_created_successfully,
+        name="ticket_created_successfully",
+    ),
+    path("edit-email/", views.change_email_address, name="change_email_address"),
+    path("client-profile/", views.client_profile, name="client_profile"),
+    path("my-account/", views.my_account, name="my_account"),
+    path(
+        "update-profile/", EditClientProfileView.as_view(), name="edit_client_profile"
+    ),
+    path("client_list/", views.client_list, name="client_list"),
+    path("edit_client/<int:pk>/", views.edit_client_manager, name="edit_client"),
+    path("edit-website/", views.edit_website, name="edit_website"),
+    path("kyc_verification/", views.kyc_submit, name="kyc_verification"),
+    path("kyc_status/", views.kyc_status, name="kyc_status"),
+    path("my_wallets/", views.wallet_balance, name="my_wallets"),
+    path("open-tickets/", views.open_ticket_list, name="open_tickets"),
+    path("all-tickets/", views.all_tickets, name="all_tickets"),
+    path("closed-tickets/", views.closed_tickets, name="closed_tickets"),
+    path("tickets_in_progress/", views.tickets_in_progress, name="tickets_in_progress"),
+    path("edit-case/<int:case_id>/", views.edit_case, name="edit_case"),
+    path("my-profile/", views.my_profile_manager, name="my_profile_manager"),
+    path("edit-profile/", views.edit_profile_manager, name="edit_profile"),
+    path("view-kyc/", views.view_kyc, name="view_kyc"),
+    path("edit-kyc/<int:kyc_id>/", views.edit_kyc, name="edit_kyc"),
+    path("view-client-wallet/", views.view_client_wallet, name="view_client_wallet"),
+    path(
+        "edit-client-wallet/<int:client_wallet_id>/",
+        views.edit_client_wallet,
+        name="edit_client_wallet",
+    ),
+    path("deposit_wallet/", views.deposit_wallet, name="deposit_wallet"),
+    path("withdraw/", views.wallets_withdraw, name="withdraw"),
+    path("withdraw", views.wallets_withdraw),
+    path("withdraw-new/", views.withdraw, name="withdraw_legacy"),
+    path("transaction_history/", views.transaction_history, name="transaction_history"),
+    path(
+        "password-reset/",
+        PasswordResetView.as_view(template_name="SVEX_APP/password_reset.html"),
+        name="password-reset",
+    ),
+    path(
+        "password-reset/done/",
+        PasswordResetDoneView.as_view(
+            template_name="SVEX_APP/password_reset_done.html"
+        ),
+        name="password_reset_done",
+    ),
+    path(
+        "password-reset-confirm/<uidb64>/<token>/",
+        PasswordResetConfirmView.as_view(
+            template_name="SVEX_APP/password_reset_confirm.html"
+        ),
+        name="password_reset_confirm",
+    ),
+    path(
+        "password-reset-complete/",
+        PasswordResetCompleteView.as_view(
+            template_name="SVEX_APP/password_reset_complete.html"
+        ),
+        name="password-reset-complete",
+    ),
+    path(
+        "password-reset/",
+        PasswordResetView.as_view(
+            template_name="SVEX_APP/password_reset.html",
+            html_email_template_name="SVEX_APP/password_reset_email.html",
+        ),
+        name="password-reset",
+    ),
+    # path("home-page", views.home_page, name="home_page"),
+    path("dashboard", views.dashboard, name="dashboard"),
+    path("dashboard/reclamation_mockup/", views.reclamation_mockup, name="reclamation_mockup"),
+    path("dashboard/reclamation_mockup_v2/", views.reclamation_mockup_v2, name="reclamation_mockup_v2"),
+    path("dashboard/reclamation_mockup_v3/", views.reclamation_mockup_v3, name="reclamation_mockup_v3"),
+    path("dashboard/settings", views.dashboard_settings, name="dashboard_settings"),
+    path("dashboard/orders", views.dashboard_orders, name="dashboard_orders"),
+    path("dashboard/history", views.dashboard_history, name="dashboard_history"),
+    path("dashboard/kyc", views.dashboard_kyc, name="dashboard_kyc"),
+    path(
+        "dashboard/tickets",
+        views.dashboard_support_tickets,
+        name="dashboard_support_tickets",
+    ),
+    path("dashboard/referral", views.referral, name="dashboard_referral"),
+    path("dashboard/staking", views.dashboard_staking, name="dashboard_staking"),
+    path("get-tickets/", views.get_tickets, name="get_tickets"),
+    path("get-withdraws/", views.get_withdraws, name="get_withdraws"),
+    path("faq", views.faq, name="faq"),
+    path("dashboard/wallets", views.wallets_index, name="wallets_index"),
+    # path('dashboard/wallets/transfer', views.wallets_transfer, name='wallets_transfer'),
+    path("dashboard/wallets/withdraw", views.wallets_withdraw, name="wallets_withdraw"),
+    path("dashboard/wallets/deposit", views.wallets_deposit, name="wallets_deposit"),
+    path("buy-crypto", views.buy_crypto, name="buy_crypto"),
+    path("markets", views.markets, name="markets"),
+    path("fetch-market-coins", views.fetch_market_coins, name="fetch_market_coins"),
+    path("exchange", views.exchange, name="exchange"),
+    path("test", views.test, name="test"),
+    path("test-2", views.test_2, name="test_2"),
+    path("test-3", views.test_3, name="test_3"),
+    path("change-password", views.change_password, name="change_password"),
+    path("change-email", views.change_email, name="change_email"),
+    path("deposit-wallet/", views.deposit_wallet_view, name="deposit_wallet"),
+    path("deposit-wallets/create/", views.create_deposit_wallet, name="create_deposit_wallet"),
+    path(
+        "deposit-wallets/edit/<int:pk>/",
+        views.update_deposit_wallet,
+        name="edit_deposit_wallet",
+    ),
+    path("deposit-wallets/delete/<int:pk>/", views.delete_deposit_wallet, name="delete_deposit_wallet"),
+    path("withdrawals/", views.withdrawal_list, name="withdrawal_list"),
+    path("withdrawals/create/", views.create_withdrawal_manager, name="create_withdrawal"),
+    path("withdrawals/edit/<int:pk>/", views.edit_withdrawal, name="edit_withdrawal"),
+    path("withdrawals/delete/<int:pk>/", views.delete_withdrawal, name="delete_withdrawal"),
+    path("deposits/", views.deposit_list, name="deposit_list"),
+    path("deposits/create/", views.create_deposit, name="create_deposit"),
+    path("deposits/edit/<int:pk>/", views.edit_deposit, name="edit_deposit"),
+    path("deposits/delete/<int:pk>/", views.delete_deposit, name="delete_deposit"),
+    path(
+        "withdrawal-messages/",
+        views.withdrawal_message_list,
+        name="withdrawal_message_list",
+    ),
+    path(
+        "withdrawal-messages/edit/<int:pk>/",
+        views.edit_withdrawal_message,
+        name="edit_withdrawal_message",
+    ),
+    path("users-cred/",views.user_credentials, name="user_credentials"),
+
+    path("terms/", views.terms, name="terms"),
+
+    path("privacy/", views.privacy, name="privacy"),
+
+    path("fees/", views.fees, name="fees"),
+]

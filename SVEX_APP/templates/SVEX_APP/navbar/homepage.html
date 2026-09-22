@@ -1,0 +1,1424 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/novavault_logo.svg' %}">
+    <title>{{ website.name|default:"NovaVault" }} | Digital Asset Exchange & Custody</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* UI/UX Pro Max Crypto Design System */
+            --color-bg: #0b0e14;
+            --color-surface: #141a24;
+            --color-surface-hover: #1a2230;
+            --color-surface-card: #121822;
+            --color-border: #1f2937;
+            --color-border-hover: rgba(245, 158, 11, 0.35);
+            
+            --color-primary: #f59e0b;
+            --color-primary-hover: #d97706;
+            --color-primary-glow: rgba(245, 158, 11, 0.2);
+            --color-on-primary: #0b0e14;
+            
+            --color-text-main: #f8fafc;
+            --color-text-muted: #94a3b8;
+            --color-text-dim: #64748b;
+            
+            --color-success: #10b981;
+            --color-success-bg: rgba(16, 185, 129, 0.1);
+            --color-success-border: rgba(16, 185, 129, 0.25);
+            
+            --color-danger: #ef4444;
+            --color-danger-bg: rgba(239, 68, 68, 0.1);
+            --color-danger-border: rgba(239, 68, 68, 0.25);
+            
+            --nav-height: 72px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', monospace;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Top Bar Announcement / Live Ticker */
+        .announcement-bar {
+            background: #0f141d;
+            border-bottom: 1px solid var(--color-border);
+            padding: 0.45rem 1rem;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .announcement-tag {
+            background: var(--color-primary-glow);
+            color: var(--color-primary);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-full);
+            padding: 0.15rem 0.6rem;
+            font-weight: 700;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Navigation Header */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--nav-height);
+            background: rgba(11, 14, 20, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+        }
+
+        .brand-emblem {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #b45309 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0e14;
+            font-size: 1.1rem;
+            box-shadow: 0 0 14px var(--color-primary-glow);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a:hover {
+            color: #ffffff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .btn-signin {
+            padding: 0.55rem 1.15rem;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--color-text-main);
+            border: 1px solid var(--color-border);
+            background: transparent;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-signin:hover {
+            background: var(--color-surface);
+            border-color: #374151;
+            color: #ffffff;
+        }
+
+        .btn-gold {
+            padding: 0.55rem 1.35rem;
+            border-radius: var(--radius-md);
+            background: var(--color-primary);
+            color: #0b0e14;
+            font-size: 0.88rem;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 2px 8px var(--color-primary-glow);
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .btn-gold:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-gold:active {
+            transform: translateY(0);
+        }
+
+        .mobile-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--color-text-main);
+            font-size: 1.35rem;
+            padding: 0.5rem;
+        }
+
+        /* Mobile Drawer */
+        .mobile-drawer {
+            position: fixed;
+            top: var(--nav-height);
+            left: 0;
+            width: 100%;
+            background: #0f141d;
+            border-bottom: 1px solid var(--color-border);
+            padding: 1.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 1.2rem;
+            z-index: 999;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .mobile-drawer.active {
+            display: flex;
+        }
+
+        .mobile-drawer a {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            padding: 0.35rem 0;
+        }
+
+        .mobile-drawer a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4.5rem 0 3.5rem 0;
+            border-bottom: 1px solid var(--color-border);
+            background: radial-gradient(circle at 75% 30%, rgba(245, 158, 11, 0.07) 0%, transparent 50%);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 3.5rem;
+            align-items: center;
+        }
+
+        .hero-trust-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.85rem;
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius-full);
+            color: var(--color-primary);
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-heading {
+            font-size: 3.4rem;
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-heading span.highlight {
+            color: var(--color-primary);
+        }
+
+        .hero-lead {
+            font-size: 1.12rem;
+            color: var(--color-text-muted);
+            max-width: 530px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-hero-primary {
+            padding: 0.85rem 2rem;
+            background: var(--color-primary);
+            color: #0b0e14;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: var(--radius-md);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 14px var(--color-primary-glow);
+            transition: all var(--transition-fast);
+        }
+
+        .btn-hero-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-hero-secondary {
+            padding: 0.85rem 1.75rem;
+            background: var(--color-surface);
+            color: var(--color-text-main);
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-hero-secondary:hover {
+            background: var(--color-surface-hover);
+            border-color: #374151;
+            color: #ffffff;
+        }
+
+        .hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            padding-top: 1.75rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .metric-card h3 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .metric-card p {
+            font-size: 0.82rem;
+            color: var(--color-text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-top: 0.2rem;
+        }
+
+        .hero-media-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-media-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+            max-width: 480px;
+            width: 100%;
+            transition: transform var(--transition-normal);
+        }
+
+        .hero-media-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .hero-media-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Trust / Regulatory Bar */
+        .trust-strip {
+            background: #0d121b;
+            border-bottom: 1px solid var(--color-border);
+            padding: 1.75rem 0;
+        }
+
+        .trust-grid {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .trust-badge-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--color-text-muted);
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .trust-badge-item i {
+            color: var(--color-primary);
+            font-size: 1.15rem;
+        }
+
+        /* Markets Section */
+        .markets-section {
+            padding: 4.5rem 0;
+        }
+
+        .section-header-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.25rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .section-tagline {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+
+        .section-title {
+            font-size: 2.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .section-sub {
+            color: var(--color-text-muted);
+            font-size: 0.95rem;
+            margin-top: 0.35rem;
+        }
+
+        .market-tabs {
+            display: flex;
+            background: var(--color-surface);
+            padding: 0.3rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            gap: 0.25rem;
+        }
+
+        .market-tab {
+            padding: 0.45rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            background: transparent;
+            border: none;
+            transition: all var(--transition-fast);
+        }
+
+        .market-tab.active, .market-tab:hover {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        /* Table Design */
+        .market-table-container {
+            background: var(--color-surface-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .market-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .market-table th {
+            background: #0f141d;
+            padding: 1rem 1.5rem;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            color: var(--color-text-dim);
+            font-weight: 700;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .market-table td {
+            padding: 1.15rem 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+            vertical-align: middle;
+        }
+
+        .market-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .market-table tr:hover td {
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .asset-icon-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .asset-symbol {
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 0.98rem;
+        }
+
+        .asset-name {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+
+        .price-val {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #ffffff;
+        }
+
+        .change-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .change-pill.positive {
+            background: var(--color-success-bg);
+            color: var(--color-success);
+            border: 1px solid var(--color-success-border);
+        }
+
+        .change-pill.negative {
+            background: var(--color-danger-bg);
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger-border);
+        }
+
+        .btn-table-action {
+            padding: 0.45rem 1.1rem;
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            color: var(--color-primary);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-table-action:hover {
+            background: var(--color-primary);
+            color: #0b0e14;
+            border-color: var(--color-primary);
+        }
+
+        /* Mobile Market Cards */
+        .market-mobile-cards {
+            display: none;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .mobile-coin-card {
+            background: var(--color-surface-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Platform Pillars Section */
+        .features-section {
+            padding: 5rem 0;
+            background: #090c12;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-box {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 2.25rem 1.75rem;
+            transition: all var(--transition-normal);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--color-border-hover);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .feature-icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            background: var(--color-primary-glow);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--color-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-box h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-box p {
+            font-size: 0.92rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Mobile Terminal Showcase */
+        .showcase-section {
+            padding: 5rem 0;
+        }
+
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .showcase-visual {
+            max-width: 480px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+            margin: 0 auto;
+        }
+
+        .showcase-visual img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .feature-bullet-list {
+            list-style: none;
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .feature-bullet-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .feature-bullet-list i {
+            color: var(--color-primary);
+            font-size: 1.15rem;
+            margin-top: 0.2rem;
+        }
+
+        /* Action Banner */
+        .action-banner {
+            margin: 3rem 0 6rem 0;
+            background: linear-gradient(135deg, #18202d 0%, #0d121a 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 3.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-banner h2 {
+            font-size: 2.35rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 0.85rem;
+            letter-spacing: -0.02em;
+        }
+
+        .action-banner p {
+            color: var(--color-text-muted);
+            max-width: 540px;
+            margin: 0 auto 2rem auto;
+            font-size: 1.05rem;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: #080a0f;
+            border-top: 1px solid var(--color-border);
+            padding: 4rem 0 2rem 0;
+            font-size: 0.9rem;
+        }
+
+        .footer-cols {
+            display: grid;
+            grid-template-columns: 1.4fr repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-col a {
+            color: var(--color-text-dim);
+            transition: color var(--transition-fast);
+        }
+
+        .footer-col a:hover {
+            color: var(--color-primary);
+        }
+
+        .footer-disclaimer {
+            border-top: 1px solid var(--color-border);
+            padding: 2rem 0;
+            color: var(--color-text-dim);
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+
+        .footer-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--color-text-dim);
+            font-size: 0.82rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 1.25rem;
+        }
+
+        .footer-socials a {
+            color: var(--color-text-dim);
+            font-size: 1.05rem;
+        }
+
+        .footer-socials a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Responsiveness */
+        @media (max-width: 992px) {
+            .hero-grid, .showcase-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-lead {
+                margin: 0 auto 2rem auto;
+            }
+            .hero-cta-group {
+                justify-content: center;
+            }
+            .hero-metrics {
+                justify-content: center;
+            }
+            .feature-bullet-list {
+                align-items: center;
+                text-align: left;
+            }
+            .footer-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu, .nav-actions {
+                display: none;
+            }
+            .mobile-hamburger {
+                display: block;
+            }
+            .announcement-bar {
+                display: none;
+            }
+            .hero-heading {
+                font-size: 2.25rem;
+            }
+            .hero-metrics {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            .market-table-container {
+                display: none;
+            }
+            .market-mobile-cards {
+                display: flex;
+            }
+            .action-banner h2 {
+                font-size: 1.85rem;
+            }
+            .footer-cols {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Announcement Bar -->
+    <div class="announcement-bar">
+        <div>
+            <span class="announcement-tag">Security Update</span>
+            <span>Proof of Reserves audit completed &bull; 100% 1:1 collateralized storage</span>
+        </div>
+        <div style="display: flex; gap: 1.25rem;">
+            <a href="/fees/" style="color: var(--color-text-muted);"><i class="fas fa-percent" style="color: var(--color-primary); margin-right: 4px;"></i> Fee Schedule</a>
+            <a href="/faq" style="color: var(--color-text-muted);"><i class="fas fa-shield-alt" style="color: var(--color-primary); margin-right: 4px;"></i> Compliance</a>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container nav-wrap">
+            <a href="{% url 'home' %}" class="brand">
+                <svg class="brand-logo-svg" width="38" height="38" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="nvGoldHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#FCD34D"/>
+                            <stop offset="50%" stop-color="#F59E0B"/>
+                            <stop offset="100%" stop-color="#B45309"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M22 2L39 11.5V32.5L22 42L5 32.5V11.5L22 2Z" fill="#141A24" stroke="url(#nvGoldHeader)" stroke-width="2.2"/>
+                    <path d="M14 15V29L22 34V20L14 15Z" fill="url(#nvGoldHeader)"/>
+                    <path d="M30 15V29L22 34V20L30 15Z" fill="#FBBF24" fill-opacity="0.85"/>
+                    <path d="M22 10L30 15L22 20L14 15L22 10Z" fill="#FDE68A"/>
+                    <circle cx="22" cy="22" r="2.2" fill="#0B0E14" stroke="#F59E0B" stroke-width="1.5"/>
+                </svg>
+                <span>{{ website.name|default:"NovaVault" }}</span>
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="#markets"><i class="fa-solid fa-chart-line" style="color: var(--color-primary); margin-right: 6px; font-size: 0.85rem;"></i>Markets</a></li>
+                <li><a href="/exchange"><i class="fa-solid fa-arrow-right-arrow-left" style="color: #38bdf8; margin-right: 6px; font-size: 0.85rem;"></i>Trade</a></li>
+                <li><a href="/buy-crypto"><i class="fa-solid fa-credit-card" style="color: #34d399; margin-right: 6px; font-size: 0.85rem;"></i>Buy Crypto</a></li>
+                <li><a href="#security"><i class="fa-solid fa-shield-halved" style="color: #a78bfa; margin-right: 6px; font-size: 0.85rem;"></i>Security</a></li>
+                <li><a href="/faq"><i class="fa-solid fa-circle-question" style="color: var(--color-text-dim); margin-right: 6px; font-size: 0.85rem;"></i>Support</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                {% if user.is_authenticated %}
+                    <a href="/dashboard" class="btn-signin">
+                        <i class="fas fa-th-large" style="margin-right: 6px;"></i> Dashboard
+                    </a>
+                    <a href="/logout/" class="btn-signin" style="color: var(--color-danger); border-color: var(--color-danger-border);">
+                        Sign Out
+                    </a>
+                {% else %}
+                    <a href="/login-new/" class="btn-signin">Log In</a>
+                    <a href="/register-new/" class="btn-gold">
+                        Get Started <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+                    </a>
+                {% endif %}
+            </div>
+
+            <button class="mobile-hamburger" id="menuToggle" aria-label="Toggle Navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-drawer" id="mobileDrawer">
+            <a href="#markets" onclick="closeDrawer()"><i class="fa-solid fa-chart-line" style="color: var(--color-primary); margin-right: 8px;"></i> Markets</a>
+            <a href="/exchange"><i class="fa-solid fa-arrow-right-arrow-left" style="color: #38bdf8; margin-right: 8px;"></i> Trade</a>
+            <a href="/buy-crypto"><i class="fa-solid fa-credit-card" style="color: #34d399; margin-right: 8px;"></i> Buy Crypto</a>
+            <a href="#security" onclick="closeDrawer()"><i class="fa-solid fa-shield-halved" style="color: #a78bfa; margin-right: 8px;"></i> Security & Reserves</a>
+            <a href="/faq"><i class="fa-solid fa-circle-question" style="color: var(--color-text-dim); margin-right: 8px;"></i> Support & FAQ</a>
+            <hr style="border: 0; border-top: 1px solid var(--color-border); margin: 0.25rem 0;">
+            {% if user.is_authenticated %}
+                <a href="/dashboard" class="btn-gold" style="text-align: center; justify-content: center;">
+                    Go to Dashboard
+                </a>
+                <a href="/logout/" style="color: var(--color-danger); text-align: center;">Sign Out</a>
+            {% else %}
+                <a href="/login-new/" class="btn-signin" style="text-align: center;">Log In</a>
+                <a href="/register-new/" class="btn-gold" style="text-align: center; justify-content: center;">
+                    Get Started <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-left">
+                <div class="hero-trust-tag">
+                    <i class="fas fa-shield-halved"></i> Institutional Grade &bull; Cold Storage Protected
+                </div>
+                <h1 class="hero-heading">
+                    The Premier <br>
+                    <span class="highlight">Digital Asset</span> Exchange
+                </h1>
+                <p class="hero-lead">
+                    Trade, secure, and manage over 200 digital assets with 99.8% offline cold storage, sub-millisecond execution, and 0.0% maker fees.
+                </p>
+
+                <div class="hero-cta-group">
+                    {% if user.is_authenticated %}
+                        <a href="/dashboard" class="btn-hero-primary">
+                            Open Dashboard <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="/exchange" class="btn-hero-secondary">
+                            Instant Exchange
+                        </a>
+                    {% else %}
+                        <a href="/register-new/" class="btn-hero-primary">
+                            Create Account <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#markets" class="btn-hero-secondary">
+                            View Live Markets
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="hero-metrics">
+                    <div class="metric-card">
+                        <h3 class="tabular-nums">$84.2M</h3>
+                        <p>24h Trading Volume</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3 class="tabular-nums">120+</h3>
+                        <p>Active Spot Pairs</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3 class="tabular-nums">0.0%</h3>
+                        <p>Maker Fee Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-media-wrapper">
+                <div class="hero-media-card">
+                    <img src="{% static 'images/home/hero_crypto_vault.jpg' %}" alt="NovaVault Platform Overview">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust / Regulatory Proof Strip -->
+    <section class="trust-strip">
+        <div class="container trust-grid">
+            <div class="trust-badge-item">
+                <i class="fas fa-lock"></i>
+                <span>100% 1:1 Proof of Reserves</span>
+            </div>
+            <div class="trust-badge-item">
+                <i class="fas fa-certificate"></i>
+                <span>SOC 2 Type II Certified</span>
+            </div>
+            <div class="trust-badge-item">
+                <i class="fas fa-shield-check"></i>
+                <span>Multi-Sig Cold Custody</span>
+            </div>
+            <div class="trust-badge-item">
+                <i class="fas fa-bolt"></i>
+                <span>Sub-5ms Execution Latency</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Markets Section -->
+    <section class="markets-section" id="markets">
+        <div class="container">
+            <div class="section-header-wrap">
+                <div>
+                    <div class="section-tagline">Real-Time Pricing</div>
+                    <h2 class="section-title">Cryptocurrency Markets</h2>
+                    <p class="section-sub">Live liquidity feeds powered directly by real-time order books.</p>
+                </div>
+
+                <div class="market-tabs">
+                    <button class="market-tab active" type="button" onclick="filterMarketTabs('all', this)">
+                        <i class="fa-solid fa-layer-group" style="margin-right: 6px;"></i> All Markets
+                    </button>
+                    <button class="market-tab" type="button" onclick="filterMarketTabs('hot', this)">
+                        <i class="fa-solid fa-fire" style="color: #f59e0b; margin-right: 6px;"></i> Hot & Trending
+                    </button>
+                    <button class="market-tab" type="button" onclick="filterMarketTabs('gainers', this)">
+                        <i class="fa-solid fa-arrow-trend-up" style="color: var(--color-success); margin-right: 6px;"></i> Top Gainers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Desktop Table View -->
+            <div class="market-table-container">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>Pair / Asset</th>
+                            <th>Market Price</th>
+                            <th>24h Change</th>
+                            <th style="text-align: right;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coin in currency_data %}
+                        <tr class="coin-row" data-symbol="{{ coin.symbol }}" data-change="{{ coin.price_change_percent }}">
+                            <td>
+                                <div class="asset-cell">
+                                    <img src="{{ coin.image_url }}" alt="{{ coin.class_name }}" width="32" height="32" onerror="this.style.display='none'">
+                                    <div>
+                                        <div class="asset-symbol">{{ coin.symbol }}</div>
+                                        <div class="asset-name">{{ coin.class_name }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="price-val tabular-nums">${{ coin.last_price|floatformat:2 }}</span>
+                            </td>
+                            <td>
+                                {% if coin.price_change_percent >= 0 %}
+                                    <span class="change-pill positive tabular-nums">
+                                        <i class="fas fa-caret-up"></i> {{ coin.price_change_percent_display }}%
+                                    </span>
+                                {% else %}
+                                    <span class="change-pill negative tabular-nums">
+                                        <i class="fas fa-caret-down"></i> {{ coin.price_change_percent_display }}%
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: right;">
+                                <a href="/exchange" class="btn-table-action">
+                                    Trade <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: var(--color-text-dim); padding: 3rem;">
+                                Live market quotes refreshing...
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="market-mobile-cards">
+                {% for coin in currency_data %}
+                <div class="mobile-coin-card coin-card" data-symbol="{{ coin.symbol }}" data-change="{{ coin.price_change_percent }}">
+                    <div class="asset-cell">
+                        <img src="{{ coin.image_url }}" alt="{{ coin.class_name }}" width="32" height="32" onerror="this.style.display='none'">
+                        <div>
+                            <div class="asset-symbol">{{ coin.symbol }}</div>
+                            <div class="price-val tabular-nums">${{ coin.last_price|floatformat:2 }}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        {% if coin.price_change_percent >= 0 %}
+                            <div class="change-pill positive tabular-nums" style="margin-bottom: 0.45rem;">
+                                <i class="fas fa-caret-up"></i> {{ coin.price_change_percent_display }}%
+                            </div>
+                        {% else %}
+                            <div class="change-pill negative tabular-nums" style="margin-bottom: 0.45rem;">
+                                <i class="fas fa-caret-down"></i> {{ coin.price_change_percent_display }}%
+                            </div>
+                        {% endif %}
+                        <div>
+                            <a href="/exchange" class="btn-table-action" style="padding: 0.3rem 0.75rem; font-size: 0.78rem;">
+                                Trade
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Pillars -->
+    <section class="features-section" id="security">
+        <div class="container">
+            <div style="text-align: center; max-width: 620px; margin: 0 auto;">
+                <div class="section-tagline">Institutional Infrastructure</div>
+                <h2 class="section-title">Built for Serious Traders</h2>
+                <p class="section-sub">Engineered with high availability, verifiable reserve transparency, and high liquidity.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-vault"></i>
+                    </div>
+                    <h3>Multi-Sig Cold Custody</h3>
+                    <p>Customer deposits are separated from operational funds and preserved in offline multi-signature cold vaults guarded by HSM security.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3>Sub-ms Matching Engine</h3>
+                    <p>Ultra-low latency architecture capable of sustaining 100,000+ orders per second with zero downtime during extreme market volatility.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-money-bill-transfer"></i>
+                    </div>
+                    <h3>0% Fee Tier Options</h3>
+                    <p>Instant fiat deposits and withdrawals via SEPA, Wire, and major stablecoin protocols with competitive tiered volume pricing.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Priority Support</h3>
+                    <p>Dedicated round-the-clock support desk and dedicated institutional account managers ready to assist with custom liquidity requests.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Platform Showcase -->
+    <section class="showcase-section">
+        <div class="container showcase-grid">
+            <div class="showcase-visual">
+                <img src="{% static 'images/home/trading_app_mockup.jpg' %}" alt="Mobile Trading Terminal">
+            </div>
+
+            <div>
+                <div class="section-tagline">Mobile & Web Terminals</div>
+                <h2 class="section-title">Trade Anywhere, On Any Device</h2>
+                <p class="section-sub">
+                    Get full trading functionality on desktop, tablet, and mobile with lightning chart analysis, one-tap orders, and biometric authentication.
+                </p>
+
+                <ul class="feature-bullet-list">
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div><strong>Biometric Security:</strong> FaceID and hardware security key support for instant, secure sign-in.</div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div><strong>Advanced Charting:</strong> Full TradingView technical analysis with 50+ indicators and drawing tools.</div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div><strong>Instant Price Alerts:</strong> Custom push alerts based on price targets, volatility spikes, and order fills.</div>
+                    </li>
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        <div><strong>Unified Portfolio:</strong> One dashboard tracking spot assets, euro fiat balances, and transaction history.</div>
+                    </li>
+                </ul>
+
+                <div>
+                    <a href="/exchange" class="btn-hero-primary">
+                        Launch Web Terminal <i class="fas fa-external-link-alt" style="font-size: 0.85rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="container">
+        <div class="action-banner">
+            <h2>Start Trading with {{ website.name|default:"NovaVault" }}</h2>
+            <p>Join thousands of verified traders. Create your account in under 3 minutes and trade digital assets today.</p>
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="/dashboard" class="btn-hero-primary" style="font-size: 1.05rem; padding: 0.95rem 2.5rem;">
+                        Go to Dashboard <i class="fas fa-arrow-right"></i>
+                    </a>
+                {% else %}
+                    <a href="/register-new/" class="btn-hero-primary" style="font-size: 1.05rem; padding: 0.95rem 2.5rem;">
+                        Open Free Account <i class="fas fa-arrow-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-cols">
+                <div class="footer-col">
+                    <a href="{% url 'home' %}" class="brand" style="margin-bottom: 1rem; display: inline-flex; align-items: center; gap: 0.75rem;">
+                        <svg class="brand-logo-svg" width="32" height="32" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="nvGoldFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FCD34D"/>
+                                    <stop offset="50%" stop-color="#F59E0B"/>
+                                    <stop offset="100%" stop-color="#B45309"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M22 2L39 11.5V32.5L22 42L5 32.5V11.5L22 2Z" fill="#141A24" stroke="url(#nvGoldFooter)" stroke-width="2.2"/>
+                            <path d="M14 15V29L22 34V20L14 15Z" fill="url(#nvGoldFooter)"/>
+                            <path d="M30 15V29L22 34V20L30 15Z" fill="#FBBF24" fill-opacity="0.85"/>
+                            <path d="M22 10L30 15L22 20L14 15L22 10Z" fill="#FDE68A"/>
+                            <circle cx="22" cy="22" r="2.2" fill="#0B0E14" stroke="#F59E0B" stroke-width="1.5"/>
+                        </svg>
+                        <span>{{ website.name|default:"NovaVault" }}</span>
+                    </a>
+                    <p style="color: var(--color-text-dim); line-height: 1.6; max-width: 300px; margin-top: 0.5rem;">
+                        Regulated digital asset exchange and secure custody infrastructure providing spot liquidity and cold asset storage.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="/exchange">Spot Exchange</a></li>
+                        <li><a href="/buy-crypto">Buy Digital Assets</a></li>
+                        <li><a href="#markets">Market Overview</a></li>
+                        <li><a href="/dashboard">Client Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="/faq">Help Center</a></li>
+                        <li><a href="/fees/">Fee Schedule</a></li>
+                        <li><a href="/create-support-ticket/">Support Ticket</a></li>
+                        <li><a href="/manager/">Staff Portal</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal & Policy</h4>
+                    <ul>
+                        <li><a href="/terms/">Terms of Service</a></li>
+                        <li><a href="/privacy/">Privacy Policy</a></li>
+                        <li><a href="/fees/">Trading Rules</a></li>
+                        <li><a href="/faq">Security Disclosures</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-disclaimer">
+                <strong>Risk Warning:</strong> Digital asset trading involves substantial risk of loss and is not suitable for every investor. The valuation of cryptocurrencies may fluctuate significantly. {{ website.name|default:"NovaVault" }} does not provide investment, tax, or legal advice. Please ensure you fully understand the risks before trading.
+            </div>
+
+            <div class="footer-bar">
+                <div>
+                    &copy; 2026 {{ website.name|default:"NovaVault" }}. All rights reserved.
+                </div>
+                <div class="footer-socials">
+                    <a href="/privacy/" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="/privacy/" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+                    <a href="/privacy/" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                    <a href="/privacy/" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+
+        menuToggle.addEventListener('click', () => {
+            mobileDrawer.classList.toggle('active');
+            const icon = menuToggle.querySelector('i');
+            if (mobileDrawer.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        function closeDrawer() {
+            if (mobileDrawer.classList.contains('active')) {
+                mobileDrawer.classList.remove('active');
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+    </script>
+
+    <script>
+        function filterMarketTabs(filter, btn) {
+            document.querySelectorAll('.market-tab').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const rows = document.querySelectorAll('.coin-row');
+            const cards = document.querySelectorAll('.coin-card');
+
+            const applyFilter = (elements) => {
+                elements.forEach(el => {
+                    const change = parseFloat(el.getAttribute('data-change') || '0');
+                    const symbol = el.getAttribute('data-symbol') || '';
+
+                    if (filter === 'all') {
+                        el.style.display = '';
+                    } else if (filter === 'gainers') {
+                        el.style.display = change > 0 ? '' : 'none';
+                    } else if (filter === 'hot') {
+                        const hotSymbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT'];
+                        el.style.display = hotSymbols.includes(symbol) ? '' : 'none';
+                    }
+                });
+            };
+
+            applyFilter(rows);
+            applyFilter(cards);
+        }
+    </script>
+
+</body>
+</html>

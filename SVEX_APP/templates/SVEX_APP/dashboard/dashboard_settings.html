@@ -1,0 +1,130 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% block content %}
+<div data-v-3548214f="" class="" style="">
+    <div data-v-3548214f="" class="page-header" style="display: none;"><h1
+            data-v-3548214f=""></h1></div>
+    <div data-v-4a6dcd5a="" data-v-28500ca6="" class="page-container" data-v-3548214f=""
+         style="border-bottom: none;">
+        <div data-v-28500ca6="" data-v-4a6dcd5a="" class="sc-menu">
+            <div data-v-168c8e9a="" data-v-28500ca6="" class="col-lg-4 col-md-4 col-xs-12"
+                 data-v-4a6dcd5a="" style="background: transparent;"><h1 data-v-168c8e9a="">
+                Security</h1><a data-v-168c8e9a=""
+                                href="#"
+                                class="">
+                <svg data-v-168c8e9a="" aria-hidden="true" focusable="false"
+                     data-prefix="fal" data-icon="user" role="img"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                     class="svg-inline--fa fa-user fa-w-14"
+                     style="margin-right: 20px; font-size: 28px; width: 28px;">
+                    <path data-v-168c8e9a="" fill="currentColor"
+                          d="M313.6 288c-28.7 0-42.5 16-89.6 16-47.1 0-60.8-16-89.6-16C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4zM416 464c0 8.8-7.2 16-16 16H48c-8.8 0-16-7.2-16-16v-41.6C32 365.9 77.9 320 134.4 320c19.6 0 39.1 16 89.6 16 50.4 0 70-16 89.6-16 56.5 0 102.4 45.9 102.4 102.4V464zM224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm0-224c52.9 0 96 43.1 96 96s-43.1 96-96 96-96-43.1-96-96 43.1-96 96-96z"
+                          class=""></path>
+                </svg>
+                <div data-v-168c8e9a="" style="line-height: 20px;">
+                    <span data-v-168c8e9a="" class="name">Last Login</span>
+                    <span data-v-168c8e9a="" class="info">27 {{user.last_login}}</span>
+                </div>
+            </a>
+                <a data-v-168c8e9a="" href="#" class="" id="emailContainer">
+                <svg data-v-168c8e9a="" aria-hidden="true" focusable="false"
+                     data-prefix="fal" data-icon="envelope" role="img"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                     class="svg-inline--fa fa-envelope fa-w-16"
+                     style="margin-right: 20px; font-size: 28px; width: 28px;">
+                    <path data-v-168c8e9a="" fill="currentColor"
+                          d="M464 64H48C21.5 64 0 85.5 0 112v288c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48zM48 96h416c8.8 0 16 7.2 16 16v41.4c-21.9 18.5-53.2 44-150.6 121.3-16.9 13.4-50.2 45.7-73.4 45.3-23.2.4-56.6-31.9-73.4-45.3C85.2 197.4 53.9 171.9 32 153.4V112c0-8.8 7.2-16 16-16zm416 320H48c-8.8 0-16-7.2-16-16V195c22.8 18.7 58.8 47.6 130.7 104.7 20.5 16.4 56.7 52.5 93.3 52.3 36.4.3 72.3-35.5 93.3-52.3 71.9-57.1 107.9-86 130.7-104.7v205c0 8.8-7.2 16-16 16z"
+                          class=""></path>
+                </svg>
+                <div data-v-168c8e9a="" style="line-height: 20px;">
+                    <span data-v-168c8e9a="" class="name">Email</span>
+                    <span data-v-168c8e9a="" class="info">{{user.email}}</span>
+                </div>
+            </a>
+                <a data-v-168c8e9a="" href="#" class="" id="passwordContainer">
+                <svg data-v-168c8e9a="" aria-hidden="true" focusable="false"
+                     data-prefix="fal" data-icon="key" role="img"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                     class="svg-inline--fa fa-key fa-w-16"
+                     style="margin-right: 20px; font-size: 28px; width: 28px;">
+                    <path data-v-168c8e9a="" fill="currentColor"
+                          d="M336 32c79.529 0 144 64.471 144 144s-64.471 144-144 144c-18.968 0-37.076-3.675-53.661-10.339L240 352h-48v64h-64v64H32v-80l170.339-170.339C195.675 213.076 192 194.968 192 176c0-79.529 64.471-144 144-144m0-32c-97.184 0-176 78.769-176 176 0 15.307 1.945 30.352 5.798 44.947L7.029 379.716A24.003 24.003 0 0 0 0 396.686V488c0 13.255 10.745 24 24 24h112c13.255 0 24-10.745 24-24v-40h40c13.255 0 24-10.745 24-24v-40h19.314c6.365 0 12.47-2.529 16.971-7.029l30.769-30.769C305.648 350.055 320.693 352 336 352c97.184 0 176-78.769 176-176C512 78.816 433.231 0 336 0zm48 108c11.028 0 20 8.972 20 20s-8.972 20-20 20-20-8.972-20-20 8.972-20 20-20m0-28c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"
+                          class=""></path>
+                </svg>
+                <div data-v-168c8e9a="" style="line-height: 20px;">
+                    <span data-v-168c8e9a="" class="name">Password</span>
+                    <!-- <span data-v-168c8e9a="" class="info">Updated: 27 Jan 2024 13:08:04</span> -->
+                </div>
+            </a>
+            </div>
+            <!--       CHANGE EMAIL     -->
+            <form action="/change-email" method="post">
+                {% csrf_token %}
+            <div data-v-28500ca6="" data-v-4a6dcd5a="" class="col-lg-8 col-md-8 col-xs-12" style="margin-top: 76px; display:none" id="emailForm">
+                <div data-v-337da634="" data-v-28500ca6="" data-v-4a6dcd5a="">
+                    <h3 data-v-337da634="" class="title">Change email</h3>
+                    <div data-v-72d3b7be="" data-v-337da634="" class="Input"
+                         style="max-width: 450px;"><label data-v-72d3b7be="" for="kmnwhp">New
+                        email</label><input data-v-72d3b7be="" type="email"
+                                            id="kmnwhp"><span data-v-72d3b7be=""
+                                                              style="display: none;">Incorrect value</span>
+                    </div>
+                    <div data-v-72d3b7be="" data-v-337da634="" class="Input"
+                         style="max-width: 450px;"><label data-v-72d3b7be="" for="n0g04g">Current
+                        password</label><input data-v-72d3b7be="" type="password"
+                                               id="n0g04g"><span data-v-72d3b7be=""
+                                                                 style="display: none;">Incorrect value</span>
+                    </div>
+                    <button data-v-31aba6a9="" data-v-337da634="" type="submit" class="Button default" style="width: 100%; max-width: 450px;">
+                        Submit
+                        <svg data-v-31aba6a9="" viewBox="0 0 50 50" class="spinner"
+                             style="display: none;">
+                            <circle data-v-31aba6a9="" cx="25" cy="25" r="20" fill="none"
+                                    stroke-width="5" class="path"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            </form>
+            <!--       CHANGE EMAIL     -->
+            <!--       CHANGE PASSWORD     -->
+        <form action="/change-password" method="post">
+            {% csrf_token %}
+            <div data-v-28500ca6="" data-v-4a6dcd5a="" class="col-lg-8 col-md-8 col-xs-12" style="margin-top: 76px; display:none" id="passwordForm">
+                <div data-v-422dc1c6="" data-v-28500ca6="" data-v-4a6dcd5a=""><h3
+                        data-v-422dc1c6="" class="title">Change password</h3>
+                    <div data-v-72d3b7be="" data-v-422dc1c6="" class="Input"
+                         style="max-width: 450px;"><label data-v-72d3b7be="" for="hi0m58">Old
+                        password</label><input data-v-72d3b7be="" type="password"
+                                               id="hi0m58"><span data-v-72d3b7be=""
+                                                                 style="display: none;">The password should be 8 to 32 characters long</span>
+                    </div>
+                    <div data-v-72d3b7be="" data-v-422dc1c6="" class="Input"
+                         style="max-width: 450px;"><label data-v-72d3b7be="" for="2lhifl">New
+                        password</label><input data-v-72d3b7be="" type="password"
+                                               id="2lhifl"><span data-v-72d3b7be=""
+                                                                 style="display: none;">The password should be 8 to 32 characters long</span>
+                    </div>
+                    <div data-v-72d3b7be="" data-v-422dc1c6="" class="Input"
+                         style="max-width: 450px;"><label data-v-72d3b7be="" for="avfkul">Repeat
+                        password</label><input data-v-72d3b7be="" type="password"
+                                               id="avfkul"><span data-v-72d3b7be=""
+                                                                 style="display: none;">The password should be 8 to 32 characters long</span>
+                    </div>
+                    <button data-v-31aba6a9="" data-v-422dc1c6="" class="Button default" style="width: 100%; max-width: 450px;" type="submit">Submit
+                        <svg data-v-31aba6a9="" viewBox="0 0 50 50" class="spinner" style="display: none;">
+                            <circle data-v-31aba6a9="" cx="25" cy="25" r="20" fill="none" stroke-width="5" class="path"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            </form>
+            <!--       CHANGE PASSWORD     -->
+            <div data-v-28500ca6="" data-v-4a6dcd5a="" class="col-lg-8 col-md-8 col-xs-12"
+                 style="margin-top: 76px;"><!----></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}
+

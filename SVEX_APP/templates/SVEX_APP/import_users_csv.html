@@ -1,0 +1,348 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}Import Users via CSV{% endblock %}
+
+{% block content %}
+<style>
+    .import-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .import-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+
+    .import-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .import-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.5rem;
+    }
+
+    .import-header p {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+
+    .format-info-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .format-info-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .format-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .format-table th, .format-table td {
+        border: 1px solid #cbd5e1;
+        padding: 6px 12px;
+        text-align: left;
+    }
+
+    .format-table th {
+        background-color: #f1f5f9;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .dropzone {
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        background-color: #f8fafc;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 1.5rem;
+    }
+
+    .dropzone:hover, .dropzone.dragover {
+        border-color: #3b82f6;
+        background-color: #eff6ff;
+    }
+
+    .dropzone-icon {
+        font-size: 2.5rem;
+        color: #3b82f6;
+        margin-bottom: 0.75rem;
+    }
+
+    .file-name-preview {
+        margin-top: 0.75rem;
+        font-weight: 600;
+        color: #2563eb;
+        display: none;
+    }
+
+    .btn-submit {
+        width: 100%;
+        background-color: #2563eb;
+        color: #ffffff;
+        border: none;
+        padding: 0.875rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+        background-color: #1d4ed8;
+    }
+
+    /* Results */
+    .result-card {
+        margin-top: 2rem;
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px solid transparent;
+    }
+
+    .result-card.success {
+        background-color: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #166534;
+    }
+
+    .result-card.warning {
+        background-color: #fffbeb;
+        border-color: #fde68a;
+        color: #92400e;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .stat-item {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .log-list {
+        max-height: 200px;
+        overflow-y: auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 0.85rem;
+    }
+
+    .log-list li {
+        margin-bottom: 0.25rem;
+    }
+
+    .log-list.errors {
+        color: #dc2626;
+        border-color: #fecaca;
+        background-color: #fef2f2;
+    }
+</style>
+
+<div class="import-container">
+    <div class="import-card">
+        <div class="import-header">
+            <h1><i class="fas fa-file-csv" style="color: #2563eb;"></i> Import Clients from CSV</h1>
+            <p>Upload a CSV file with full name, email, and phone to bulk-create or update client accounts.</p>
+        </div>
+
+        <div class="format-info-box">
+            <div class="format-info-title">
+                <i class="fas fa-info-circle" style="color: #3b82f6;"></i> Expected CSV Columns:
+            </div>
+            <p style="margin: 0; font-size: 0.875rem; color: #475569;">
+                The first line must be a header row containing <strong>Full Name</strong>, <strong>Email</strong>, and <strong>Phone</strong>.
+            </p>
+            <table class="format-table">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>john.doe@example.com</td>
+                        <td>+1 555-0199</td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>jane.smith@example.com</td>
+                        <td>+44 20 7946 0912</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 0.75rem; text-align: right;">
+                <a href="data:text/csv;charset=utf-8,Full%20Name%2CEmail%2CPhone%0AJohn%20Doe%2Cjohn.doe%40example.com%2C%2B15550199%0AJane%20Smith%2Cjane.smith%40example.com%2C%2B442079460912" download="sample_clients.csv" style="font-size: 0.85rem; color: #2563eb; font-weight: 600; text-decoration: none;">
+                    <i class="fas fa-download"></i> Download Sample CSV
+                </a>
+            </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            <div class="dropzone" id="dropzone" onclick="document.getElementById('csv_file').click()">
+                <div class="dropzone-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div style="font-size: 1.05rem; font-weight: 600; color: #1e293b;">
+                    Click to browse or drag and drop your CSV file here
+                </div>
+                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.35rem;">
+                    Accepts .csv files (UTF-8 formatted)
+                </div>
+                <div class="file-name-preview" id="fileNamePreview"></div>
+                <input type="file" id="csv_file" name="csv_file" accept=".csv" required style="display: none;">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <i class="fas fa-upload"></i> Process CSV Import
+            </button>
+        </form>
+
+        {% if results %}
+            <div class="result-card {% if results.errors %}warning{% else %}success{% endif %}">
+                <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 700;">
+                    {% if results.errors and not results.created and not results.updated %}
+                        <i class="fas fa-exclamation-circle" style="color: #dc2626;"></i> Import Failed
+                    {% elif results.errors %}
+                        <i class="fas fa-exclamation-triangle" style="color: #d97706;"></i> Import Completed with Warnings
+                    {% else %}
+                        <i class="fas fa-check-circle" style="color: #16a34a;"></i> Import Completed Successfully
+                    {% endif %}
+                </h3>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ results.total }}</div>
+                        <div class="stat-label">Total Rows</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #16a34a;">{{ results.created }}</div>
+                        <div class="stat-label">Created</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #2563eb;">{{ results.updated }}</div>
+                        <div class="stat-label">Updated</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #dc2626;">{{ results.skipped }}</div>
+                        <div class="stat-label">Skipped</div>
+                    </div>
+                </div>
+
+                {% if results.details %}
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 1rem;">Processed Users:</div>
+                    <ul class="log-list">
+                        {% for detail in results.details %}
+                            <li>{{ detail }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if results.errors %}
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 1rem; color: #dc2626;">Errors / Skipped:</div>
+                    <ul class="log-list errors">
+                        {% for err in results.errors %}
+                            <li>{{ err }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <a href="{% url 'client_list' %}" class="btn btn-primary" style="padding: 0.6rem 1.25rem; border-radius: 6px; background: #0f172a; color: white; text-decoration: none; font-weight: 600;">
+                        <i class="fas fa-users"></i> View All Clients
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('csv_file');
+    const fileNamePreview = document.getElementById('fileNamePreview');
+
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            fileNamePreview.textContent = "Selected: " + this.files[0].name;
+            fileNamePreview.style.display = 'block';
+        }
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            fileNamePreview.textContent = "Selected: " + e.dataTransfer.files[0].name;
+            fileNamePreview.style.display = 'block';
+        }
+    });
+</script>
+{% endblock %}

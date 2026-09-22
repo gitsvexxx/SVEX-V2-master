@@ -1,0 +1,178 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}Edit Client Wallet{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 2rem auto; padding: 0 1rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin: 0 0 0.5rem 0; font-size: 1.75rem; font-weight: 600;">Edit Client Wallet</h1>
+        <p style="color: #888; margin: 0 0 2rem 0;">Update cryptocurrency balances for {{ client_wallet.client.username }}</p>
+
+        {% if form.errors %}
+        <div style="background: #2d1515; border-left: 4px solid #ef4444; padding: 1rem; margin-bottom: 1.5rem; border-radius: 6px;">
+            <p style="color: #ef4444; margin: 0; font-weight: 500;">Please correct the errors below:</p>
+            <ul style="margin: 0.5rem 0 0 1.5rem; color: #ef4444;">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- Client Field -->
+                <div style="grid-column: 1 / -1;">
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        Client
+                    </label>
+                    {{ form.client }}
+                    {% if form.client.errors %}
+                        <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.client.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div style="grid-column: 1 / -1;">
+                        <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                            <span style="color: #10b981; font-weight: 600;">🏦</span> Transfer Wallet
+                        </label>
+                        {{ form.wallet_address }}
+                        {% if form.wallet_address.errors %}
+                            <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.wallet_address.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                <!-- Spot BTC Balance -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="color: #f7931a; font-weight: 600;">₿</span> Spot BTC Balance
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.spotbtc_balance }}
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #f7931a; font-weight: 600; pointer-events: none;">BTC</span>
+                    </div>
+                    {% if form.spotbtc_balance.errors %}
+                        <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.spotbtc_balance.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- BTC Balance -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="color: #f7931a; font-weight: 600;">₿</span> BTC Balance
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.btc_balance }}
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #f7931a; font-weight: 600; pointer-events: none;">BTC</span>
+                    </div>
+                    {% if form.btc_balance.errors %}
+                        <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.btc_balance.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- ETH Balance -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="color: #627eea; font-weight: 600;">Ξ</span> ETH Balance
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.eth_balance }}
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #627eea; font-weight: 600; pointer-events: none;">ETH</span>
+                    </div>
+                    {% if form.eth_balance.errors %}
+                        <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.eth_balance.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- USDT ERC20 Balance -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="color: #26a17b; font-weight: 600;">₮</span> USDT Balance (ERC20)
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.usdt_balance_erc20 }}
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #26a17b; font-weight: 600; pointer-events: none;">USDT</span>
+                    </div>
+                    {% if form.usdt_balance_erc20.errors %}
+                        <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.usdt_balance_erc20.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- USD TRC20 Balance -->
+                <div>
+                    <label style="display: block; color: #1e293b; font-weight: 500; margin-bottom: 0.5rem;">
+                        <span style="color: #26a17b; font-weight: 600;">₮</span> USD Balance (TRC20)
+                    </label>
+                    <div style="position: relative;">
+                        {{ form.usd_balance_trc20 }}
+                        <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #26a17b; font-weight: 600; pointer-events: none;">USDT</span>
+                    </div>
+                    {% if form.usd_balance_trc20.errors %}
+                        <p style="color: #ef4444; font-size: 0.875rem; margin-top: 0.25rem;">{{ form.usd_balance_trc20.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid #333;">
+                <a href="{% url 'view_client_wallet' %}" 
+                   style="padding: 0.75rem 1.5rem; background: #ffffff; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s; border: 1px solid #cbd5e1; display: inline-block;">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #0f172a; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);">
+                    Update Wallet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input[type="number"],
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 0.75rem;
+        padding-right: 60px;
+        
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #1e293b;
+        font-size: 1rem;
+        font-family: 'Courier New', monospace;
+        transition: all 0.2s;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    input[type="number"]:hover,
+    input[type="text"]:hover,
+    select:hover {
+        border-color: #404040;
+    }
+
+    button[type="submit"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+    }
+
+    a[href]:hover {
+        background: #333;
+        border-color: #505050;
+    }
+
+    @media (max-width: 768px) {
+        div[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

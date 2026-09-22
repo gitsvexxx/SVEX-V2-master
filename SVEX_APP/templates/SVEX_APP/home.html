@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SVEX_Project</title>
+    <link rel="stylesheet" href="{% static 'css/base_manager.css' %}">
+        <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif; /* Optional: Use a common font for better readability */
+        }
+
+        header, nav, main, footer {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #333;
+            color: #0f172a;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            color: #0f172a;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #555;
+            color: #0f172a;
+            text-align: center;
+            margin-top: auto;
+        }
+
+.manager-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Display 5 columns per row */
+    gap: 10px; /* Adjust spacing between items */
+}
+
+.manager-nav li {
+    text-align: center; /* Center-align the text */
+}
+
+.manager-nav a {
+    display: block;
+    padding: 10px;
+    background-color: #444; /* Background color */
+    color: #0f172a; /* Text color */
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+        .manager-nav a:hover {
+            background-color: #666;
+        }
+
+        .active {
+            background-color: #666;
+        }
+
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Welcome to SVEX_Project</h1>
+            <nav class="manager-nav">
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'client_home' %}">Client Home</a></li>
+                    <li><a href="{% url 'manager_home' %}">Manager Home</a></li>
+                    <li><a href="{% url 'custom_login' %}">Login</a></li>
+                    <li><a href="{% url 'new_login' %}">New Login</a></li>
+                    <li><a href="{% url 'custom_logout' %}">Logout</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                    <li><a href="{% url 'register_new' %}">Register New</a></li>
+                    <li><a href="{% url 'create_support_ticket' %}">Create Support Ticket</a></li>
+                    <li><a href="{% url 'ticket_created_successfully' %}">Ticket Created Successfully</a></li>
+                    <li><a href="{% url 'change_email_address' %}">Edit Email</a></li>
+                    <li><a href="{% url 'client_profile' %}">Client Profile</a></li>
+                    <li><a href="{% url 'edit_client_profile' %}">Edit Profile</a></li>
+                    <li><a href="{% url 'client_list' %}">Client List</a></li>
+                    <li><a href="{% url 'edit_client' 1 %}">Edit Client</a></li>
+                    <li><a href="{% url 'edit_website' %}">Edit Website</a></li>
+                    <li><a href="{% url 'kyc_verification' %}">KYC Verification</a></li>
+                    <li><a href="{% url 'kyc_status' %}">KYC Status</a></li>
+                    <li><a href="{% url 'my_wallets' %}">My Wallets</a></li>
+                    <li><a href="{% url 'open_tickets' %}">Open Tickets</a></li>
+                    <li><a href="{% url 'all_tickets' %}">All Tickets</a></li>
+                    <li><a href="{% url 'closed_tickets' %}">Closed Tickets</a></li>
+                    <li><a href="{% url 'tickets_in_progress' %}">Tickets in Progress</a></li>
+                    <li><a href="{% url 'edit_case' 1 %}">Edit Case</a></li>
+                    <li><a href="{% url 'my_profile_manager' %}">My Profile</a></li>
+                    <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
+                    <li><a href="{% url 'view_kyc' %}">View KYC</a></li>
+                    <li><a href="{% url 'edit_kyc' 1 %}">Edit KYC</a></li>
+                    <li><a href="{% url 'view_client_wallet' %}">View Client Wallet</a></li>
+                    <li><a href="{% url 'edit_client_wallet' 1 %}">Edit Client Wallet</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <p>This is the homepage of SVEX_Project.</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 SVEX_Project. All rights reserved.</p>
+    </footer>
+</body>
+</html>

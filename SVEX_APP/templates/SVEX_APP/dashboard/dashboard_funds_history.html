@@ -1,0 +1,370 @@
+{% extends 'SVEX_APP/wallets/layout.html' %}
+{% block content %}
+<style>
+    /* Banking Aesthetic Custom Styles */
+    .history-dashboard {
+        padding: 32px 24px; 
+        max-width: 1400px; 
+        margin: 0 auto; 
+        background-color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+    }
+    .wallet-header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .wallet-title { font-size: 32px; font-weight: 700; margin: 0 0 8px 0; color: #0f172a; letter-spacing: -0.025em; }
+    
+    .bank-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    /* Filter Controls */
+    .filter-container {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        background: #f8fafc;
+    }
+    
+    .filter-select, .search-input {
+        padding: 10px 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #0f172a;
+        background-color: #ffffff;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    
+    .filter-select:focus, .search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .search-input {
+        flex-grow: 1;
+        max-width: 400px;
+    }
+
+    /* Table Styles */
+    .tx-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    
+    .tx-table th {
+        padding: 16px 24px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .tx-table td {
+        padding: 20px 24px;
+        font-size: 15px;
+        color: #334155;
+        border-bottom: 1px solid #e2e8f0;
+        vertical-align: middle;
+    }
+    
+    .tx-table tr:last-child td { border-bottom: none; }
+    .tx-table tr:hover { background-color: #f8fafc; }
+    
+    /* Transaction specific styles */
+    .tx-type { font-weight: 600; text-transform: capitalize; }
+    .tx-deposit { color: #16a34a; }
+    .tx-withdrawal { color: #0f172a; }
+    
+    .tx-amount { font-family: monospace; font-size: 16px; font-weight: 600; }
+    .amount-positive { color: #16a34a; }
+    .amount-negative { color: #0f172a; }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .status-pending { background-color: #fef3c7; color: #d97706; }
+    .status-confirmed { background-color: #dcfce7; color: #16a34a; }
+    .status-canceled { background-color: #fee2e2; color: #dc2626; }
+    
+    .tx-date { color: #64748b; font-size: 14px; }
+    
+    .empty-state {
+        padding: 64px 24px;
+        text-align: center;
+        color: #64748b;
+    }
+
+    /* Mobile App Overrides */
+    @media (max-width: 991px) {
+        body, html { background-color: #ffffff !important; }
+        .history-dashboard {
+            padding: 0 0 100px 0 !important;
+            background-color: #ffffff !important;
+        }
+        .wallet-header {
+            padding: 16px !important; margin-bottom: 0 !important;
+            background: #ffffff; border-bottom: 1px solid #f1f5f9;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .wallet-title { font-size: 24px !important; font-weight: 800 !important; text-align: center; }
+        .wallet-header p { display: none !important; } /* Hide description on mobile */
+        
+        .bank-card {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 16px !important;
+        }
+        
+        .filter-container {
+            padding: 16px 0 !important;
+            background: #ffffff !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Transform Table into a clean List */
+        .tx-table, .tx-table tbody {
+            display: block !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .tx-table thead {
+            display: none !important; /* Hide table headers */
+        }
+        
+        .tx-table td {
+            display: block !important;
+            padding: 0 !important;
+            border: none !important;
+            text-align: left !important;
+            line-height: 1.2 !important;
+        }
+        
+        .tx-table tr {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            align-items: center !important;
+            padding: 16px 0 !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            position: relative !important;
+        }
+        
+        .tx-table tr:last-child {
+            border-bottom: none !important;
+        }
+        
+        /* 
+           Layout the row:
+           - We want an icon on the left (simulated by margin or using Asset)
+           - Left side: Asset (Top), Date (Bottom)
+           - Right side: Amount (Top), Status (Bottom)
+        */
+        
+        /* 3: Asset */
+        .tx-table td:nth-child(3) { 
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            order: 1;
+            width: 50% !important;
+            margin-bottom: 4px !important;
+        }
+        
+        /* 4: Amount */
+        .tx-table td:nth-child(4) { 
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            text-align: right !important;
+            order: 2;
+            width: 50% !important;
+            margin-bottom: 4px !important;
+        }
+        
+        /* 1: Date & Time */
+        .tx-table td:nth-child(1) { 
+            order: 3;
+            width: 50% !important;
+            font-size: 13px !important;
+            color: #64748b !important;
+        }
+        
+        /* 5: Status */
+        .tx-table td:nth-child(5) { 
+            order: 4;
+            width: 50% !important;
+            text-align: right !important;
+            font-size: 12px !important;
+        }
+        
+        /* Status Badge Tweaks for Mobile */
+        .tx-table td:nth-child(5) .status-badge {
+            padding: 2px 8px !important;
+            font-size: 11px !important;
+            display: inline-block !important;
+        }
+        
+        /* Hide type (it's obvious by amount +/-) and hide address details */
+        .tx-table td:nth-child(2), .tx-table td:nth-child(6) {
+            display: none !important; 
+        }
+        
+        .empty-state {
+            padding: 40px 0 !important;
+        }
+    }
+
+</style>
+
+<div class="history-dashboard">
+    <div class="wallet-header">
+        <div>
+            <h1 class="wallet-title">History</h1>
+            <p style="color: #64748b; font-size: 15px; margin-top: 8px;">View all your deposits, withdrawals, and account activities.</p>
+        </div>
+    </div>
+
+    <div class="bank-card">
+        <div class="filter-container">
+            <select class="filter-select" id="typeFilter">
+                <option value="all">All Types</option>
+                <option value="deposit">Deposits</option>
+                <option value="withdrawal">Withdrawals</option>
+            </select>
+            
+            <input type="text" class="search-input" id="searchInput" placeholder="Search by asset (e.g. BTC) or address...">
+        </div>
+        
+        <table class="tx-table" id="txTable">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Type</th>
+                    <th>Asset</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Address Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr class="tx-row" data-type="{{ tx.type }}" data-asset="{{ tx.crypto_currency|lower }}" data-address="{{ tx.address|lower }}">
+                    <td class="tx-date">{{ tx.time|date:"M d, Y - H:i" }}</td>
+                    <td>
+                        <span class="tx-type {% if tx.type == 'deposit' %}tx-deposit{% else %}tx-withdrawal{% endif %}">
+                            {{ tx.type }}
+                        </span>
+                    </td>
+                    <td style="font-weight: 600; display: flex; align-items: center; gap: 12px;">
+                        {% if tx.type == 'deposit' %}
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                            </div>
+                        {% else %}
+                            <div style="width: 36px; height: 36px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                            </div>
+                        {% endif %}
+                        <span>{{ tx.crypto_currency }}</span>
+                    </td>
+                    <td>
+                        <span class="tx-amount {% if tx.type == 'deposit' %}amount-positive{% else %}amount-negative{% endif %}">
+                            {% if tx.type == 'deposit' %}+{% else %}-{% endif %}{{ tx.amount|floatformat:8 }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ tx.status|lower }}">{{ tx.status }}</span>
+                    </td>
+                    <td style="font-family: monospace; font-size: 13px; color: #64748b; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ tx.address }}">
+                        {{ tx.address }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 16px auto; opacity: 0.5;"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                            <h3 style="font-size: 16px; font-weight: 600; color: #334155; margin: 0 0 8px 0;">No transactions found</h3>
+                            <p style="margin: 0; font-size: 14px;">You haven't made any deposits or withdrawals yet.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function filterTable() {
+        const typeFilter = $('#typeFilter').val();
+        const searchQuery = $('#searchInput').val().toLowerCase().trim();
+        let visibleCount = 0;
+        
+        $('.tx-row').each(function() {
+            const rowType = $(this).data('type');
+            const rowAsset = String($(this).data('asset') || "");
+            const rowAddress = String($(this).data('address') || "");
+            
+            let showRow = true;
+            
+            // Apply Type Filter
+            if (typeFilter !== 'all' && rowType !== typeFilter) {
+                showRow = false;
+            }
+            
+            // Apply Search Filter
+            if (searchQuery !== '') {
+                if (!rowAsset.includes(searchQuery) && !rowAddress.includes(searchQuery)) {
+                    showRow = false;
+                }
+            }
+            
+            if (showRow) {
+                $(this).show();
+                visibleCount++;
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        // Handle no results case when filtering
+        const emptyRow = $('#noResultsRow');
+        if (visibleCount === 0 && $('.tx-row').length > 0) {
+            if (emptyRow.length === 0) {
+                $('#txTable tbody').append('<tr id="noResultsRow"><td colspan="6" style="text-align: center; padding: 32px; color: #64748b;">No matching transactions found for your filters.</td></tr>');
+            } else {
+                emptyRow.show();
+            }
+        } else {
+            emptyRow.hide();
+        }
+    }
+    
+    $('#typeFilter').on('change', filterTable);
+    $('#searchInput').on('input', filterTable);
+});
+</script>
+{% endblock %}

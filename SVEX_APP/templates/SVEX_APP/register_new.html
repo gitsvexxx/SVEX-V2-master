@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>NEW PROJECT</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="/static/css/login.css" />
+</head>
+
+<body>
+    <!--Main Navigation-->
+    <header>
+        <style>
+            #intro {
+                background-image: url("/static/images/Login_img.webp");
+                height: 100vh;
+            }
+
+            /* Height for devices larger than 576px */
+            @media (min-width: 992px) {
+                #intro {
+                    margin-top: -58.59px;
+                }
+            }
+
+            .navbar .nav-link {
+                color: #fff !important;
+            }
+        </style>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
+            <div class="container-fluid">
+                <!-- Navbar brand -->
+                <a class="navbar-brand nav-link" target="_blank" href="/">
+                    <strong>New Page</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-mdb-collapse-init data-mdb-target="#navbarExample01" aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarExample01">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" aria-current="page" href="/login-new">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/" rel="nofollow" target="_blank">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/" target="_blank">Terms & Conditions</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Navbar -->
+
+        <!-- Background image -->
+        <div id="intro" class="bg-image shadow-2-strong">
+            <div class="mask d-flex align-items-center h-100" style="background-color: rgba(0, 0, 0, 0.8);">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-5 col-md-8">
+                            <form class="bg-white rounded shadow-5-strong p-5" action="/register-new/" method="POST">
+                                {% csrf_token %}
+                                <div class="mb-5" style="text-align: center; font-weight: bold;">SIGN UP</div>
+                                {% if msg %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ msg }}
+                                </div>
+                                {% endif %}
+                                <!-- Username input -->
+                                <div class="form-outline mb-4" data-mdb-input-init>
+                                    <input type="text" id="username" class="form-control" name="username">
+                                    <label class="form-label" for="username">Username</label>
+                                </div>
+
+ <!-- Email input -->
+<div class="form-outline mb-4" data-mdb-input-init>
+  <input type="text" id="id_email" name="email" class="form-control" />
+  <label class="form-label" for="id_email">Email address</label>
+</div>
+
+<!-- Password input -->
+<div class="form-outline mb-4" data-mdb-input-init>
+  <input type="password" id="id_password1" name="password1" class="form-control" />
+  <label class="form-label" for="id_password1">Password</label>
+</div>
+<!-- Password input -->
+<div class="form-outline mb-4" data-mdb-input-init>
+  <input type="password" id="id_password2" name="password2" class="form-control" />
+  <label class="form-label" for="id_password2">Password Repeat</label>
+</div>
+
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-block" data-mdb-ripple-init>Sign up</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Background image -->
+    </header>
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+        © 2024 Copyright:
+        <a class="text-dark" href="/">{{ website.name }}</a>
+    </div>
+    <!-- Copyright -->
+    </footer>
+    <!--Footer-->
+    <!-- MDB -->
+    <script type="text/javascript" src="/static/js/login.js"></script>
+</body>
+
+</html>

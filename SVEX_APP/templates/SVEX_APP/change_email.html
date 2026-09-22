@@ -1,0 +1,152 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+
+{% block title %}
+    Change Email
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1 class="form-title">Change Email Address</h1>
+    <p class="form-subtitle">
+        Your current email is <strong>{{ user.email }}</strong>. Enter a new email and confirm with your password.
+    </p>
+
+    <!-- This block will display messages from Django's messaging framework -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'change_email' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="newEmail">New Email Address</label>
+            <input type="email" name="newEmail" id="newEmail" placeholder="you@example.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Current Password</label>
+            <input type="password" name="password" id="password" placeholder="Enter your password to confirm" required>
+        </div>
+
+        <div class="form-actions">
+            <a href="{% url 'dashboard_settings' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Email</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Form Layout */
+    .form-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        border: 1px solid #2a2a2a;
+    }
+    .form-title {
+        color: #0f172a;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+    }
+    .form-subtitle {
+        color: #a0a0a0;
+        margin: 0 0 2rem 0;
+        font-size: 1rem;
+    }
+    .form-subtitle strong {
+        color: #334155;
+        font-weight: 600;
+    }
+
+    /* Form Groups and Elements */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        color: #334155;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #ffffff;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input::placeholder {
+        color: #6b7280;
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Message Styling */
+    .message {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    .message.success {
+        background-color: rgba(34, 197, 94, 0.1);
+        border: 1px solid #22c55e;
+        color: #86efac;
+    }
+    .message.error {
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 1px solid #ef4444;
+        color: #fca5a5;
+    }
+
+    /* Form Actions (Buttons) */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #2a2a2a;
+    }
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+        color: #0f172a;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+    .btn-primary {
+        background-color: #2563eb;
+    }
+    .btn-primary:hover {
+        background-color: #1d4ed8;
+    }
+    .btn-secondary {
+        background-color: #4b5563;
+    }
+    .btn-secondary:hover {
+        background-color: #374151;
+    }
+</style>
+{% endblock %}

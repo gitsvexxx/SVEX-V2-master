@@ -1,0 +1,396 @@
+{% extends 'SVEX_APP/wallets/layout.html' %}
+{% block content %}
+<style>
+    /* Banking Aesthetic Custom Styles */
+    .wallet-dashboard {
+        padding: 32px 24px; 
+        max-width: 1400px; 
+        margin: 0 auto; 
+        background-color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+    }
+    
+    .wallet-header {
+        margin-bottom: 32px;
+    }
+    
+    .wallet-title {
+        font-size: 32px; 
+        font-weight: 700; 
+        margin: 0 0 8px 0; 
+        color: #0f172a;
+        letter-spacing: -0.025em;
+    }
+    
+    .wallet-subtitle {
+        color: #64748b; 
+        font-size: 15px; 
+        margin: 0;
+    }
+    
+    /* Hero Section for Total Value */
+    .hero-card {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border-radius: 20px;
+        padding: 40px;
+        color: #0f172a;
+        margin-bottom: 32px;
+        box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .hero-label {
+        color: #94a3b8;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+    }
+    
+    .hero-value-main {
+        font-size: 48px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin-bottom: 8px;
+    }
+    
+    .hero-value-sub {
+        font-size: 16px;
+        color: #94a3b8;
+    }
+    
+    /* Bank Cards for Assets */
+    .bank-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .bank-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .asset-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    
+    .asset-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        padding: 4px;
+    }
+    
+    .asset-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+    
+    .asset-amount {
+        font-size: 28px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+        letter-spacing: -0.025em;
+    }
+    
+    .asset-usd {
+        color: #64748b;
+        font-size: 15px;
+        margin-bottom: 24px;
+    }
+    
+    .action-group {
+        display: flex;
+        gap: 12px;
+        margin-top: auto;
+    }
+    
+    .btn-action {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+    }
+    
+    .btn-primary {
+        background: #2563eb;
+        color: #ffffff;
+    }
+    
+    .btn-primary:hover {
+        background: #1d4ed8;
+    }
+    
+    .btn-secondary {
+        background: #f1f5f9;
+        color: #334155;
+    }
+    
+    .btn-secondary:hover {
+        background: #e2e8f0;
+    }
+    
+    .balance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .desktop-hide {
+        display: none;
+    }
+    
+    /* MOBILE REVOLUT UI OVERRIDES */
+    @media (max-width: 991px) {
+        body, html {
+            background-color: #f8fafc !important;
+        }
+        
+        .wallet-dashboard {
+            padding: 0 0 90px 0 !important;
+        }
+        
+        .desktop-hide { display: block !important; }
+        
+        /* Mobile Header */
+        .wallet-header {
+            padding: 20px 16px 12px 16px !important;
+            margin-bottom: 0 !important;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .wallet-title {
+            font-size: 24px !important;
+            font-weight: 800 !important;
+        }
+        .wallet-subtitle { display: none !important; }
+        
+        .hero-card { display: none !important; }
+        
+        .balance-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0 !important;
+            background: #ffffff;
+        }
+        
+        .bank-card {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            padding: 16px !important;
+            margin: 0 !important;
+            border: none !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .bank-card:last-child {
+            border-bottom: none !important;
+        }
+        
+        .asset-header {
+            margin-bottom: 0 !important;
+        }
+        
+        .asset-icon {
+            width: 44px !important;
+            height: 44px !important;
+            padding: 0 !important;
+        }
+        
+        .asset-name {
+            font-size: 16px !important;
+            font-weight: 600 !important;
+        }
+        
+        .asset-amount {
+            display: block !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            text-align: right !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .asset-usd {
+            display: block !important;
+            font-size: 13px !important;
+            color: #64748b !important;
+            text-align: right !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Hide action buttons in list view */
+        .action-group {
+            display: none !important;
+        }
+        
+        .mobile-asset-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .mobile-asset-numbers {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: right;
+            margin-left: auto;
+        }
+    }
+
+</style>
+
+<div class="wallet-dashboard">
+    <!-- Page Header -->
+    <div class="wallet-header">
+        <h1 class="wallet-title">Wallets</h1>
+        <div class="wallet-subtitle">
+            Current Market Rates: BTC ${{btc_price|floatformat:2}} &bull; ETH ${{eth_price|floatformat:2}}
+        </div>
+    </div>
+
+    <!-- Hero Card: Total Balance (Desktop Only) -->
+    <div class="hero-card">
+        <span class="hero-label">Total Portfolio Value</span>
+        <div class="hero-value-main">
+            ${{total_usd_value|floatformat:2}}
+        </div>
+        <div class="hero-value-sub">
+            Combined value across all wallets
+        </div>
+    </div>
+
+    <!-- Assets Grid / Mobile List -->
+    <div class="balance-grid">
+                <!-- Spot Bitcoin -> EUR Account -->
+        <a href="/dashboard/wallets/withdraw" style="text-decoration: none; color: inherit; display: contents;">
+        <div class="bank-card" style="background-color: #f0f9ff; border: 1px solid #bae6fd !important;">
+            <div class="asset-header">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: #2563eb; color: #0f172a; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; margin-right: 16px;">€</div>
+            </div>
+            <div class="mobile-asset-info" style="flex-grow: 1;">
+                <span class="asset-name" style="color: #0369a1;">EUR Account</span>
+                <span style="font-size: 13px; color: #0284c7; font-weight: 500;" class="desktop-hide">Main Fiat Balance</span>
+            </div>
+            <div class="mobile-asset-numbers">
+                <div class="asset-amount" style="color: #0369a1;">{{ wallet.spotbtc_balance|floatformat:2 }}</div>
+                <div class="asset-usd" style="color: #0284c7;">≈ €{{ wallet.spotbtc_balance|floatformat:2 }}</div>
+            </div>
+            <div class="action-group">
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/withdraw';" class="btn-action btn-primary" style="width: 100%;">Withdraw</button>
+            </div>
+        </div>
+        </a>
+
+        <!-- Bitcoin (BTC) -->
+        <a href="/dashboard/wallets/deposit" style="text-decoration: none; color: inherit; display: contents;">
+        <div class="bank-card">
+            <div class="asset-header">
+                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="asset-icon" alt="BTC">
+            </div>
+            <div class="mobile-asset-info" style="flex-grow: 1;">
+                <span class="asset-name">Bitcoin</span>
+                <span style="font-size: 13px; color: #64748b; font-weight: 500;" class="desktop-hide">BTC</span>
+            </div>
+            <div class="mobile-asset-numbers">
+                <div class="asset-amount">{{ wallet.btc_balance|floatformat:8 }}</div>
+                <div class="asset-usd">≈ ${{ btc_usd_value|floatformat:2 }}</div>
+            </div>
+            <div class="action-group">
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/deposit';" class="btn-action btn-primary">Deposit</button>
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/withdraw';" class="btn-action btn-secondary">Withdraw</button>
+            </div>
+        </div>
+        </a>
+
+        
+        <!-- Ethereum (ETH) -->
+        <a href="/dashboard/wallets/deposit" style="text-decoration: none; color: inherit; display: contents;">
+        <div class="bank-card">
+            <div class="asset-header">
+                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="asset-icon" alt="ETH">
+            </div>
+            <div class="mobile-asset-info" style="flex-grow: 1;">
+                <span class="asset-name">Ethereum</span>
+                <span style="font-size: 13px; color: #64748b; font-weight: 500;" class="desktop-hide">ETH</span>
+            </div>
+            <div class="mobile-asset-numbers">
+                <div class="asset-amount">{{ wallet.eth_balance|floatformat:8 }}</div>
+                <div class="asset-usd">≈ ${{ eth_usd_value|floatformat:2 }}</div>
+            </div>
+            <div class="action-group">
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/deposit';" class="btn-action btn-primary">Deposit</button>
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/withdraw';" class="btn-action btn-secondary">Withdraw</button>
+            </div>
+        </div>
+        </a>
+
+        <!-- Tether (USDT TRC-20) -->
+        <a href="/dashboard/wallets/deposit" style="text-decoration: none; color: inherit; display: contents;">
+        <div class="bank-card">
+            <div class="asset-header">
+                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="asset-icon" alt="USDT">
+            </div>
+            <div class="mobile-asset-info" style="flex-grow: 1;">
+                <span class="asset-name">Tether TRC-20</span>
+                <span style="font-size: 13px; color: #64748b; font-weight: 500;" class="desktop-hide">USDT</span>
+            </div>
+            <div class="mobile-asset-numbers">
+                <div class="asset-amount">{{ wallet.usd_balance_trc20|floatformat:8 }}</div>
+                <div class="asset-usd">≈ ${{ usd_trc20_usd_value|floatformat:2 }}</div>
+            </div>
+            <div class="action-group">
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/deposit';" class="btn-action btn-primary">Deposit</button>
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/withdraw';" class="btn-action btn-secondary">Withdraw</button>
+            </div>
+        </div>
+        </a>
+
+        <!-- Tether (USDT ERC-20) -->
+        <a href="/dashboard/wallets/deposit" style="text-decoration: none; color: inherit; display: contents;">
+        <div class="bank-card">
+            <div class="asset-header">
+                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="asset-icon" alt="USDT">
+            </div>
+            <div class="mobile-asset-info" style="flex-grow: 1;">
+                <span class="asset-name">Tether ERC-20</span>
+                <span style="font-size: 13px; color: #64748b; font-weight: 500;" class="desktop-hide">USDT</span>
+            </div>
+            <div class="mobile-asset-numbers">
+                <div class="asset-amount">{{ wallet.usdt_balance_erc20|floatformat:8 }}</div>
+                <div class="asset-usd">≈ ${{ usdt_erc20_usd_value|floatformat:2 }}</div>
+            </div>
+            <div class="action-group">
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/deposit';" class="btn-action btn-primary">Deposit</button>
+                <button onclick="event.preventDefault(); window.location.href='/dashboard/wallets/withdraw';" class="btn-action btn-secondary">Withdraw</button>
+            </div>
+        </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'SVEX_APP/base_client.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>Create Support Ticket</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+
+{% block styles %}
+    <!-- Link to the CSS file for this page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/create_support_ticket.css' %}">
+{% endblock %}

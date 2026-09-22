@@ -1,0 +1,55 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+
+{% block title %}
+    Withdrawal Messages
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+    <div style=" border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+        <h1 style="color: #0f172a; margin: 0 0 1.5rem 0; font-size: 1.875rem; font-weight: 600;">Withdrawal Messages</h1>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;  border-radius: 8px; overflow: hidden;">
+                <thead>
+                    <tr style="background: #ffffff; border-bottom: 2px solid #cbd5e1;">
+                        <th style="padding: 1rem; text-align: left; color: #0f172a; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">User</th>
+                        <th style="padding: 1rem; text-align: left; color: #0f172a; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
+                        <th style="padding: 1rem; text-align: left; color: #0f172a; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">Message</th>
+                        <th style="padding: 1rem; text-align: center; color: #0f172a; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for withdrawal_message in withdrawal_messages %}
+                    <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;"  >
+                        <td style="padding: 1rem; color: #334155; font-weight: 500;">{{ withdrawal_message.user }}</td>
+                        <td style="padding: 1rem;">
+                            {% if withdrawal_message.can_withdraw %}
+                                <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #10b981; color: #0f172a; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Enabled</span>
+                            {% else %}
+                                <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #ef4444; color: #0f172a; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Disabled</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 1rem; color: #b0b0b0; max-width: 400px;">{{ withdrawal_message.message }}</td>
+                        <td style="padding: 1rem; text-align: center;">
+                            <a href="{% url 'edit_withdrawal_message' withdrawal_message.pk %}" 
+                               style="display: inline-block; padding: 0.5rem 1rem; background: #3b82f6; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 0.875rem; transition: background-color 0.2s;"
+                               onmouseover="this.style.backgroundColor='#2563eb'"
+                               onmouseout="this.style.backgroundColor='#3b82f6'">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if not withdrawal_messages %}
+        <div style="text-align: center; padding: 3rem; color: #808080;">
+            <p style="font-size: 1.125rem; margin: 0;">No withdrawal messages found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

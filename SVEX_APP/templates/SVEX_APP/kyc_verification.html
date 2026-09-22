@@ -1,0 +1,10 @@
+{% extends 'SVEX_APP/base_client.html' %}
+
+{% block content %}
+  <h2>KYC Verification</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}

@@ -1,0 +1,120 @@
+# Git
+.git
+.gitignore
+.gitattributes
+.gitmodules
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+.docker/
+
+# Environment and secrets
+.env
+.env.*
+*.env
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.conda/
+
+# Django
+db.sqlite3
+*.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+*.log
+local_settings.py
+
+# IDE and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.cache
+
+# Documentation
+README.md
+*.md
+!CHANGELOG.md
+docs/
+PRODUCTION_SETUP.md
+COMPARISON_*.md
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Miscellaneous
+.agents/
+*.bak
+*.tmp
+*.temp
+*.swp
+*.swo
+.directory
+.ipynb_checkpoints/
+*.ipynb
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backup files
+*.backup
+*.old
+*.orig

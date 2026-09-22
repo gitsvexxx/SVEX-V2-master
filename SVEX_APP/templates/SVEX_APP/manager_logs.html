@@ -1,0 +1,228 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}User Activity Logs{% endblock %}
+
+{% block extra_head %}
+<style>
+    .logs-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+    
+    .logs-title h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    
+    .logs-title p {
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    
+    .logs-actions {
+        display: flex;
+        gap: 12px;
+    }
+    
+    .btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+    }
+    
+    .btn-refresh {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+    }
+    
+    .btn-refresh:hover {
+        background: #f1f5f9;
+    }
+    
+    .btn-live {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+    }
+    
+    .btn-live.active {
+        background: #ecfdf5;
+        border-color: #10b981;
+        color: #047857;
+    }
+    
+    .btn-live.active .live-dot {
+        background: #10b981;
+        box-shadow: 0 0 6px #10b981;
+        animation: pulse 1.5s infinite;
+    }
+    
+    .live-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #94a3b8;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    
+    .logs-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+    }
+    
+    .logs-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+    }
+    
+    .logs-table th {
+        background: #f8fafc;
+        text-align: left;
+        padding: 12px 16px;
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 1px solid #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.75rem;
+    }
+    
+    .logs-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+    }
+    
+    .logs-table tr:hover td {
+        background: #f8fafc;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.025em;
+    }
+    
+    .badge-gray { background: #f1f5f9; color: #475569; }
+    .badge-blue { background: #eff6ff; color: #2563eb; }
+    .badge-green { background: #ecfdf5; color: #059669; }
+    .badge-yellow { background: #fef2f2; color: #dc2626; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="logs-header">
+    <div class="logs-title">
+        <h1>User Activity Logs</h1>
+        <p>Live chronological feed of all user actions on the platform.</p>
+    </div>
+    <div class="logs-actions">
+        <button class="btn btn-refresh" onclick="window.location.reload()">
+            <i class="fas fa-sync-alt"></i> Refresh Now
+        </button>
+        <button id="liveToggle" class="btn btn-live" onclick="toggleLive()">
+            <div class="live-dot"></div>
+            <span id="liveText">Live Updates: Off</span>
+        </button>
+    </div>
+</div>
+
+<div class="logs-card">
+    <div style="overflow-x: auto;">
+        <table class="logs-table">
+            <thead>
+                <tr>
+                    <th style="width: 180px;">Time</th>
+                    <th style="width: 150px;">User</th>
+                    <th style="width: 150px;">Action Type</th>
+                    <th>Description</th>
+                    <th>Path</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td style="color: #64748b;">{{ log.timestamp|date:"M d, Y - H:i:s" }}</td>
+                    <td style="font-weight: 600;">{{ log.user.username }}</td>
+                    <td>
+                        {% if log.action_type == 'PAGE_VIEW' %}
+                            <span class="badge badge-gray">{{ log.action_type }}</span>
+                        {% elif log.action_type == 'CLICK' %}
+                            <span class="badge badge-blue">{{ log.action_type }}</span>
+                        {% elif log.action_type == 'LOGIN' %}
+                            <span class="badge badge-green">{{ log.action_type }}</span>
+                        {% elif 'ATTEMPT' in log.action_type %}
+                            <span class="badge badge-yellow">{{ log.action_type }}</span>
+                        {% else %}
+                            <span class="badge badge-gray">{{ log.action_type }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ log.description }}</td>
+                    <td style="font-family: monospace; color: #64748b;">{{ log.path }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align: center; padding: 32px; color: #64748b;">No activity logs found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let liveInterval = null;
+    let isLive = localStorage.getItem('logsLiveMode') === 'true';
+
+    function updateLiveUI() {
+        const btn = document.getElementById('liveToggle');
+        const txt = document.getElementById('liveText');
+        if (isLive) {
+            btn.classList.add('active');
+            txt.innerText = 'Live Updates: On (15s)';
+            if (!liveInterval) {
+                liveInterval = setInterval(() => {
+                    window.location.reload();
+                }, 15000);
+            }
+        } else {
+            btn.classList.remove('active');
+            txt.innerText = 'Live Updates: Off';
+            if (liveInterval) {
+                clearInterval(liveInterval);
+                liveInterval = null;
+            }
+        }
+    }
+
+    function toggleLive() {
+        isLive = !isLive;
+        localStorage.setItem('logsLiveMode', isLive);
+        updateLiveUI();
+    }
+
+    // Initialize UI on load
+    document.addEventListener('DOMContentLoaded', updateLiveUI);
+</script>
+{% endblock %}

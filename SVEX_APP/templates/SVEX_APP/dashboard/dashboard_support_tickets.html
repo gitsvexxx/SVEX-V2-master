@@ -1,0 +1,350 @@
+{% extends 'SVEX_APP/dashboard/layout.html' %}
+{% block content %}
+<style>
+    .error-container {
+    display: flex;
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    height: 50px; /* Adjust height as needed */
+}
+    .status-open,
+.status-escalated {
+    color: green;
+}
+
+.status-in-progress,
+.status-on-hold {
+    color: blue;
+}
+
+.status-responded {
+    color: orange;
+}
+
+.status-closed-resolved {
+    color: #008000; /* Dark Green */
+}
+
+.status-closed-notresolved,
+.status-closed-spam,
+.status-closed-lost,
+.status-closed {
+    color: red;
+}
+</style>
+<div data-v-3548214f="" class="">
+    <div data-v-3548214f="" class="page-header" style="display: none;">
+        <h1 data-v-3548214f=""></h1>
+    </div>
+    <div data-v-4a6dcd5a="" data-v-58827758="" class="page-container" data-v-3548214f=""
+         style="border-bottom: none;">
+        <form action="/create-support-ticket/" method="POST">
+              {% csrf_token %}
+            <div data-v-58827758="" data-v-4a6dcd5a="" class="container" style="margin-bottom: 40px;">
+                <h2 data-v-58827758="" data-v-4a6dcd5a="">Create Ticket</h2>
+                  <div class="error-container">
+                    {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        <small style="color: red;">{{ message }}</small>
+                    {% endif %}
+                      {% if message.tags == 'success' %}
+                        <small style="color: green;">{{ message }}</small>
+                    {% endif %}
+                {% endfor %}
+                </div>
+                <div data-v-58827758="" data-v-4a6dcd5a="" class="row">
+                    <div data-v-113008a1="" data-v-58827758=""
+                         class="Input col-lg-6 col-md-6 col-xs-6" data-v-4a6dcd5a="">
+                        <label data-v-113008a1="" for="case_category">Category</label>
+                        <select data-v-113008a1="" id="case_category" name="case_category">
+                        <option data-v-113008a1="" value="Security">Security Concern</option>
+                        <option data-v-113008a1="" value="Transaction">Transaction Issue</option>
+                        <option data-v-113008a1="" value="Wallet">Wallet Management Issue</option>
+                        <option data-v-113008a1="" value="Exchange">Exchange Rate Discrepancy</option>
+                        <option data-v-113008a1="" value="KYC">Know Your Customer (KYC) Issue</option>
+                        <option data-v-113008a1="" value="AML">Anti-Money Laundering (AML) Issue</option>
+                        <option data-v-113008a1="" value="Withdrawal">Withdrawal Problem</option>
+                        <option data-v-113008a1="" value="Deposit">Deposit Issue</option>
+                        <option data-v-113008a1="" value="Trading">Trading Issue</option>
+                        <option data-v-113008a1="" value="API">API Integration Issue</option>
+                        <option data-v-113008a1="" value="Chart">Charting/Graphical Issue</option>
+                        <option data-v-113008a1="" value="Order">Order Execution Issue</option>
+                        <option data-v-113008a1="" value="Liquidity">Liquidity Problem</option>
+                        <option data-v-113008a1="" value="Margin">Margin Trading Issue</option>
+                        <option data-v-113008a1="" value="Funds">Funds Availability Issue</option>
+                        <option data-v-113008a1="" value="Verification">Account Verification Issue</option>
+                        <option data-v-113008a1="" value="Scam">Suspected Scam/Phishing Report</option>
+                        <option data-v-113008a1="" value="Tax">Tax Reporting Issue</option>
+                        <option data-v-113008a1="" value="Regulatory">Regulatory Compliance Issue</option>
+                        <option data-v-113008a1="" value="Privacy">Privacy Concern</option>
+                        <option data-v-113008a1="" value="Support">Customer Support Request</option>
+                        <option data-v-113008a1="" value="Education">Education/Training Request</option>
+                        <option data-v-113008a1="" value="Feedback">General Feedback</option>
+                        <option data-v-113008a1="" value="Other">Other</option>
+                    </select>
+                        <span data-v-113008a1="" style="display: none;">Incorrect value</span>
+                    </div>
+                    <div data-v-72d3b7be="" data-v-58827758="" class="Input col-lg-6 col-md-6 col-xs-6" data-v-4a6dcd5a="">
+                        <label data-v-72d3b7be="" for="case_subject">Subject</label>
+                        <input data-v-72d3b7be="" type="text" id="case_subject" name="case_subject">
+                        <span data-v-72d3b7be="" style="display: none;">Incorrect value</span>
+                    </div>
+                </div>
+                <div data-v-58827758="" data-v-4a6dcd5a="" class="col-lg-12" style="margin-bottom: 24px;">
+                    <label data-v-58827758="" data-v-4a6dcd5a="" style="box-sizing: border-box; margin: 0px; min-width: 0px; font-size: 12px; line-height: 16px; color: rgb(71, 77, 87);" for="client_contact_details">Message</label>
+                    <textarea data-v-58827758="" data-v-4a6dcd5a="" maxlength="1500"
+                        placeholder="Describe your problem" rows="5" id = "client_contact_details" name="client_contact_details"
+                        style="resize: none;"></textarea>
+                </div>
+                <div data-v-58827758="" data-v-4a6dcd5a="" class="col-lg-4" style="float: right;">
+                    <button data-v-31aba6a9="" data-v-58827758=""
+                            class="Button default" data-v-4a6dcd5a="" style="width: 100%;"> Submit
+                        <svg data-v-31aba6a9="" viewBox="0 0 50 50" class="spinner"
+                             style="display: none;">
+                            <circle data-v-31aba6a9="" cx="25" cy="25" r="20" fill="none"
+                                    stroke-width="5" class="path"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </form>
+          <div data-v-58827758="" data-v-4a6dcd5a="" class="container">
+              <h2 data-v-58827758="" data-v-4a6dcd5a="">My Tickets</h2>
+              <div data-v-62f45cc0="" data-v-58827758="" class="" data-v-4a6dcd5a="">
+                  <div data-v-62f45cc0="" style="position: relative;">
+                      <div data-v-62f45cc0="" style="margin-bottom: 15px;">
+                          <div data-v-62f45cc0="" class="toggle_filters" style="display: none;">
+                              <span data-v-62f45cc0="" style="margin-right: 5px;">Clear sort</span>
+                              <svg data-v-62f45cc0="" aria-hidden="true" focusable="false"
+                                   data-prefix="fal" data-icon="times" role="img"
+                                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                   class="svg-inline--fa fa-times fa-w-10 fa-sm">
+                                  <path data-v-62f45cc0="" fill="currentColor"
+                                        d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"
+                                        class=""></path>
+                              </svg>
+                          </div>
+                          <div data-v-62f45cc0=""
+                               style="position: relative; display: flex; align-items: center; justify-content: space-between;">
+                              <div data-v-62f45cc0="">
+                                  <select data-v-62f45cc0="" class="mr-auto" id="pagePagination"
+                                          style="width: auto !important; border-radius: 50px; padding: 3px 6px; font-size: 12px; outline: none; border: 1px solid rgb(240, 240, 240);">
+                                        <option data-v-62f45cc0="" value="10">10</option>
+                                        <option data-v-62f45cc0="" value="25">25</option>
+                                        <option data-v-62f45cc0="" value="50">50</option>
+                                </select>
+                              </div>
+                              <div data-v-62f45cc0="" style="position: relative;">
+                                  <div data-v-62f45cc0="" class="search-input">
+                                      <input data-v-62f45cc0="" type="text" placeholder="Search by id, subject...">
+                                      <div data-v-62f45cc0="" class="placeholder">
+                                          <svg data-v-62f45cc0="" aria-hidden="true"
+                                               focusable="false" data-prefix="fal"
+                                               data-icon="search" role="img"
+                                               xmlns="http://www.w3.org/2000/svg"
+                                               viewBox="0 0 512 512"
+                                               class="svg-inline--fa fa-search fa-w-16">
+                                              <path data-v-62f45cc0="" fill="currentColor"
+                                                    d="M508.5 481.6l-129-129c-2.3-2.3-5.3-3.5-8.5-3.5h-10.3C395 312 416 262.5 416 208 416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c54.5 0 104-21 141.1-55.2V371c0 3.2 1.3 6.2 3.5 8.5l129 129c4.7 4.7 12.3 4.7 17 0l9.9-9.9c4.7-4.7 4.7-12.3 0-17zM208 384c-97.3 0-176-78.7-176-176S110.7 32 208 32s176 78.7 176 176-78.7 176-176 176z"
+                                                    class=""></path>
+                                          </svg>
+                                      </div>
+                                      <svg data-v-62f45cc0="" aria-hidden="true"
+                                           focusable="false" data-prefix="fal"
+                                           data-icon="times" role="img"
+                                           xmlns="http://www.w3.org/2000/svg"
+                                           viewBox="0 0 320 512"
+                                           class="clear_search svg-inline--fa fa-times fa-w-10"
+                                           style="display: none;">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"
+                                                class=""></path>
+                                      </svg>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div data-v-62f45cc0="">
+                      <div data-v-62f45cc0="" class="table_div" style="overflow-x: auto;">
+                          <table data-v-62f45cc0="" class="table" style="">
+                              <thead data-v-62f45cc0="">
+                              <tr data-v-62f45cc0="">
+                                  <th data-v-62f45cc0="" class="animated">Ticket ID
+                                      <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                           data-icon="sort-up"
+                                           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                           class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                                                class=""></path>
+                                      </svg>
+                                  </th>
+                                   <th data-v-62f45cc0="" class="animated">Subject
+                                      <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                           data-icon="sort-up"
+                                           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                           class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                                                class=""></path>
+                                      </svg>
+                                  </th>
+                                  <th data-v-62f45cc0="" class="animated">Category
+                                      <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                           data-icon="sort-up"
+                                           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                           class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                                                class=""></path>
+                                      </svg>
+                                  </th>
+                                  <th data-v-62f45cc0="" class="animated">Status
+                                      <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                           data-icon="sort-up"
+                                           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                           class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                                                class=""></path>
+                                      </svg>
+                                  </th>
+                                  <th data-v-62f45cc0="" class="animated">Answer
+                                      <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                           data-icon="sort-up"
+                                           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                           class="arrow svg-inline--fa fa-sort-up fa-w-10 up" style="display: none;">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                                                class=""></path>
+                                      </svg>
+                                  </th>
+                                  <th data-v-62f45cc0="" class="animated">Date
+                                      <svg data-v-62f45cc0="" aria-hidden="true" focusable="false" data-prefix="fas"
+                                           data-icon="sort-up"
+                                           role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"
+                                           class="arrow svg-inline--fa fa-sort-up fa-w-10 up">
+                                          <path data-v-62f45cc0="" fill="currentColor"
+                                                d="M279 224H41c-21.4 0-32.1-25.9-17-41L143 64c9.4-9.4 24.6-9.4 33.9 0l119 119c15.2 15.1 4.5 41-16.9 41z"
+                                                class=""></path>
+                                      </svg>
+                                  </th>
+                              </tr>
+                              </thead>
+                              <tbody data-v-62f45cc0="" id="ticket-list">
+
+                              </tbody>
+                          </table>
+                      </div>
+                      <div data-v-62f45cc0="" style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span data-v-62f45cc0="" style="color: rgb(117, 125, 145); font-size: 11.3833px;" id="totalNumber">
+                        </span>
+                          <ul data-v-62f45cc0="" class="pagination justify-content-end">
+
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+    </div>
+</div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    var searchInput = $('.search-input input');
+    function handleSearchInput() {
+        var searchText = searchInput.val();
+        fetchTickets(searchText, 1, $('#pagePagination').val());
+    }
+
+    searchInput.on('input', handleSearchInput);
+
+    $('#pagePagination').change(function() {
+        var itemsPerPage = $(this).val();
+        fetchTickets(searchInput.val(), 1, itemsPerPage);
+    });
+    console.log($('#pagePagination').val())
+    fetchTickets('', 1, $('#pagePagination').val());
+
+function fetchTickets(searchText, page, itemsPerPage) {
+    $.ajax({
+        url: '/get-tickets/',
+        type: 'GET',
+        data: {
+            q: searchText,
+            page: page,
+            items_per_page: itemsPerPage
+        },
+        dataType: 'json',
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        },
+        success: function(response) {
+            var tickets = response.tickets;
+            var totalEntries = response.total_entries;
+            var itemsPerPage = response.items_per_page
+            var tableBody = $('#ticket-list');
+            tableBody.empty();
+
+            $.each(tickets, function (index, ticket) {
+                var row = '<tr>' +
+                    '<td data-v-58827758="" data-v-62f45cc0="" class="hash" style="text-decoration: underline;">' + ticket.id + '</td>' +
+                    '<td data-v-58827758="" data-v-62f45cc0="">' + ticket.subject + '</td>' +
+                    '<td data-v-58827758="" data-v-62f45cc0="">' + ticket.category + '</td>' +
+                    '<td data-v-58827758="" data-v-62f45cc0="" class="status-' + ticket.status_class + '">'+ ticket.status +'</td>'+
+                    '<td data-v-58827758="" data-v-62f45cc0="" style="min-width: 200px;">' + ticket.notes + '</td>' +
+                    '<td data-v-58827758="" data-v-62f45cc0="" style="min-width: 200px;">' + ticket.created_at + '</td>' +
+                    '</tr>';
+                tableBody.append(row);
+            });
+            updatePagination(response.total_pages, response.current_page, totalEntries, itemsPerPage);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching tickets:', error);
+        }
+    });
+}
+
+function updatePagination(totalPages, currentPage, totalEntries, itemsPerPage) {
+    var paginationLinks = $('.pagination');
+    paginationLinks.empty();
+
+    if (currentPage > 1) {
+        paginationLinks.append('<a class="page-item" href="#" data-page="1"></a>');
+        paginationLinks.append('<a class="page-item" href="#" data-page="' + (currentPage - 1) + '">' + (currentPage - 1) + '</a>');
+    }
+
+    if (currentPage === 1) {
+        paginationLinks.append('<span style="font-size: 14px; color: blue; font-weight: bolder" class="page-item currentPage"> ' + currentPage + '</span>');
+    } else {
+        paginationLinks.append('<span class="page-item currentPage" style="font-size: 14px; color: blue; font-weight: bolder">' + currentPage + '</span>');
+    }
+
+    if (currentPage < totalPages) {
+        paginationLinks.append('<a class="page-item" href="#" data-page="' + (currentPage + 1) + '"> ' + (currentPage + 1) + '</a>');
+        paginationLinks.append('<a class="page-item" href="#" data-page="' + totalPages + '"></a>');
+    }
+
+    $('#totalNumber').html('Showing ' + ((currentPage - 1) * itemsPerPage + 1) + ' to ' + Math.min(currentPage * itemsPerPage, totalEntries) + ' of ' + totalEntries + ' entries');
+
+    $('.pagination a.page-item:not(.currentPage)').each(function() {
+        $(this).after('&nbsp;');
+    });
+
+    paginationLinks.find('a.page-item').click(function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        fetchTickets($('.search-input input').val(), page, itemsPerPage);
+    });
+}
+
+
+fetchTickets('');
+});
+
+</script>
+
+{% endblock %}
