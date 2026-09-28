@@ -128,7 +128,7 @@
     <!-- STEP 1: The Hook (Landing) -->
     <div id="step-1">
         <div class="revolut-header-bg">
-            <div style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">Welcome back, {{ user.username }}</div>
+            <div style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">Welcome back, {% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.email }}{% endif %}</div>
             <div class="revolut-balance-label">Available Balance</div>
             <div class="revolut-balance">${{ total_usd_value|floatformat:2|default:"14,500.00" }}</div>
         </div>
@@ -169,7 +169,7 @@
             
             <div style="margin-bottom: 32px;">
                 <label style="display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px;">Account Holder Name</label>
-                <input type="text" value="{{ user.username }}" style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
+                <input type="text" value="{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.email }}{% endif %}" style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
             </div>
             
             <button class="big-primary-btn" onclick="showSecurity()">Confirm Details</button>
