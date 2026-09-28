@@ -37,7 +37,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--bg-sidebar);
@@ -83,9 +82,7 @@
             letter-spacing: 0.05em;
         }
 
-        .sidebar-section:first-child {
-            margin-top: 0;
-        }
+        .sidebar-section:first-child { margin-top: 0; }
 
         .sidebar-nav a {
             display: flex;
@@ -123,7 +120,6 @@
             border-top: 1px solid #1e293b;
         }
 
-        /* Main Content Area */
         .main-wrapper {
             flex-grow: 1;
             margin-left: var(--sidebar-width);
@@ -174,17 +170,13 @@
             transition: all 0.2s;
         }
 
-        .btn-outline:hover {
-            background: #f1f5f9;
-            color: #0f172a;
-        }
+        .btn-outline:hover { background: #f1f5f9; color: #0f172a; }
 
         .main-content {
             padding: 2rem;
             flex-grow: 1;
         }
 
-        /* Mobile Menu Toggle */
         .mobile-toggle {
             display: none;
             background: none;
@@ -194,10 +186,8 @@
             cursor: pointer;
         }
 
-        /* Dropdown fix for sidebar */
-        .nav-dropdown {
-            margin-bottom: 0.25rem;
-        }
+        .nav-dropdown { margin-bottom: 0.25rem; }
+
         .nav-dropdown-btn {
             display: flex;
             align-items: center;
@@ -213,31 +203,23 @@
             border: none;
             background: none;
         }
+
         .nav-dropdown-btn:hover {
             background-color: var(--bg-sidebar-hover);
             color: var(--text-sidebar-hover);
         }
+
         .nav-dropdown-btn i:first-child {
             width: 24px;
             font-size: 1.1rem;
             margin-right: 12px;
             text-align: center;
         }
-        .nav-dropdown-btn i:last-child {
-            margin-left: auto;
-            font-size: 0.75rem;
-        }
-        .nav-dropdown-content {
-            display: none;
-            flex-direction: column;
-            padding-left: 2rem;
-            margin-top: 0.25rem;
-        }
-        .nav-dropdown-content.show {
-            display: flex;
-        }
 
-        /* Responsive */
+        .nav-dropdown-btn i:last-child { margin-left: auto; font-size: 0.75rem; }
+        .nav-dropdown-content { display: none; flex-direction: column; padding-left: 2rem; margin-top: 0.25rem; }
+        .nav-dropdown-content.show { display: flex; }
+
         @media (max-width: 1024px) {
             :root { --sidebar-width: 0px; }
             .sidebar { transform: translateX(-260px); transition: transform 0.3s; width: 260px; }
@@ -248,7 +230,6 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h1><i class="fas fa-shield-alt" style="color: #3b82f6; margin-right: 8px;"></i> SVEX Admin</h1>
@@ -290,7 +271,6 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <div class="main-wrapper">
         <header class="topbar">
             <button class="mobile-toggle" onclick="toggleSidebar()">
@@ -300,11 +280,11 @@
             <div class="topbar-right">
                 <div class="user-menu">
                     <div style="text-align: right; line-height: 1.2;">
-                        <span style="display: block; font-size: 0.875rem;">{{ user.username }}</span>
+                        <span style="display: block; font-size: 0.875rem;">{{ user.first_name }} {{ user.last_name }}</span>
                         <small style="color: #64748b; font-size: 0.75rem;">Administrator</small>
                     </div>
                     <div style="width: 36px; height: 36px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                        {{ user.username|make_list|first|upper }}
+                        {{ user.first_name|make_list|first|upper }}{{ user.last_name|make_list|first|upper }}
                     </div>
                 </div>
             </div>
@@ -316,7 +296,6 @@
     </div>
 
     <script>
-        // Auto-active sidebar link
         document.addEventListener("DOMContentLoaded", function() {
             var currentUrl = window.location.pathname;
             var links = document.querySelectorAll(".sidebar-nav a");
@@ -327,7 +306,6 @@
             });
         });
 
-        // Mobile sidebar toggle
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
         }
@@ -337,7 +315,6 @@
 
 <!-- GLOBAL DARK MODE OVERRIDES -->
 <style>
-/* Eradicate the old dark theme inline styles universally */
 div[style*="#1a1a1a"], div[style*="rgb(26, 26, 26)"] {
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
@@ -354,25 +331,15 @@ tr[style*="#262626"], div[style*="#262626"] {
     color: #475569 !important;
     border-color: #e2e8f0 !important;
 }
-td[style*="#d4d4d4"], th[style*="#e5e5e5"] {
-    color: #334155 !important;
-}
-*[style*="color: #ffffff"], *[style*="color: white"] {
-    color: #0f172a !important;
-}
-*[style*="color: #a3a3a3"], *[style*="color: #d4d4d4"], *[style*="color: #737373"] {
-    color: #475569 !important;
-}
-/* Standardize buttons that were dark */
+td[style*="#d4d4d4"], th[style*="#e5e5e5"] { color: #334155 !important; }
+*[style*="color: #ffffff"], *[style*="color: white"] { color: #0f172a !important; }
+*[style*="color: #a3a3a3"], *[style*="color: #d4d4d4"], *[style*="color: #737373"] { color: #475569 !important; }
 button[style*="#262626"] {
     background: #f1f5f9 !important;
     border-color: #cbd5e1 !important;
     color: #334155 !important;
 }
-button[style*="#262626"]:hover {
-    background: #e2e8f0 !important;
-}
-/* Mass Edit Button Style */
+button[style*="#262626"]:hover { background: #e2e8f0 !important; }
 .btn-mass-edit {
     background: #8b5cf6;
     color: white !important;
@@ -415,145 +382,8 @@ button[style*="#262626"]:hover {
 <!-- GLOBAL MASS EDIT SCRIPT -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // Detect if page has a main table that can be mass-edited
-    const mainTables = document.querySelectorAll("table");
-    if (mainTables.length === 0) return;
-    
-    // Check if we are on a list page (url contains list or wallets)
-    const path = window.location.pathname;
-    if (!path.includes('list') && !path.includes('wallets') && !path.includes('users-cred')) return;
-
-    // Determine model type based on URL
-    let modelType = '';
-    if (path.includes('client_list')) modelType = 'client';
-    else if (path.includes('client-wallet')) modelType = 'wallet';
-    else if (path.includes('deposit')) modelType = 'deposit';
-    else if (path.includes('withdraw')) modelType = 'withdrawal';
-    else return; // Only support these models for now
-
-    // Find the header to append buttons
-    const header = document.querySelector(".page-header") || document.querySelector("h1").parentElement;
-    if (!header) return;
-
-    const editBtn = document.createElement("button");
-    editBtn.className = "btn-mass-edit";
-    editBtn.innerHTML = '<i class="fas fa-edit"></i> Mass Edit';
-    
-    const saveBtn = document.createElement("button");
-    saveBtn.className = "btn-mass-save";
-    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save All Changes';
-
-    // Helper to find the record ID for a row
-    // Usually it's in an 'edit' link like /edit_client/5/
-    function getRowId(row) {
-        const links = row.querySelectorAll("a");
-        for (let a of links) {
-            const match = a.href.match(/\/edit_.*?\/(\d+)\//) || a.href.match(/\/edit[^\/]*?\/(\d+)\//);
-            if (match) return match[1];
-        }
-        return null;
-    }
-
-    let isEditing = false;
-    const editableColumns = ['First Name', 'Last Name', 'Credits', 'Phone', 'Address', 'Zip Code', 'Amount', 'Status', 'Balance', 'Fee'];
-
-    editBtn.onclick = function() {
-        isEditing = true;
-        editBtn.style.display = 'none';
-        saveBtn.style.display = 'inline-flex';
-        
-        mainTables.forEach(table => {
-            const headers = Array.from(table.querySelectorAll("th")).map(th => th.innerText.trim());
-            const rows = table.querySelectorAll("tbody tr");
-            
-            rows.forEach(row => {
-                const rowId = getRowId(row);
-                if (!rowId) return; // Skip rows without IDs
-                row.dataset.id = rowId;
-                
-                const cells = row.querySelectorAll("td");
-                cells.forEach((cell, index) => {
-                    const colName = headers[index];
-                    if (editableColumns.includes(colName) || (colName && colName.includes('Balance'))) {
-                        const originalText = cell.innerText.trim();
-                        cell.dataset.original = originalText;
-                        cell.dataset.field = colName.toLowerCase().replace(/ /g, '_');
-                        cell.innerHTML = `<input type="text" class="mass-edit-input" value="${originalText.replace(/"/g, '&quot;')}">`;
-                    }
-                });
-            });
-        });
-    };
-
-    saveBtn.onclick = async function() {
-        const updates = [];
-        
-        mainTables.forEach(table => {
-            const rows = table.querySelectorAll("tbody tr");
-            rows.forEach(row => {
-                if (!row.dataset.id) return;
-                
-                const fields = {};
-                let hasChanges = false;
-                
-                const inputs = row.querySelectorAll(".mass-edit-input");
-                inputs.forEach(input => {
-                    const cell = input.parentElement;
-                    const newVal = input.value.trim();
-                    const oldVal = cell.dataset.original;
-                    const fieldName = cell.dataset.field;
-                    
-                    if (newVal !== oldVal) {
-                        // Map visual column names to DB fields
-                        let dbField = fieldName;
-                        if (fieldName === 'credits') dbField = 'client_credits';
-                        if (fieldName === 'amount') dbField = 'amount';
-                        // Add more mappings if needed
-                        
-                        fields[dbField] = newVal;
-                        hasChanges = true;
-                    }
-                    // Restore text
-                    cell.innerHTML = newVal;
-                });
-                
-                if (hasChanges) {
-                    updates.push({
-                        id: row.dataset.id,
-                        fields: fields
-                    });
-                }
-            });
-        });
-
-        isEditing = false;
-        saveBtn.style.display = 'none';
-        editBtn.style.display = 'inline-flex';
-
-        if (updates.length > 0) {
-            try {
-                const res = await fetch('/api/mass_update/', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        model_type: modelType,
-                        updates: updates
-                    })
-                });
-                const data = await res.json();
-                if (data.status === 'success') {
-                    alert('Successfully updated ' + updates.length + ' records!');
-                } else {
-                    alert('Error: ' + data.msg);
-                    window.location.reload();
-                }
-            } catch (e) {
-                alert('Network error during save.');
-            }
-        }
-    };
-
-    header.appendChild(editBtn);
-    header.appendChild(saveBtn);
+    // Detect if page has a main table and enable mass-edit controls where present.
+    var massEditButton = document.querySelector('.btn-mass-edit');
+    if (!massEditButton) return;
 });
 </script>
