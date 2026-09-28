@@ -145,7 +145,7 @@
                     <div class="user-circle">{{ user.email|make_list|first|upper }}</div>
                     <div style="display: flex; flex-direction: column; text-align: left;">
                         <span style="font-size: 15px; opacity: 0.9; font-weight: 500;">Welcome back,</span>
-                        <span style="font-size: 20px; font-weight: 800;">{{ user.username|default:user.email }}</span>
+                        <span style="font-size: 20px; font-weight: 800;">{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.email }}{% endif %}</span>
                     </div>
                 </div>
                 <a href="/dashboard/settings" style="color: #0f172a;"><svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></a>
@@ -238,7 +238,7 @@
         <div class="wallet-header">
             <div>
                 <h1 class="wallet-title">Dashboard</h1>
-                <p style="color: #64748b; font-size: 15px; margin: 0;">Welcome back, {{user.email}}</p>
+                <p style="color: #64748b; font-size: 15px; margin: 0;">Welcome back, {% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.email }}{% endif %}</p>
             </div>
             <div>
                 <a href="/dashboard/wallets/deposit" class="btn-secondary" style="margin-right: 8px;">Deposit</a>
@@ -254,7 +254,7 @@
                     <div style="flex-grow: 1;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                             <div>
-                                <h2 style="margin: 0 0 4px 0; font-size: 20px; color: #0f172a;">{{user.username}}</h2>
+                                <h2 style="margin: 0 0 4px 0; font-size: 20px; color: #0f172a;">{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.email }}{% endif %}</h2>
                                 <p style="margin: 0 0 12px 0; color: #64748b; font-size: 14px; font-family: monospace;">ID: {{user.id}}</p>
                             </div>
                             <a href="/dashboard/settings" class="btn-secondary">Account Settings</a>
@@ -350,7 +350,7 @@
             
             <div style="margin-bottom: 32px;">
                 <label style="display: block; font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 8px;">Account Holder Name</label>
-                <input type="text" value="{{ user.username|default:user.email }}" style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
+                <input type="text" value="{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.email }}{% endif %}" style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 16px; box-sizing: border-box;">
             </div>
             
             <button class="big-primary-btn" onclick="showSecurity()">Confirm Details</button>
