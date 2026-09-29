@@ -1,0 +1,162 @@
+{% extends 'SVEX_APP/base_manager.html' %}
+{% block title %}Export Users{% endblock %}
+
+{% block content %}
+<style>
+    .export-page {
+        max-width: 760px;
+        margin: 2.5rem auto;
+        padding: 0 1rem;
+    }
+    .export-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 2rem;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, .06);
+    }
+    .export-card h1 {
+        margin: 0 0 .5rem;
+        color: #0f172a;
+        font-size: 1.7rem;
+    }
+    .export-card p {
+        margin: 0;
+        color: #64748b;
+        line-height: 1.6;
+    }
+    .date-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: .45rem;
+    }
+    .field label {
+        font-size: .86rem;
+        font-weight: 700;
+        color: #334155;
+    }
+    .field input {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        padding: .78rem .9rem;
+        font-size: .95rem;
+        color: #0f172a;
+        background: #fff;
+    }
+    .field input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+    .helper {
+        margin-top: 1rem !important;
+        font-size: .84rem;
+    }
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: .7rem;
+        margin-top: 1.5rem;
+    }
+    .btn {
+        border: 0;
+        border-radius: 9px;
+        padding: .78rem 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+    }
+    .btn-reset {
+        background: #f1f5f9;
+        color: #334155;
+    }
+    .btn-export {
+        background: #2563eb;
+        color: #fff;
+    }
+    .btn-export:hover { background: #1d4ed8; }
+    .notice {
+        margin-top: 1.25rem;
+        padding: .8rem 1rem;
+        border-radius: 9px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+        font-size: .86rem;
+    }
+    @media (max-width: 650px) {
+        .export-card { padding: 1.2rem; }
+        .date-grid { grid-template-columns: 1fr; }
+        .actions { flex-direction: column; }
+        .actions .btn { width: 100%; justify-content: center; }
+    }
+</style>
+
+<div class="export-page">
+    <div class="export-card">
+        <h1><i class="fas fa-file-export" style="color:#2563eb;"></i> Export Users</h1>
+        <p>Select a date range and download only the user accounts whose <strong>account creation date</strong> falls inside that range.</p>
+
+        <form method="post" id="exportForm">
+            {% csrf_token %}
+
+            <div class="date-grid">
+                <div class="field">
+                    <label for="start_date">From</label>
+                    <input type="date" id="start_date" name="start_date">
+                </div>
+
+                <div class="field">
+                    <label for="end_date">To</label>
+                    <input type="date" id="end_date" name="end_date">
+                </div>
+            </div>
+
+            <p class="helper">
+                Leave either date empty for an open-ended range. Leaving both empty exports all users.
+            </p>
+
+            <div class="notice">
+                <i class="fas fa-info-circle"></i>
+                This page no longer downloads a CSV just by opening it. The CSV is generated only after you choose the range and click Export.
+            </div>
+
+            <div class="actions">
+                <button type="reset" class="btn btn-reset">
+                    <i class="fas fa-undo"></i> Clear
+                </button>
+                <button type="submit" class="btn btn-export">
+                    <i class="fas fa-download"></i> Export CSV
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function () {
+    const form = document.getElementById('exportForm');
+    const start = document.getElementById('start_date');
+    const end = document.getElementById('end_date');
+
+    form.addEventListener('submit', function (event) {
+        if (start.value && end.value && start.value > end.value) {
+            event.preventDefault();
+            alert('The From date cannot be after the To date.');
+            end.focus();
+        }
+    });
+})();
+</script>
+{% endblock %}
