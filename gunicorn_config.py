@@ -20,7 +20,7 @@ backlog = 2048
 workers = int(os.environ.get("GUNICORN_WORKERS", multiprocessing.cpu_count() * 2 + 1))
 worker_class = "sync"  # Options: sync, gevent, eventlet, tornado, gthread
 worker_connections = 1000  # For async workers (gevent, eventlet)
-timeout = 120  # Seconds before a worker is killed and restarted
+timeout = int(os.environ.get("GUNICORN_TIMEOUT", "300"))  # Allow large admin imports without killing the worker
 keepalive = 5  # Seconds to wait for requests on Keep-Alive connections
 
 # Restart workers after this many requests, to help prevent memory leaks
