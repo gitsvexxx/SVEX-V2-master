@@ -100,6 +100,7 @@
             <input type="file" id="csv_file" accept=".csv,text/csv" style="display:none;">
         </div>
 
+        <input type="hidden" id="csrfToken" value="{{ csrf_token }}">
         <button type="button" class="btn-submit" id="startImportBtn" disabled>
             <i class="fas fa-upload"></i> Start Import
         </button>
@@ -154,7 +155,7 @@
     const updatedCount = document.getElementById('updatedCount');
     const errorCount = document.getElementById('errorCount');
 
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+    const csrfToken = document.getElementById('csrfToken')?.value || '';
     let selectedFile = null;
     let importing = false;
 
