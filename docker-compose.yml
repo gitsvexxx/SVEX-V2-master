@@ -29,6 +29,16 @@ services:
       db:
         condition: service_healthy
 
+  mcp:
+    build: .
+    restart: unless-stopped
+    command: python mcp_server.py
+    env_file:
+      - ${ENV_FILE:-.env}
+    depends_on:
+      db:
+        condition: service_healthy
+
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
