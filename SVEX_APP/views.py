@@ -372,6 +372,46 @@ def register(request):
 
 @login_required(login_url='new_login')
 @manager_required
+def import_user_csv_row(request):
+    """Import exactly one client row so each request completes quickly."""
+    if request.method != "POST":
+        return JsonResponse({"ok": False, "error": "POST required"}, status=405)
+
+    from .csv_importer import process_user_import_row
+
+    full_name = (request.POST.get("full_name") or "").strip()
+    email = (request.POST.get("email") or "").strip()
+    phone = (request.POST.get("phone") or "").strip()
+
+    if not email or "@" not in email:
+        return JsonResponse(
+            {"ok": False, "error": "Missing or invalid email"},
+            status=400,
+        )
+
+    try:
+        results = process_user_import_row(full_name, email, phone)
+        errors = results.get("errors") or []
+        details = results.get("details") or []
+        return JsonResponse(
+            {
+                "ok": not bool(errors),
+                "created": results.get("created", 0),
+                "updated": results.get("updated", 0),
+                "skipped": results.get("skipped", 0),
+                "error": errors[0] if errors else "",
+                "detail": details[0] if details else "",
+            }
+        )
+    except Exception as exc:
+        return JsonResponse(
+            {"ok": False, "error": f"Row import failed: {str(exc)}"},
+            status=500,
+        )
+
+
+@login_required(login_url='new_login')
+@manager_required
 def import_users_csv(request):
     from .csv_importer import process_user_import_csv
     results = None
