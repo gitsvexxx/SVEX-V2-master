@@ -36,7 +36,7 @@ from django.db.models import Q
 from django.utils import timezone
 from starlette.responses import JSONResponse
 
-from mcp.server import MCPServer
+from mcp.server.mcpserver import MCPServer
 from mcp.server.transport_security import TransportSecuritySettings
 
 from SVEX_APP.models import Client, ClientWallet, Deposit, Withdrawal
