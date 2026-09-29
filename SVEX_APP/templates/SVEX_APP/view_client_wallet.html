@@ -4,80 +4,171 @@
 {% block content %}
 <div class="container">
     <div class="page-header">
-        <h1>Client Wallets</h1>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search by client..." onkeyup="searchTable()">
-    </div>
-
-    <div class="table-container">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Client</th>
-                        <th class="text-right">Transfer Wallet</th>
-                        <th class="text-right">Spot BTC Balance</th>
-                        <th class="text-right">BTC Balance</th>
-                        <th class="text-right">ETH Balance</th>
-                        <th class="text-right">USDT (ERC20)</th>
-                        <th class="text-right">USDT (TRC20)</th>
-                        <th class="text-center">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="walletTableBody">
-                    {% for wallet in client_wallets %}
-                        <tr>
-                            <td>{{ wallet.client.username }}</td>
-                            <td class="text-right monospace font-semibold">{{ wallet.wallet_address}}</td>
-                            <td class="text-right monospace font-semibold">{{ wallet.spotbtc_balance }}</td>
-                            <td class="text-right monospace font-semibold">{{ wallet.btc_balance }}</td>
-                            <td class="text-right monospace font-semibold">{{ wallet.eth_balance }}</td>
-                            <td class="text-right monospace font-semibold">{{ wallet.usdt_balance_erc20 }}</td>
-                            <td class="text-right monospace font-semibold">{{ wallet.usd_balance_trc20 }}</td>
-                            <td class="text-center">
-                                <a href="{% url 'edit_client_wallet' client_wallet_id=wallet.pk %}" class="btn btn-sm btn-info">Edit</a>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="7" class="empty-state">
-                                <div class="empty-state-title">No client wallets found</div>
-                                <div class="empty-state-subtitle">Wallet balances will appear here once they are generated for clients.</div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div>
+            <h1>Client Wallets</h1>
+            <p class="page-subtitle">Manage individual wallets or update selected wallets in bulk.</p>
+        </div>
+        <div class="header-actions">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by client..." onkeyup="searchTable()">
+            <button type="button" class="btn btn-mass" onclick="toggleMassUpdate()">
+                <i class="fas fa-layer-group"></i> Mass Update
+            </button>
         </div>
     </div>
+
+    <form method="post" action="{% url 'mass_update_client_wallets' %}" id="massUpdateForm" onsubmit="return confirmMassUpdate();">
+        {% csrf_token %}
+
+        <div id="massUpdatePanel" class="mass-panel" style="display: none;">
+            <div class="mass-panel-header">
+                <div>
+                    <h2>Mass Update Selected Wallets</h2>
+                    <p>Enter only the balances you want to change. Blank fields remain unchanged.</p>
+                </div>
+                <div class="selected-counter"><span id="selectedCount">0</span> selected</div>
+            </div>
+
+            <div class="mass-grid">
+                <label>
+                    <span>Spot BTC</span>
+                    <input type="number" step="0.00000001" min="0" name="spotbtc_balance" placeholder="Leave blank to keep">
+                </label>
+                <label>
+                    <span>BTC</span>
+                    <input type="number" step="0.00000001" min="0" name="btc_balance" placeholder="Leave blank to keep">
+                </label>
+                <label>
+                    <span>ETH</span>
+                    <input type="number" step="0.00000001" min="0" name="eth_balance" placeholder="Leave blank to keep">
+                </label>
+                <label>
+                    <span>USDT (ERC20)</span>
+                    <input type="number" step="0.00000001" min="0" name="usdt_balance_erc20" placeholder="Leave blank to keep">
+                </label>
+                <label>
+                    <span>USDT (TRC20)</span>
+                    <input type="number" step="0.00000001" min="0" name="usd_balance_trc20" placeholder="Leave blank to keep">
+                </label>
+            </div>
+
+            <div class="mass-panel-actions">
+                <button type="submit" class="btn btn-mass-save">
+                    <i class="fas fa-save"></i> Update Selected Wallets
+                </button>
+                <button type="button" class="btn btn-cancel" onclick="toggleMassUpdate()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-center select-column">
+                                <input type="checkbox" id="selectAll" title="Select all visible wallets" onchange="toggleAllVisible(this)">
+                            </th>
+                            <th>Client</th>
+                            <th class="text-right">Transfer Wallet</th>
+                            <th class="text-right">Spot BTC Balance</th>
+                            <th class="text-right">BTC Balance</th>
+                            <th class="text-right">ETH Balance</th>
+                            <th class="text-right">USDT (ERC20)</th>
+                            <th class="text-right">USDT (TRC20)</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="walletTableBody">
+                        {% for wallet in client_wallets %}
+                            <tr class="wallet-row">
+                                <td class="text-center">
+                                    <input type="checkbox" class="wallet-check" name="wallet_ids" value="{{ wallet.pk }}" onchange="updateSelectedCount()">
+                                </td>
+                                <td>
+                                    <div class="client-name">
+                                        {% if wallet.client.first_name or wallet.client.last_name %}
+                                            {{ wallet.client.first_name }} {{ wallet.client.last_name }}
+                                        {% else %}
+                                            {{ wallet.client.email|default:wallet.client.username }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="client-username">{{ wallet.client.username }}</div>
+                                </td>
+                                <td class="text-right monospace font-semibold">{{ wallet.wallet_address }}</td>
+                                <td class="text-right monospace font-semibold">{{ wallet.spotbtc_balance }}</td>
+                                <td class="text-right monospace font-semibold">{{ wallet.btc_balance }}</td>
+                                <td class="text-right monospace font-semibold">{{ wallet.eth_balance }}</td>
+                                <td class="text-right monospace font-semibold">{{ wallet.usdt_balance_erc20 }}</td>
+                                <td class="text-right monospace font-semibold">{{ wallet.usd_balance_trc20 }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'edit_client_wallet' client_wallet_id=wallet.pk %}" class="btn btn-sm btn-info">Edit</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="9" class="empty-state">
+                                    <div class="empty-state-title">No client wallets found</div>
+                                    <div class="empty-state-subtitle">Wallet balances will appear here once they are generated for clients.</div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
 </div>
 
 <style>
-    /* General Layout & Typography */
     .container {
         max-width: 1400px;
         margin: 0 auto;
         padding: 2rem;
     }
+
     .page-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
+        align-items: flex-end;
+        margin-bottom: 1.5rem;
         flex-wrap: wrap;
         gap: 1rem;
     }
+
     .page-header h1 {
         color: #0f172a;
         font-size: 2rem;
         font-weight: 600;
         margin: 0;
     }
+
+    .page-subtitle {
+        color: #64748b;
+        margin: 0.4rem 0 0;
+        font-size: 0.9rem;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
     .monospace { font-family: monospace; }
     .font-semibold { font-weight: 600; }
     .text-center { text-align: center; }
     .text-right { text-align: right; }
+    .select-column { width: 48px; }
 
-    /* Search Input */
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #2563eb;
+        cursor: pointer;
+    }
+
     .search-input {
         background-color: #ffffff;
         color: #334155;
@@ -89,113 +180,309 @@
         min-width: 250px;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .search-input::placeholder {
-        color: #6b7280;
-    }
+
+    .search-input::placeholder { color: #6b7280; }
+
     .search-input:focus {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
 
-    /* Buttons */
     .btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
         text-decoration: none;
-        font-weight: 500;
-        transition: background-color 0.2s;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: background-color 0.2s, transform 0.1s;
         border: none;
         cursor: pointer;
-        color: #0f172a;
         white-space: nowrap;
     }
+
+    .btn:active { transform: translateY(1px); }
+
     .btn-sm {
         padding: 0.5rem 1rem;
         font-size: 0.875rem;
-        border-radius: 6px;
     }
-    .btn-info { background-color: #3b82f6; }
+
+    .btn-info {
+        background-color: #3b82f6;
+        color: #ffffff;
+    }
+
     .btn-info:hover { background-color: #2563eb; }
 
-    /* Table Styling */
-    .table-container {
-        
+    .btn-mass {
+        background-color: #0f766e;
+        color: #ffffff;
+        padding: 0.65rem 1rem;
+    }
+
+    .btn-mass:hover { background-color: #115e59; }
+
+    .btn-mass-save {
+        background-color: #2563eb;
+        color: #ffffff;
+        padding: 0.7rem 1.1rem;
+    }
+
+    .btn-mass-save:hover { background-color: #1d4ed8; }
+
+    .btn-cancel {
+        background-color: #f1f5f9;
+        color: #334155;
+        padding: 0.7rem 1.1rem;
+    }
+
+    .btn-cancel:hover { background-color: #e2e8f0; }
+
+    .mass-panel {
+        background: #ffffff;
+        border: 1px solid #99f6e4;
         border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 4px 12px rgba(15, 118, 110, 0.08);
+    }
+
+    .mass-panel-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .mass-panel-header h2 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #0f172a;
+    }
+
+    .mass-panel-header p {
+        margin: 0.3rem 0 0;
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+
+    .selected-counter {
+        background: #ecfeff;
+        border: 1px solid #a5f3fc;
+        color: #155e75;
+        padding: 0.4rem 0.7rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .mass-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(160px, 1fr));
+        gap: 0.85rem;
+    }
+
+    .mass-grid label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .mass-grid input {
+        width: 100%;
+        padding: 0.7rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        color: #0f172a;
+        background: #ffffff;
+    }
+
+    .mass-grid input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .mass-panel-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .table-container {
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
         overflow: hidden;
+        background: #ffffff;
     }
-    .table-wrapper {
-        overflow-x: auto;
-    }
+
+    .table-wrapper { overflow-x: auto; }
+
     table {
         width: 100%;
         border-collapse: collapse;
     }
+
     th {
-        padding: 1rem;
+        padding: 0.9rem 1rem;
         text-align: left;
         color: #0f172a;
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
     }
+
     td {
-        padding: 1rem;
+        padding: 0.9rem 1rem;
         color: #334155;
         font-weight: 500;
+        vertical-align: middle;
     }
+
     thead tr {
         background-color: #ffffff;
         border-bottom: 2px solid #cbd5e1;
     }
+
     tbody tr {
         border-bottom: 1px solid #e2e8f0;
-        transition: background-color 0.2s;
-    }
-    tbody tr:last-child {
-        border-bottom: none;
-    }
-    tbody tr:hover {
-        background-color: #252525;
+        transition: background-color 0.15s;
     }
 
-    /* Empty State */
+    tbody tr:hover { background-color: #f8fafc; }
+
+    .client-name {
+        color: #0f172a;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .client-username {
+        color: #94a3b8;
+        font-size: 0.75rem;
+        margin-top: 2px;
+    }
+
     .empty-state {
         padding: 3rem;
         text-align: center;
         color: #6b7280;
     }
+
     .empty-state-title {
         font-size: 1.125rem;
         font-weight: 500;
         margin-bottom: 0.5rem;
     }
-    .empty-state-subtitle {
-        font-size: 0.875rem;
+
+    .empty-state-subtitle { font-size: 0.875rem; }
+
+    @media (max-width: 900px) {
+        .container { padding: 1rem; }
+        .page-header { align-items: stretch; }
+        .header-actions { width: 100%; }
+        .search-input { min-width: 0; flex: 1; }
+        .mass-grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+    }
+
+    @media (max-width: 560px) {
+        .mass-grid { grid-template-columns: 1fr; }
+        .mass-panel-actions { flex-direction: column; }
+        .mass-panel-actions .btn { width: 100%; }
     }
 </style>
 
 <script>
+    function visibleWalletRows() {
+        return Array.from(document.querySelectorAll('#walletTableBody .wallet-row'))
+            .filter(row => row.style.display !== 'none');
+    }
+
     function searchTable() {
         const input = document.getElementById("searchInput");
         const filter = input.value.toUpperCase();
-        const tableBody = document.getElementById("walletTableBody");
-        const rows = tableBody.getElementsByTagName("tr");
+        const rows = document.querySelectorAll("#walletTableBody .wallet-row");
 
-        for (let i = 0; i < rows.length; i++) {
-            // Only search actual data rows, not the empty state row
-            if (rows[i].getElementsByTagName("td").length > 1) {
-                const td = rows[i].getElementsByTagName("td")[0]; // Search by client username
-                if (td) {
-                    const txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        rows[i].style.display = "";
-                    } else {
-                        rows[i].style.display = "none";
-                    }
-                }
-            }
+        rows.forEach(function(row) {
+            const clientCell = row.querySelector("td:nth-child(2)");
+            const text = clientCell ? (clientCell.textContent || "").toUpperCase() : "";
+            row.style.display = text.indexOf(filter) > -1 ? "" : "none";
+        });
+
+        const selectAll = document.getElementById("selectAll");
+        if (selectAll) {
+            selectAll.checked = visibleWalletRows().length > 0 &&
+                visibleWalletRows().every(row => row.querySelector(".wallet-check").checked);
         }
     }
+
+    function toggleMassUpdate() {
+        const panel = document.getElementById("massUpdatePanel");
+        const isHidden = panel.style.display === "none";
+        panel.style.display = isHidden ? "block" : "none";
+
+        if (isHidden) {
+            updateSelectedCount();
+            panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }
+
+    function toggleAllVisible(source) {
+        visibleWalletRows().forEach(function(row) {
+            const checkbox = row.querySelector(".wallet-check");
+            if (checkbox) checkbox.checked = source.checked;
+        });
+        updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+        const count = document.querySelectorAll(".wallet-check:checked").length;
+        document.getElementById("selectedCount").textContent = count;
+
+        const selectAll = document.getElementById("selectAll");
+        const visible = visibleWalletRows();
+        selectAll.checked = visible.length > 0 && visible.every(row => row.querySelector(".wallet-check").checked);
+        selectAll.indeterminate = visible.some(row => row.querySelector(".wallet-check").checked) && !selectAll.checked;
+    }
+
+    function confirmMassUpdate() {
+        const selected = document.querySelectorAll(".wallet-check:checked").length;
+        if (!selected) {
+            alert("Select at least one wallet first.");
+            return false;
+        }
+
+        const fields = [
+            "spotbtc_balance",
+            "btc_balance",
+            "eth_balance",
+            "usdt_balance_erc20",
+            "usd_balance_trc20"
+        ];
+
+        const hasValue = fields.some(function(name) {
+            const input = document.querySelector('[name="' + name + '"]');
+            return input && input.value.trim() !== "";
+        });
+
+        if (!hasValue) {
+            alert("Enter at least one balance to update.");
+            return false;
+        }
+
+        return confirm("Update the selected " + selected + " wallet(s)? This will replace the entered balances.");
+    }
+
+    updateSelectedCount();
 </script>
 {% endblock %}
