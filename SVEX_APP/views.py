@@ -568,7 +568,7 @@ def edit_kyc(request, kyc_id):
 @login_required(login_url='new_login')
 @manager_required
 def view_client_wallet(request):
-    client_wallets = ClientWallet.objects.all()
+    client_wallets = ClientWallet._default_manager.select_related("client").all()
     return render(
         request, "SVEX_APP/view_client_wallet.html", {
             "client_wallets": client_wallets}
