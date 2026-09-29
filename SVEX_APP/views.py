@@ -449,11 +449,13 @@ def export_users_csv(request):
     start_date = None
     end_date = None
 
+    if not start_date_raw or not end_date_raw:
+        messages.error(request, "Please select both a start date and an end date.")
+        return redirect("export_users_csv")
+
     try:
-        if start_date_raw:
-            start_date = datetime.strptime(start_date_raw, "%Y-%m-%d").date()
-        if end_date_raw:
-            end_date = datetime.strptime(end_date_raw, "%Y-%m-%d").date()
+        start_date = datetime.strptime(start_date_raw, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end_date_raw, "%Y-%m-%d").date()
     except ValueError:
         messages.error(request, "Please enter valid start and end dates.")
         return redirect("export_users_csv")
@@ -462,7 +464,7 @@ def export_users_csv(request):
         messages.error(request, "Start date cannot be after end date.")
         return redirect("export_users_csv")
 
-    # Filter by the account's date_joined. Blank endpoints mean open-ended.
+    # Filter by the account's date_joined. Both selected dates are inclusive.
     user_filters = Q(is_superuser=False)
     if start_date:
         start_dt = timezone.make_aware(datetime.combine(start_date, time.min))
@@ -477,12 +479,9 @@ def export_users_csv(request):
         .select_related("client")
         .order_by("date_joined", "id")
     )
-    users_by_id = {user.pk: user for user in users}
 
     response = HttpResponse(content_type="text/csv; charset=utf-8")
-    range_label = (
-        f"{start_date_raw or 'all'}_to_{end_date_raw or 'all'}"
-    )
+    range_label = f"{start_date_raw}_to_{end_date_raw}"
     response["Content-Disposition"] = (
         f'attachment; filename="svex_users_{range_label}.csv"'
     )
