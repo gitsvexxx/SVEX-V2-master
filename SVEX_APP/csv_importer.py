@@ -359,6 +359,22 @@ def _process_batch(batch, results):
             )
 
 
+def process_user_import_row(full_name="", email="", phone=""):
+    """Process exactly one CSV-style client row and return its import result."""
+    csv_buffer = io.StringIO()
+    writer = csv.writer(csv_buffer)
+    writer.writerow(["Full Name", "Email", "Phone"])
+    writer.writerow([
+        str(full_name or "").strip(),
+        str(email or "").strip(),
+        str(phone or "").strip(),
+    ])
+    csv_buffer.seek(0)
+    return process_user_import_csv(
+        io.BytesIO(csv_buffer.getvalue().encode("utf-8"))
+    )
+
+
 def process_user_import_csv(csv_file):
     """
     Import clients in small database batches.
