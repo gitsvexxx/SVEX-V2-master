@@ -15,5 +15,9 @@
         file_server
     }
 
+    handle /mcp* {
+        reverse_proxy mcp:8001
+    }
+
     reverse_proxy web:8000
 }
