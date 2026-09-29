@@ -3,352 +3,411 @@
 
 {% block content %}
 <style>
-    .import-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
-
+    .import-container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
     .import-card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 2.5rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+        padding: 2rem; box-shadow: 0 4px 12px rgba(15,23,42,.05);
     }
-
-    .import-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .import-header h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 0.5rem;
-    }
-
-    .import-header p {
-        color: #64748b;
-        font-size: 0.95rem;
-    }
-
+    .import-header { text-align: center; margin-bottom: 1.75rem; }
+    .import-header h1 { margin: 0 0 .5rem; font-size: 1.75rem; color: #0f172a; }
+    .import-header p { margin: 0; color: #64748b; }
     .format-info-box {
-        background-color: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 2rem;
+        background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+        padding: 1rem 1.15rem; margin-bottom: 1.25rem;
     }
-
-    .format-info-title {
-        font-weight: 600;
-        font-size: 0.95rem;
-        color: #1e293b;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .format-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.75rem;
-        font-size: 0.875rem;
-    }
-
-    .format-table th, .format-table td {
-        border: 1px solid #cbd5e1;
-        padding: 6px 12px;
-        text-align: left;
-    }
-
-    .format-table th {
-        background-color: #f1f5f9;
-        color: #334155;
-        font-weight: 600;
-    }
-
     .dropzone {
-        border: 2px dashed #cbd5e1;
-        border-radius: 12px;
-        padding: 2.5rem 1.5rem;
-        text-align: center;
-        background-color: #f8fafc;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        margin-bottom: 1.5rem;
+        border: 2px dashed #cbd5e1; border-radius: 12px; padding: 2.25rem 1rem;
+        text-align: center; background: #f8fafc; cursor: pointer; transition: .2s;
     }
-
-    .dropzone:hover, .dropzone.dragover {
-        border-color: #3b82f6;
-        background-color: #eff6ff;
-    }
-
-    .dropzone-icon {
-        font-size: 2.5rem;
-        color: #3b82f6;
-        margin-bottom: 0.75rem;
-    }
-
-    .file-name-preview {
-        margin-top: 0.75rem;
-        font-weight: 600;
-        color: #2563eb;
-        display: none;
-    }
-
+    .dropzone:hover, .dropzone.dragover { border-color: #2563eb; background: #eff6ff; }
+    .dropzone-icon { font-size: 2.4rem; color: #2563eb; margin-bottom: .7rem; }
+    .file-name-preview { margin-top: .75rem; font-weight: 600; color: #2563eb; display: none; }
     .btn-submit {
-        width: 100%;
-        background-color: #2563eb;
-        color: #ffffff;
-        border: none;
-        padding: 0.875rem;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
+        width: 100%; margin-top: 1rem; padding: .9rem; border: 0; border-radius: 9px;
+        background: #2563eb; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer;
     }
-
-    .btn-submit:hover {
-        background-color: #1d4ed8;
+    .btn-submit:disabled { opacity: .55; cursor: not-allowed; }
+    .progress-wrap {
+        display: none; margin-top: 1.5rem; border: 1px solid #e2e8f0; border-radius: 12px;
+        padding: 1rem; background: #fff;
     }
-
-    /* Results */
-    .result-card {
-        margin-top: 2rem;
-        border-radius: 8px;
-        padding: 1.5rem;
-        border: 1px solid transparent;
+    .progress-top { display:flex; justify-content:space-between; gap:1rem; margin-bottom:.65rem; }
+    .progress-label { color:#334155; font-weight:700; }
+    .progress-percent { color:#2563eb; font-weight:800; }
+    .progress-track { height: 16px; background:#e2e8f0; border-radius:999px; overflow:hidden; }
+    .progress-bar {
+        height:100%; width:0%; background:#2563eb; transition:width .2s ease;
     }
-
-    .result-card.success {
-        background-color: #f0fdf4;
-        border-color: #bbf7d0;
-        color: #166534;
+    .import-stats {
+        display:grid; grid-template-columns:repeat(4, 1fr); gap:.75rem; margin-top:1rem;
     }
-
-    .result-card.warning {
-        background-color: #fffbeb;
-        border-color: #fde68a;
-        color: #92400e;
+    .stat {
+        background:#f8fafc; border:1px solid #e2e8f0; border-radius:9px; padding:.8rem;
+        text-align:center;
     }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 1rem;
-        margin: 1rem 0;
+    .stat-number { font-size:1.25rem; font-weight:800; color:#0f172a; }
+    .stat-label { font-size:.72rem; color:#64748b; text-transform:uppercase; letter-spacing:.04em; }
+    .current-row {
+        margin-top:1rem; padding:.8rem; border-radius:8px; background:#f8fafc;
+        color:#475569; font-size:.88rem; min-height: 42px;
     }
-
-    .stat-item {
-        background: #ffffff;
-        padding: 1rem;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #0f172a;
-    }
-
-    .stat-label {
-        font-size: 0.8rem;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
     .log-list {
-        max-height: 200px;
-        overflow-y: auto;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 6px;
-        padding: 0.75rem 1rem;
-        margin-top: 1rem;
-        font-family: monospace;
-        font-size: 0.85rem;
+        margin-top:1rem; max-height:220px; overflow:auto; padding:.75rem 1rem;
+        border:1px solid #e2e8f0; border-radius:8px; background:#fff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.82rem;
     }
-
-    .log-list li {
-        margin-bottom: 0.25rem;
+    .log-list li { margin-bottom:.3rem; }
+    .log-list .error { color:#b91c1c; }
+    .done-actions { display:none; margin-top:1.25rem; text-align:center; }
+    .done-actions a {
+        display:inline-block; padding:.7rem 1.1rem; border-radius:8px; background:#0f172a;
+        color:#fff; text-decoration:none; font-weight:700;
     }
-
-    .log-list.errors {
-        color: #dc2626;
-        border-color: #fecaca;
-        background-color: #fef2f2;
+    .secondary { color:#64748b; font-size:.84rem; margin-top:.5rem; }
+    @media (max-width:700px) {
+        .import-card { padding:1rem; }
+        .import-stats { grid-template-columns:repeat(2, 1fr); }
+        .progress-top { flex-direction:column; gap:.2rem; }
     }
 </style>
 
 <div class="import-container">
     <div class="import-card">
         <div class="import-header">
-            <h1><i class="fas fa-file-csv" style="color: #2563eb;"></i> Import Clients from CSV</h1>
-            <p>Upload a CSV file with full name, email, and phone to bulk-create or update client accounts.</p>
+            <h1><i class="fas fa-file-csv" style="color:#2563eb;"></i> Import Clients from CSV</h1>
+            <p>Rows are imported <strong>one at a time</strong> so a large CSV does not hold a web request open.</p>
         </div>
 
         <div class="format-info-box">
-            <div class="format-info-title">
-                <i class="fas fa-info-circle" style="color: #3b82f6;"></i> Expected CSV Columns:
+            <div style="font-weight:700;color:#1e293b;margin-bottom:.35rem;">
+                Expected columns
             </div>
-            <p style="margin: 0; font-size: 0.875rem; color: #475569;">
-                The first line must be a header row containing <strong>Full Name</strong>, <strong>Email</strong>, and <strong>Phone</strong>.
-            </p>
-            <table class="format-table">
-                <thead>
-                    <tr>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>john.doe@example.com</td>
-                        <td>+1 555-0199</td>
-                    </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>jane.smith@example.com</td>
-                        <td>+44 20 7946 0912</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="margin-top: 0.75rem; text-align: right;">
-                <a href="data:text/csv;charset=utf-8,Full%20Name%2CEmail%2CPhone%0AJohn%20Doe%2Cjohn.doe%40example.com%2C%2B15550199%0AJane%20Smith%2Cjane.smith%40example.com%2C%2B442079460912" download="sample_clients.csv" style="font-size: 0.85rem; color: #2563eb; font-weight: 600; text-decoration: none;">
-                    <i class="fas fa-download"></i> Download Sample CSV
-                </a>
+            <div style="font-size:.88rem;color:#475569;">
+                <strong>Full Name</strong>, <strong>Email</strong>, <strong>Phone</strong>.
+                CSVs using commas, semicolons, or tabs are supported.
             </div>
         </div>
 
-        <form method="POST" enctype="multipart/form-data" id="uploadForm">
-            {% csrf_token %}
-            <div class="dropzone" id="dropzone" onclick="document.getElementById('csv_file').click()">
-                <div class="dropzone-icon">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                </div>
-                <div style="font-size: 1.05rem; font-weight: 600; color: #1e293b;">
-                    Click to browse or drag and drop your CSV file here
-                </div>
-                <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.35rem;">
-                    Accepts .csv files (UTF-8 formatted)
-                </div>
-                <div class="file-name-preview" id="fileNamePreview"></div>
-                <input type="file" id="csv_file" name="csv_file" accept=".csv" required style="display: none;">
+        <div class="dropzone" id="dropzone">
+            <div class="dropzone-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+            <div style="font-size:1.05rem;font-weight:700;color:#1e293b;">
+                Click to select CSV or drag and drop it here
+            </div>
+            <div style="font-size:.85rem;color:#64748b;margin-top:.35rem;">
+                The browser will read the file and send one row per request.
+            </div>
+            <div class="file-name-preview" id="fileNamePreview"></div>
+            <input type="file" id="csv_file" accept=".csv,text/csv" style="display:none;">
+        </div>
+
+        <button type="button" class="btn-submit" id="startImportBtn" disabled>
+            <i class="fas fa-upload"></i> Start Import
+        </button>
+
+        <div class="progress-wrap" id="progressWrap">
+            <div class="progress-top">
+                <div class="progress-label" id="progressLabel">Preparing import…</div>
+                <div class="progress-percent" id="progressPercent">0%</div>
+            </div>
+            <div class="progress-track">
+                <div class="progress-bar" id="progressBar"></div>
             </div>
 
-            <button type="submit" class="btn-submit" id="submitBtn">
-                <i class="fas fa-upload"></i> Process CSV Import
-            </button>
-        </form>
-
-        {% if results %}
-            <div class="result-card {% if results.errors %}warning{% else %}success{% endif %}">
-                <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 700;">
-                    {% if results.errors and not results.created and not results.updated %}
-                        <i class="fas fa-exclamation-circle" style="color: #dc2626;"></i> Import Failed
-                    {% elif results.errors %}
-                        <i class="fas fa-exclamation-triangle" style="color: #d97706;"></i> Import Completed with Warnings
-                    {% else %}
-                        <i class="fas fa-check-circle" style="color: #16a34a;"></i> Import Completed Successfully
-                    {% endif %}
-                </h3>
-
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number">{{ results.total }}</div>
-                        <div class="stat-label">Total Rows</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" style="color: #16a34a;">{{ results.created }}</div>
-                        <div class="stat-label">Created</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" style="color: #2563eb;">{{ results.updated }}</div>
-                        <div class="stat-label">Updated</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" style="color: #dc2626;">{{ results.skipped }}</div>
-                        <div class="stat-label">Skipped</div>
-                    </div>
-                </div>
-
-                {% if results.details %}
-                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 1rem;">Processed Users:</div>
-                    <ul class="log-list">
-                        {% for detail in results.details %}
-                            <li>{{ detail }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                {% if results.logs_limited %}
-                    <div style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 6px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.85rem;">
-                        Large import detected. The counters above include every row, while the detailed log is limited to the first 200 entries to keep the page responsive.
-                    </div>
-                {% endif %}
-
-                {% if results.errors %}
-                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 1rem; color: #dc2626;">Errors / Skipped:</div>
-                    <ul class="log-list errors">
-                        {% for err in results.errors %}
-                            <li>{{ err }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                <div style="margin-top: 1.5rem; text-align: center;">
-                    <a href="{% url 'client_list' %}" class="btn btn-primary" style="padding: 0.6rem 1.25rem; border-radius: 6px; background: #0f172a; color: white; text-decoration: none; font-weight: 600;">
-                        <i class="fas fa-users"></i> View All Clients
-                    </a>
-                </div>
+            <div class="import-stats">
+                <div class="stat"><div class="stat-number" id="totalCount">0</div><div class="stat-label">Total</div></div>
+                <div class="stat"><div class="stat-number" id="createdCount">0</div><div class="stat-label">Created</div></div>
+                <div class="stat"><div class="stat-number" id="updatedCount">0</div><div class="stat-label">Updated</div></div>
+                <div class="stat"><div class="stat-number" id="errorCount">0</div><div class="stat-label">Errors</div></div>
             </div>
-        {% endif %}
+
+            <div class="current-row" id="currentRow">Waiting to start…</div>
+
+            <ul class="log-list" id="logList"></ul>
+
+            <div class="done-actions" id="doneActions">
+                <a href="{% url 'client_list' %}">
+                    <i class="fas fa-users"></i> View All Clients
+                </a>
+                <div class="secondary">You can safely leave this page after the import finishes.</div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
+(function () {
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('csv_file');
     const fileNamePreview = document.getElementById('fileNamePreview');
+    const startBtn = document.getElementById('startImportBtn');
 
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            fileNamePreview.textContent = "Selected: " + this.files[0].name;
-            fileNamePreview.style.display = 'block';
+    const progressWrap = document.getElementById('progressWrap');
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+    const progressLabel = document.getElementById('progressLabel');
+    const currentRow = document.getElementById('currentRow');
+    const logList = document.getElementById('logList');
+    const doneActions = document.getElementById('doneActions');
+
+    const totalCount = document.getElementById('totalCount');
+    const createdCount = document.getElementById('createdCount');
+    const updatedCount = document.getElementById('updatedCount');
+    const errorCount = document.getElementById('errorCount');
+
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+    let selectedFile = null;
+    let importing = false;
+
+    function setFile(file) {
+        if (!file) return;
+        if (!/\.csv$/i.test(file.name)) {
+            alert('Please choose a CSV file.');
+            return;
         }
-    });
+        selectedFile = file;
+        fileNamePreview.textContent = 'Selected: ' + file.name;
+        fileNamePreview.style.display = 'block';
+        startBtn.disabled = false;
+    }
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => setFile(fileInput.files[0]));
 
     dropzone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropzone.classList.add('dragover');
     });
-
-    dropzone.addEventListener('dragleave', () => {
-        dropzone.classList.remove('dragover');
-    });
-
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
     dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropzone.classList.remove('dragover');
-        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            fileInput.files = e.dataTransfer.files;
-            fileNamePreview.textContent = "Selected: " + e.dataTransfer.files[0].name;
-            fileNamePreview.style.display = 'block';
-        }
+        if (e.dataTransfer.files?.length) setFile(e.dataTransfer.files[0]);
     });
+
+    function detectDelimiter(text) {
+        const firstLine = (text.split(/\r?\n/).find(line => line.trim()) || '');
+        const counts = {
+            ',': (firstLine.match(/,/g) || []).length,
+            ';': (firstLine.match(/;/g) || []).length,
+            '\t': (firstLine.match(/\t/g) || []).length
+        };
+        if (counts[';'] > counts[','] && counts[';'] >= counts['\t']) return ';';
+        if (counts['\t'] > counts[','] && counts['\t'] > counts[';']) return '\t';
+        return ',';
+    }
+
+    // RFC4180-style parser for quoted fields, escaped quotes and multiline fields.
+    function parseCSV(text, delimiter) {
+        text = text.replace(/^\uFEFF/, '');
+        const rows = [];
+        let row = [];
+        let field = '';
+        let inQuotes = false;
+
+        for (let i = 0; i < text.length; i++) {
+            const ch = text[i];
+
+            if (inQuotes) {
+                if (ch === '"') {
+                    if (text[i + 1] === '"') {
+                        field += '"';
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    field += ch;
+                }
+            } else {
+                if (ch === '"') {
+                    inQuotes = true;
+                } else if (ch === delimiter) {
+                    row.push(field);
+                    field = '';
+                } else if (ch === '\n') {
+                    row.push(field);
+                    field = '';
+                    if (row.length && row.some(v => v.trim() !== '')) rows.push(row);
+                    row = [];
+                } else if (ch === '\r') {
+                    // Ignore CR; LF handles the row boundary.
+                } else {
+                    field += ch;
+                }
+            }
+        }
+
+        if (inQuotes) throw new Error('CSV contains an unmatched quote.');
+        row.push(field);
+        if (row.length && row.some(v => v.trim() !== '')) rows.push(row);
+        return rows;
+    }
+
+    function normalizeHeader(value) {
+        return String(value || '').trim().toLowerCase().replace(/[ -]/g, '_');
+    }
+
+    function resolveColumns(header) {
+        const normalized = header.map(normalizeHeader);
+        const find = (names) => {
+            const idx = normalized.findIndex(v => names.includes(v));
+            return idx >= 0 ? idx : null;
+        };
+
+        let name = find(['full_name', 'fullname', 'name', 'client_name', 'client']);
+        let email = find(['email', 'e_mail', 'email_address', 'mail']);
+        let phone = find(['phone', 'phone_number', 'telephone', 'mobile', 'cell', 'tel']);
+
+        if (email === null && header.length >= 2) {
+            name = 0;
+            email = 1;
+            if (header.length >= 3) phone = 2;
+        }
+        if (name === null && header.length > 0) name = email === 0 ? (header.length > 1 ? 1 : null) : 0;
+        if (phone === null && header.length >= 3) {
+            const used = new Set([name, email]);
+            phone = Array.from(header.keys()).find(i => !used.has(i));
+        }
+
+        return { name, email, phone };
+    }
+
+    function appendLog(message, isError) {
+        const li = document.createElement('li');
+        li.textContent = message;
+        if (isError) li.className = 'error';
+        logList.appendChild(li);
+
+        while (logList.children.length > 200) {
+            logList.removeChild(logList.firstChild);
+        }
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function importRow(row, rowNumber) {
+        const body = new URLSearchParams();
+        body.set('csrfmiddlewaretoken', csrfToken);
+        body.set('full_name', row.full_name);
+        body.set('email', row.email);
+        body.set('phone', row.phone);
+
+        let lastError = '';
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+                const response = await fetch('{% url "import_user_csv_row" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: body.toString(),
+                    credentials: 'same-origin'
+                });
+
+                const payload = await response.json();
+                if (response.ok) return payload;
+                lastError = payload.error || ('HTTP ' + response.status);
+            } catch (error) {
+                lastError = error.message || 'Network error';
+            }
+
+            if (attempt < 3) await sleep(attempt * 750);
+        }
+
+        return { ok: false, error: lastError || 'Request failed' };
+    }
+
+    async function startImport() {
+        if (!selectedFile || importing) return;
+
+        importing = true;
+        startBtn.disabled = true;
+        progressWrap.style.display = 'block';
+        doneActions.style.display = 'none';
+        logList.innerHTML = '';
+
+        try {
+            const text = await selectedFile.text();
+            const rows = parseCSV(text, detectDelimiter(text));
+
+            if (rows.length < 2) {
+                throw new Error('The CSV needs a header row and at least one data row.');
+            }
+
+            const columns = resolveColumns(rows[0]);
+            if (columns.email === null) {
+                throw new Error('Could not find an Email column.');
+            }
+
+            const dataRows = rows.slice(1).map((cells, idx) => ({
+                rowNumber: idx + 2,
+                full_name: columns.name !== null ? String(cells[columns.name] || '').trim() : '',
+                email: columns.email !== null ? String(cells[columns.email] || '').trim().toLowerCase() : '',
+                phone: columns.phone !== null ? String(cells[columns.phone] || '').trim() : ''
+            }));
+
+            totalCount.textContent = dataRows.length;
+            let created = 0;
+            let updated = 0;
+            let errors = 0;
+
+            for (let i = 0; i < dataRows.length; i++) {
+                const row = dataRows[i];
+                const percent = Math.round((i / dataRows.length) * 100);
+                progressBar.style.width = percent + '%';
+                progressPercent.textContent = percent + '%';
+                progressLabel.textContent = 'Importing ' + (i + 1) + ' of ' + dataRows.length;
+                currentRow.textContent = 'Row ' + row.rowNumber + ': ' + (row.full_name || row.email || 'Unnamed');
+
+                if (!row.email || !row.email.includes('@')) {
+                    errors++;
+                    errorCount.textContent = errors;
+                    appendLog('Row ' + row.rowNumber + ': invalid or missing email', true);
+                    continue;
+                }
+
+                const result = await importRow(row, row.rowNumber);
+
+                if (result.ok) {
+                    if (Number(result.created || 0) > 0) {
+                        created += Number(result.created || 0);
+                        appendLog('Row ' + row.rowNumber + ': created ' + row.email, false);
+                    } else if (Number(result.updated || 0) > 0) {
+                        updated += Number(result.updated || 0);
+                        appendLog('Row ' + row.rowNumber + ': updated ' + row.email, false);
+                    } else {
+                        appendLog('Row ' + row.rowNumber + ': processed ' + row.email, false);
+                    }
+                } else {
+                    errors++;
+                    appendLog('Row ' + row.rowNumber + ': ' + (result.error || 'import failed'), true);
+                }
+
+                createdCount.textContent = created;
+                updatedCount.textContent = updated;
+                errorCount.textContent = errors;
+            }
+
+            progressBar.style.width = '100%';
+            progressPercent.textContent = '100%';
+            progressLabel.textContent = 'Import complete';
+            currentRow.textContent = 'Finished: ' + dataRows.length + ' rows processed.';
+            doneActions.style.display = 'block';
+        } catch (error) {
+            progressLabel.textContent = 'Import stopped';
+            currentRow.textContent = error.message || 'Unable to read the CSV.';
+            appendLog(error.message || 'Unknown import error', true);
+        } finally {
+            importing = false;
+            startBtn.disabled = false;
+        }
+    }
+
+    startBtn.addEventListener('click', startImport);
+})();
 </script>
 {% endblock %}
