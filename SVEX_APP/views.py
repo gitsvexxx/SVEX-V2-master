@@ -413,19 +413,16 @@ def import_user_csv_row(request):
 @login_required(login_url='new_login')
 @manager_required
 def import_users_csv(request):
-    from .csv_importer import process_user_import_csv
-    results = None
+    # The browser now imports rows through the progressive /row/ endpoint.
+    # Never run the entire CSV synchronously from this page request.
     if request.method == "POST":
-        csv_file = request.FILES.get("csv_file")
-        if csv_file:
-            if not csv_file.name.endswith(".csv"):
-                messages.error(request, "Please upload a valid .csv file.")
-            else:
-                results = process_user_import_csv(csv_file)
-        else:
-            messages.error(request, "Please select a CSV file to upload.")
+        messages.error(
+            request,
+            "Please use Start Import. CSV rows are imported one at a time to keep the server responsive.",
+        )
+        return redirect("import_users_csv")
 
-    return render(request, "SVEX_APP/import_users_csv.html", {"results": results})
+    return render(request, "SVEX_APP/import_users_csv.html", {"results": None})
 
 
 # Export Users Full Name, Email, Phone, and Autologin Link as CSV
