@@ -59,6 +59,7 @@ urlpatterns = [
     path("view-kyc/", views.view_kyc, name="view_kyc"),
     path("edit-kyc/<int:kyc_id>/", views.edit_kyc, name="edit_kyc"),
     path("view-client-wallet/", views.view_client_wallet, name="view_client_wallet"),
+    path("view-client-wallet/mass-update/", views.mass_update_client_wallets, name="mass_update_client_wallets"),
     path(
         "edit-client-wallet/<int:client_wallet_id>/",
         views.edit_client_wallet,
