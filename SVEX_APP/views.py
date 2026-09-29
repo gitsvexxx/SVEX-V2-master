@@ -3237,6 +3237,8 @@ from django.views.decorators.csrf import csrf_exempt
 @login_required
 @manager_required
 @csrf_exempt
+@login_required(login_url='new_login')
+@manager_required
 def mass_update_api(request):
     if request.method == 'POST':
         try:
