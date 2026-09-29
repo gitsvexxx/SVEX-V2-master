@@ -76,3 +76,27 @@ All commands are executed using `uv run` to ensure they use the project's virtua
     ```django
     {% load static %}
     ```
+
+
+## MCP database service
+
+The deployment includes a private MCP (Model Context Protocol) service for an authorized LLM/MCP client.
+
+1. Set these secrets in the server's private `.env` file (do not commit them):
+   ```sh
+   SVEX_MCP_READ_TOKEN=replace-with-a-long-random-read-token
+   SVEX_MCP_WRITE_TOKEN=replace-with-a-different-long-random-write-token
+   ```
+2. Rebuild the stack:
+   ```sh
+   docker compose up -d --build
+   ```
+3. Connect the MCP client to:
+   ```
+   https://YOUR_DOMAIN/mcp
+   ```
+
+Read tools can search users, read profiles/wallets, list wallets, and inspect a client's transaction history.
+
+Write access is deliberately two-step: the LLM first calls `propose_record_update`, then the resulting signed proposal must be explicitly confirmed with `confirm_record_update(..., confirmation="CONFIRM")`. The server allowlists writable fields and does not expose raw SQL, stored passwords/credentials, KYC documents, or delete operations.
+
