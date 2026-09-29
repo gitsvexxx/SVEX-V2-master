@@ -16,6 +16,7 @@ Write operations are always two-step:
 """
 
 import contextlib
+import hmac
 import contextvars
 import logging
 import os
@@ -119,9 +120,9 @@ class BearerTokenMiddleware:
         role = None
         client_id = "mcp-client"
 
-        if WRITE_TOKEN and token == WRITE_TOKEN:
+        if WRITE_TOKEN and hmac.compare_digest(token, WRITE_TOKEN):
             role = "write"
-        elif READ_TOKEN and token == READ_TOKEN:
+        elif READ_TOKEN and hmac.compare_digest(token, READ_TOKEN):
             role = "read"
 
         if role is None:
