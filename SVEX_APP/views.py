@@ -430,61 +430,97 @@ def import_users_csv(request):
 @manager_required
 def export_users_csv(request):
     import csv
+    from datetime import datetime, time
+    from django.utils import timezone
     from .models import AutoLoginToken
 
+    if request.method != "POST":
+        return render(
+            request,
+            "SVEX_APP/export_users_csv.html",
+            {
+                "today": timezone.localdate(),
+            },
+        )
+
+    start_date_raw = (request.POST.get("start_date") or "").strip()
+    end_date_raw = (request.POST.get("end_date") or "").strip()
+
+    start_date = None
+    end_date = None
+
+    try:
+        if start_date_raw:
+            start_date = datetime.strptime(start_date_raw, "%Y-%m-%d").date()
+        if end_date_raw:
+            end_date = datetime.strptime(end_date_raw, "%Y-%m-%d").date()
+    except ValueError:
+        messages.error(request, "Please enter valid start and end dates.")
+        return redirect("export_users_csv")
+
+    if start_date and end_date and start_date > end_date:
+        messages.error(request, "Start date cannot be after end date.")
+        return redirect("export_users_csv")
+
+    # Filter by the account's date_joined. Blank endpoints mean open-ended.
+    user_filters = Q(is_superuser=False)
+    if start_date:
+        start_dt = timezone.make_aware(datetime.combine(start_date, time.min))
+        user_filters &= Q(date_joined__gte=start_dt)
+    if end_date:
+        end_dt = timezone.make_aware(datetime.combine(end_date, time.max))
+        user_filters &= Q(date_joined__lte=end_dt)
+
+    users = list(
+        User._default_manager
+        .filter(user_filters)
+        .select_related("client")
+        .order_by("date_joined", "id")
+    )
+    users_by_id = {user.pk: user for user in users}
+
     response = HttpResponse(content_type="text/csv; charset=utf-8")
-    response["Content-Disposition"] = 'attachment; filename="svex_users_export.csv"'
-    response.write("\ufeff")  # UTF-8 BOM for Microsoft Excel compatibility
+    range_label = (
+        f"{start_date_raw or 'all'}_to_{end_date_raw or 'all'}"
+    )
+    response["Content-Disposition"] = (
+        f'attachment; filename="svex_users_{range_label}.csv"'
+    )
+    response.write("\ufeff")
 
     writer = csv.writer(response)
     writer.writerow(["Full Name", "Email", "Phone", "Autologin Link"])
 
-    clients = list(Client.objects.select_related("user").all().order_by("id"))
-    processed_user_ids = set()
+    client_rows = []
+    for user in users:
+        client = getattr(user, "client", None)
 
-    for client in clients:
-        user = client.user
-        if user:
-            processed_user_ids.add(user.pk)
-
-        # Full Name resolution
-        parts = [p.strip() for p in [client.first_name, client.last_name] if p and p.strip()]
+        parts = [
+            p.strip()
+            for p in [
+                client.first_name if client else None,
+                client.last_name if client else None,
+            ]
+            if p and p.strip()
+        ]
         if parts:
             full_name = " ".join(parts)
-        elif user:
-            user_full = user.get_full_name().strip()
-            full_name = user_full if user_full else user.username
         else:
-            full_name = ""
+            full_name = user.get_full_name().strip() or user.username
 
-        # Email
-        email = user.email if (user and user.email) else ""
-
-        # Phone
-        phone = client.phone if client.phone else ""
-
-        # Autologin Link
-        if user:
-            token_obj, _ = AutoLoginToken.objects.get_or_create(user=user)
-            autologin_path = reverse("autologin", kwargs={"token": token_obj.token})
-            autologin_link = request.build_absolute_uri(autologin_path)
-        else:
-            autologin_link = ""
-
-        writer.writerow([full_name, email, phone, autologin_link])
-
-    # Also include any users who don't have a Client record
-    orphaned_users = User.objects.exclude(id__in=processed_user_ids).order_by("id")
-    for user in orphaned_users:
-        user_full = user.get_full_name().strip()
-        full_name = user_full if user_full else user.username
         email = user.email or ""
-        phone = ""
-        token_obj, _ = AutoLoginToken.objects.get_or_create(user=user)
-        autologin_path = reverse("autologin", kwargs={"token": token_obj.token})
-        autologin_link = request.build_absolute_uri(autologin_path)
-        writer.writerow([full_name, email, phone, autologin_link])
+        phone = client.phone if client and client.phone else ""
 
+        token_obj, _ = AutoLoginToken.objects.get_or_create(user=user)
+        autologin_path = reverse(
+            "autologin",
+            kwargs={"token": token_obj.token},
+        )
+        autologin_link = request.build_absolute_uri(autologin_path)
+
+        client_rows.append([full_name, email, phone, autologin_link])
+
+    writer.writerows(client_rows)
     return response
 
 
