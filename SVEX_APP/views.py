@@ -6,12 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db import transaction
 from django.db.models import Avg, Count, Max, Min, OuterRef, Q, Subquery, Sum
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import resolve, reverse
 from django.views.generic import View
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 import qrcode
 import base64
 from io import BytesIO
@@ -575,6 +576,66 @@ def view_client_wallet(request):
 
 
 # Edit the wallets
+@login_required(login_url='new_login')
+@manager_required
+def mass_update_client_wallets(request):
+    """Set selected client wallet balances in one transaction."""
+    if request.method != "POST":
+        return redirect("view_client_wallet")
+
+    wallet_ids = []
+    for raw_id in request.POST.getlist("wallet_ids"):
+        try:
+            wallet_ids.append(int(raw_id))
+        except (TypeError, ValueError):
+            continue
+
+    if not wallet_ids:
+        messages.error(request, "Select at least one wallet.")
+        return redirect("view_client_wallet")
+
+    allowed_fields = (
+        "spotbtc_balance",
+        "btc_balance",
+        "eth_balance",
+        "usdt_balance_erc20",
+        "usd_balance_trc20",
+    )
+    updates = {}
+    for field in allowed_fields:
+        raw_value = (request.POST.get(field) or "").strip()
+        if raw_value == "":
+            continue
+        try:
+            value = Decimal(raw_value)
+        except (InvalidOperation, ValueError):
+            messages.error(request, f"Invalid value for {field.replace('_', ' ').title()}.")
+            return redirect("view_client_wallet")
+
+        if not value.is_finite() or value < 0:
+            messages.error(request, f"{field.replace('_', ' ').title()} must be a non-negative number.")
+            return redirect("view_client_wallet")
+        if value.as_tuple().exponent < -8:
+            messages.error(request, f"{field.replace('_', ' ').title()} supports up to 8 decimal places.")
+            return redirect("view_client_wallet")
+        if value >= Decimal("1000000000000"):
+            messages.error(request, f"{field.replace('_', ' ').title()} is too large for the wallet field.")
+            return redirect("view_client_wallet")
+
+        updates[field] = value
+
+    if not updates:
+        messages.error(request, "Enter at least one balance to update.")
+        return redirect("view_client_wallet")
+
+    with transaction.atomic():
+        queryset = ClientWallet._default_manager.select_for_update().filter(pk__in=set(wallet_ids))
+        updated_count = queryset.update(**updates)
+
+    messages.success(request, f"Updated {updated_count} wallet(s). Blank fields were left unchanged.")
+    return redirect("view_client_wallet")
+
+
 @login_required(login_url='new_login')
 @manager_required
 def edit_client_wallet(request, client_wallet_id):
