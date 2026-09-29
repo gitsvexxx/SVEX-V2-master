@@ -267,6 +267,11 @@ def _process_batch(batch, results):
         clients_to_update = []
         clients_to_create = []
 
+        repair_next_client_number = 100000
+        last_client_for_repair = client_manager.select_for_update().order_by("-id").first()
+        if last_client_for_repair and str(last_client_for_repair.client_number).isdigit():
+            repair_next_client_number = int(last_client_for_repair.client_number) + 1
+
         for row in unique_batch:
             if not row["email"]:
                 results["skipped"] += 1
@@ -301,14 +306,10 @@ def _process_batch(batch, results):
                     clients_to_update.append(client)
             elif not was_new:
                 # Repair legacy users that never received a Client row.
-                last_client = client_manager.select_for_update().order_by("-id").first()
-                next_number = 100000
-                if last_client and str(last_client.client_number).isdigit():
-                    next_number = int(last_client.client_number) + 1
                 clients_to_create.append(
                     Client(
                         user=user,
-                        client_number=str(next_number),
+                        client_number=str(repair_next_client_number),
                         first_name=row["first_name"] or "",
                         last_name=row["last_name"] or "",
                         phone=(row["phone"] or "")[:15],
@@ -316,6 +317,7 @@ def _process_batch(batch, results):
                         zip_code="",
                     )
                 )
+                repair_next_client_number += 1
 
             if was_new:
                 results["created"] += 1
