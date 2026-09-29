@@ -2,8 +2,6 @@ import csv
 import io
 import re
 import secrets
-from decimal import Decimal
-from typing import Iterable
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
@@ -148,7 +146,19 @@ def _process_batch(batch, results):
     } if bases else set()
 
     with transaction.atomic():
-        new_rows = [row for row in batch if row["email"] not in existing_users]
+        # One account operation per email in a batch. Duplicate CSV rows for the
+        # same email are treated as repeated updates instead of attempting a
+        # duplicate UNIQUE email insert.
+        unique_rows = {}
+        duplicate_rows = []
+        for row in batch:
+            if row["email"] in unique_rows:
+                duplicate_rows.append(row)
+            else:
+                unique_rows[row["email"]] = row
+
+        unique_batch = list(unique_rows.values())
+        new_rows = [row for row in unique_batch if row["email"] not in existing_users]
         new_users = []
         new_credentials = []
         new_user_rows = []
@@ -256,7 +266,7 @@ def _process_batch(batch, results):
         clients_to_update = []
         clients_to_create = []
 
-        for row in batch:
+        for row in unique_batch:
             if not row["email"]:
                 results["skipped"] += 1
                 _append_log(results, "errors", f"Row {row['row_num']}: Skipped - missing email")
@@ -336,6 +346,13 @@ def _process_batch(batch, results):
         if clients_to_create:
             client_manager.bulk_create(
                 clients_to_create, batch_size=IMPORT_BATCH_SIZE
+            )
+
+        for row in duplicate_rows:
+            _append_log(
+                results,
+                "details",
+                f"Repeated CSV row for existing email: {row['email']} (processed without duplicate account creation)",
             )
 
 
