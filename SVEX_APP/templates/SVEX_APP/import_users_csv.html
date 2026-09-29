@@ -295,6 +295,12 @@
                     </ul>
                 {% endif %}
 
+                {% if results.logs_limited %}
+                    <div style="margin-top: 1rem; padding: 0.75rem 1rem; border-radius: 6px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 0.85rem;">
+                        Large import detected. The counters above include every row, while the detailed log is limited to the first 200 entries to keep the page responsive.
+                    </div>
+                {% endif %}
+
                 {% if results.errors %}
                     <div style="font-weight: 600; font-size: 0.9rem; margin-top: 1rem; color: #dc2626;">Errors / Skipped:</div>
                     <ul class="log-list errors">
