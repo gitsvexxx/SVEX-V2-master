@@ -262,6 +262,7 @@ def _process_batch(batch, results):
                     client for client in new_clients if client.user_id == created_user.pk
                 )
 
+        new_email_set = {row["email"] for row, _, _ in new_user_rows}
         users_to_update = []
         clients_to_update = []
         clients_to_create = []
@@ -278,7 +279,7 @@ def _process_batch(batch, results):
                 _append_log(results, "errors", f"Row {row['row_num']}: Could not resolve user")
                 continue
 
-            was_new = row["email"] not in {r["email"] for r, _, _ in new_user_rows}
+            was_new = row["email"] in new_email_set
 
             if row["first_name"] and user.first_name != row["first_name"]:
                 user.first_name = row["first_name"]
