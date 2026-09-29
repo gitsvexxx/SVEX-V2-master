@@ -360,21 +360,167 @@ def _process_batch(batch, results):
 
 
 def process_user_import_row(full_name="", email="", phone=""):
-    """Process exactly one CSV-style client row and return its import result."""
-    csv_buffer = io.StringIO()
-    writer = csv.writer(csv_buffer)
-    writer.writerow(["Full Name", "Email", "Phone"])
-    writer.writerow([
-        str(full_name or "").strip(),
-        str(email or "").strip(),
-        str(phone or "").strip(),
-    ])
-    csv_buffer.seek(0)
-    return process_user_import_csv(
-        io.BytesIO(csv_buffer.getvalue().encode("utf-8"))
-    )
+    """Import exactly one client row with a small, bounded number of DB queries.
 
+    This intentionally does not call process_user_import_csv(). The old
+    one-row wrapper still executed the batch importer, which scanned every
+    wallet address on every request and became slower as the database grew.
+    """
+    from .models import AutoLoginToken, UserStats
 
+    results = {
+        "total": 1,
+        "created": 0,
+        "updated": 0,
+        "skipped": 0,
+        "errors": [],
+        "details": [],
+    }
+
+    full_name = str(full_name or "").strip()
+    email = str(email or "").strip().lower()
+    phone = str(phone or "").strip()[:15]
+
+    if not email or "@" not in email:
+        results["skipped"] = 1
+        results["errors"].append("Missing or invalid email")
+        return results
+
+    name_parts = full_name.split(None, 1)
+    first_name = name_parts[0] if name_parts else ""
+    last_name = name_parts[1] if len(name_parts) > 1 else ""
+
+    user_manager = User._default_manager
+    client_manager = Client._default_manager
+    wallet_manager = ClientWallet._default_manager
+    deposit_wallet_manager = DepositWallet._default_manager
+    withdrawal_message_manager = WithdrawalMessage._default_manager
+    credentials_manager = UserCredentials._default_manager
+
+    with transaction.atomic():
+        user = user_manager.filter(email__iexact=email).first()
+
+        if user:
+            user_changed = False
+            if first_name and user.first_name != first_name:
+                user.first_name = first_name
+                user_changed = True
+            if last_name and user.last_name != last_name:
+                user.last_name = last_name
+                user_changed = True
+            if user_changed:
+                user_manager.filter(pk=user.pk).update(
+                    first_name=user.first_name,
+                    last_name=user.last_name,
+                )
+
+            client = client_manager.filter(user_id=user.pk).first()
+            if client:
+                client_updates = {}
+                if first_name and client.first_name != first_name:
+                    client_updates["first_name"] = first_name
+                if last_name and client.last_name != last_name:
+                    client_updates["last_name"] = last_name
+                if phone and client.phone != phone:
+                    client_updates["phone"] = phone
+                if client_updates:
+                    client_manager.filter(pk=client.pk).update(**client_updates)
+            else:
+                last_client = client_manager.select_for_update().order_by("-id").first()
+                next_client_number = 100000
+                if last_client and str(last_client.client_number).isdigit():
+                    next_client_number = int(last_client.client_number) + 1
+                client_manager.create(
+                    user=user,
+                    client_number=str(next_client_number),
+                    first_name=first_name or "",
+                    last_name=last_name or "",
+                    phone=phone,
+                    address="",
+                    zip_code="",
+                )
+
+            # Repair any legacy account missing its related records without
+            # scanning the whole table.
+            if not wallet_manager.filter(client_id=user.pk).exists():
+                wallet_manager.create(
+                    client=user,
+                    wallet_address=_unique_wallet_address(set()),
+                )
+            if not deposit_wallet_manager.filter(user_id=user.pk).exists():
+                deposit_wallet_manager.create(user=user)
+            if not withdrawal_message_manager.filter(user_id=user.pk).exists():
+                withdrawal_message_manager.create(user=user)
+            if not credentials_manager.filter(username=user.username).exists():
+                credentials_manager.create(
+                    username=user.username,
+                    password=secrets.token_urlsafe(10),
+                )
+            AutoLoginToken.objects.get_or_create(user=user)
+            UserStats.objects.get_or_create(user=user)
+
+            results["updated"] = 1
+            results["details"].append(f"Updated user: {email}")
+            return results
+
+        base = re.sub(r"[^a-zA-Z0-9]", "", email.split("@")[0]) or re.sub(
+            r"[^a-zA-Z0-9]", "", first_name.lower()
+        ) or "user"
+        username_filter = Q(username__istartswith=base[:150])
+        used_usernames = set(
+            username.lower()
+            for username in user_manager.filter(username_filter).values_list(
+                "username", flat=True
+            )
+        )
+        username = _safe_username(base, used_usernames)
+
+        raw_password = secrets.token_urlsafe(10)
+        user = User(
+            username=username,
+            email=email,
+            password=make_password(raw_password),
+            first_name=first_name,
+            last_name=last_name,
+            is_client=True,
+            is_manager=False,
+            is_active=True,
+            date_joined=timezone.now(),
+        )
+        # bulk_create avoids the project's legacy post_save receivers, which
+        # use disabled objects managers on several models.
+        user_manager.bulk_create([user])
+
+        group, _ = Group.objects.get_or_create(name="Clients")
+        user.groups.add(group)
+
+        last_client = client_manager.select_for_update().order_by("-id").first()
+        next_client_number = 100000
+        if last_client and str(last_client.client_number).isdigit():
+            next_client_number = int(last_client.client_number) + 1
+
+        client_manager.create(
+            user=user,
+            client_number=str(next_client_number),
+            first_name=first_name or "",
+            last_name=last_name or "",
+            phone=phone,
+            address="",
+            zip_code="",
+        )
+        wallet_manager.create(
+            client=user,
+            wallet_address=_unique_wallet_address(set()),
+        )
+        deposit_wallet_manager.create(user=user)
+        withdrawal_message_manager.create(user=user)
+        credentials_manager.create(username=username, password=raw_password)
+        AutoLoginToken.objects.create(user=user)
+        UserStats.objects.create(user=user)
+
+        results["created"] = 1
+        results["details"].append(f"Created user: {email}")
+        return results
 def process_user_import_csv(csv_file):
     """
     Import clients in small database batches.
