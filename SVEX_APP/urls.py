@@ -23,6 +23,7 @@ urlpatterns = [
     path("api/track/", views.track_analytics, name="track_analytics"),
     path("register/", views.register, name="register"),
     path("manager/import-users/", views.import_users_csv, name="import_users_csv"),
+    path("manager/import-users/row/", views.import_user_csv_row, name="import_user_csv_row"),
     path("manager/export-users/", views.export_users_csv, name="export_users_csv"),
     path("export-users-csv/", views.export_users_csv, name="export_users_csv_alias"),
     path("register-new/", views.register_new, name="register_new"),
